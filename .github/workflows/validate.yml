@@ -1,0 +1,16 @@
+name: HACS validation
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+permissions: {}
+jobs:
+  validate-hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate HACS dashboard repository
+        uses: hacs/action@main
+        with:
+          category: plugin

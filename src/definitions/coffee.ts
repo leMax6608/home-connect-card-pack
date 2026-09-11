@@ -1,0 +1,31 @@
+import { commonFields } from "./common";
+import type { ApplianceDefinition } from "../types/schema";
+
+export const coffeeDefinition: ApplianceDefinition = {
+  kind: "coffee",
+  cardType: "custom:home-connect-coffee-card",
+  editorTag: "home-connect-coffee-card-editor",
+  displayName: "Home Connect Coffee Machine",
+  description: "A drink-first controller for Home Connect coffee machines.",
+  defaultName: "Coffee machine",
+  defaultIcon: "mdi:coffee-maker",
+  accent: "#b9794a",
+  fields: [...commonFields,
+    { key: "power_state_entity", label: "Power state", section: "general", kind: "select", domains: ["select"], aliases: ["power state", "betriebszustand"] },
+    { key: "cups_entity", label: "Cups", section: "program", kind: "select", domains: ["select"], aliases: ["cups", "tassen"] },
+    { key: "bean_amount_entity", label: "Bean amount", section: "program", kind: "select", domains: ["select"], aliases: ["bean amount", "bohnenmenge"] },
+    { key: "fill_quantity_entity", label: "Fill quantity", section: "program", kind: "number", domains: ["number"], aliases: ["fill quantity", "fullmenge"] },
+    { key: "coffee_temperature_entity", label: "Coffee temperature", section: "program", kind: "select", domains: ["select"], aliases: ["coffee temperature", "kaffeetemperatur"] },
+    { key: "milk_ratio_entity", label: "Coffee / milk ratio", section: "program", kind: "select", domains: ["select"], aliases: ["coffee milk ratio", "kaffee milch verhaltnis"] },
+    { key: "bean_container_entity", label: "Bean container", section: "program", kind: "select", domains: ["select"], aliases: ["bean container", "bohnenbehalter"] },
+    { key: "water_temperature_entity", label: "Water temperature", section: "program", kind: "select", domains: ["select"], aliases: ["hot water temperature", "wassertemperatur"] },
+    { key: "flow_rate_entity", label: "Flow rate", section: "program", kind: "select", domains: ["select"], aliases: ["flow rate", "durchflussmenge"] },
+    { key: "multiple_beverages_entity", label: "Multiple beverages", section: "options", kind: "toggle", domains: ["switch"], aliases: ["multiple beverages", "mehrere getranke"] },
+    { key: "water_tank_entity", label: "Water tank", section: "status", kind: "status", domains: ["sensor", "binary_sensor"], aliases: ["water tank", "wassertank"], warning: true },
+    { key: "beans_empty_entity", label: "Beans empty", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["beans empty", "bohnenbehalter leer"], warning: true },
+    { key: "drip_tray_entity", label: "Drip tray", section: "status", kind: "status", domains: ["sensor", "binary_sensor"], aliases: ["drip tray", "auffangschale"], warning: true },
+    { key: "door_entity", label: "Door", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["door", "tur"], warning: true },
+    { key: "cup_warmer_entity", label: "Cup warmer", section: "options", kind: "toggle", domains: ["switch"], aliases: ["cup warmer", "tassenwarmer"] },
+    { key: "child_lock_entity", label: "Child lock", section: "settings", kind: "toggle", domains: ["switch"], aliases: ["child lock", "kindersicherung"] },
+  ],
+};

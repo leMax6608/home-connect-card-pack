@@ -1,0 +1,123 @@
+# These IDs are examples only. Every value can be selected in the visual editor.
+
+type: vertical-stack
+cards:
+  - type: custom:home-connect-dishwasher-card
+    entity: sensor.bosch_spulmaschine_status
+    name: Bosch Spülmaschine
+    power_entity: switch.bosch_spulmaschine_einschalter
+    status_entity: sensor.bosch_spulmaschine_status
+    operating_state_entity: sensor.bosch_spulmaschine_betriebszustand
+    selected_program_entity: select.bosch_spulmaschine_ausgewahltes_programm
+    active_program_entity: sensor.bosch_spulmaschine_aktives_programm
+    progress_entity: sensor.bosch_spulmaschine_programmfortschritt
+    remaining_time_entity: sensor.bosch_spulmaschine_verbleibende_programmlaufzeit
+    phase_entity: sensor.bosch_spulmaschine_programmphase
+    start_entity: button.bosch_spulmaschine_start
+    cancel_entity: button.bosch_spulmaschine_abbrechen
+    vario_speed_entity: switch.bosch_spulmaschine_variospeed_plus
+    hygiene_entity: switch.bosch_spulmaschine_hygiene_plus
+    half_load_entity: switch.bosch_spulmaschine_halbe_ladung
+    silent_entity: switch.bosch_spulmaschine_leise_auf_knopfdruck
+    water_entity: sensor.bosch_spulmaschine_wasserverbrauch_schatzung
+    energy_entity: sensor.bosch_spulmaschine_energieverbrauch_schatzung
+    salt_entity: sensor.bosch_spulmaschine_salz
+    rinse_aid_entity: sensor.bosch_spulmaschine_klarspuler
+    door_entity: binary_sensor.bosch_spulmaschine_tur
+    care_entity: binary_sensor.bosch_spulmaschine_maschinenreinigung
+    filter_entity: binary_sensor.bosch_spulmaschine_maschinenreinigung_filter
+    heater_scale_entity: binary_sensor.bosch_spulmaschine_wasserheizung_verkalkt
+
+  - type: custom:home-connect-oven-card
+    entity: sensor.siemens_backofen_status
+    name: Siemens Backofen
+    power_entity: switch.siemens_backofen_einschalter
+    status_entity: sensor.siemens_backofen_status
+    operating_state_entity: sensor.siemens_backofen_betriebszustand
+    selected_program_entity: select.siemens_backofen_ausgewahltes_programm
+    active_program_entity: sensor.siemens_backofen_aktives_programm
+    progress_entity: sensor.siemens_backofen_programmfortschritt
+    remaining_time_entity: sensor.siemens_backofen_verbleibende_programmlaufzeit
+    current_temperature_entity: sensor.siemens_backofen_aktuelle_temperatur
+    target_temperature_entity: number.siemens_backofen_sollwert_temperatur
+    duration_entity: number.siemens_oven_dauer
+    level_entity: select.siemens_backofen_stufe
+    start_entity: button.siemens_backofen_start
+    pause_entity: button.siemens_backofen_pause
+    resume_entity: button.siemens_backofen_fortsetzen
+    cancel_entity: button.siemens_backofen_abbrechen
+    rapid_preheat_entity: switch.siemens_backofen_schnelles_vorheizen
+    door_entity: binary_sensor.siemens_backofen_tur
+    water_tank_entity: sensor.siemens_backofen_wassertank
+    alarm_entity: number.siemens_backofen_alarm_clock
+    child_lock_entity: switch.siemens_backofen_kindersicherung
+    display_brightness_entity: number.siemens_backofen_display_helligkeit
+    key_tones_entity: switch.siemens_backofen_tastentone
+    cooling_fan_entity: select.siemens_backofen_kuhllufter_laufzeit
+    tone_duration_entity: select.siemens_backofen_tondauer
+
+  - type: custom:home-connect-coffee-card
+    entity: sensor.siemens_kaffeemaschine_betriebszustand
+    name: Siemens Kaffeemaschine
+    power_entity: switch.siemens_kaffeemaschine_einschalter
+    power_state_entity: select.siemens_coffeemaker_power_state
+    status_entity: sensor.siemens_kaffeemaschine_power_state
+    operating_state_entity: sensor.siemens_kaffeemaschine_betriebszustand
+    selected_program_entity: select.siemens_kaffeemaschine_ausgewahltes_programm
+    active_program_entity: sensor.siemens_kaffeemaschine_aktives_programm
+    progress_entity: sensor.siemens_kaffeemaschine_programmfortschritt
+    cups_entity: select.siemens_kaffeemaschine_cups
+    bean_amount_entity: select.siemens_kaffeemaschine_bean_amount
+    fill_quantity_entity: number.siemens_kaffeemaschine_fill_quantity
+    coffee_temperature_entity: select.siemens_kaffeemaschine_coffee_temperature
+    milk_ratio_entity: select.siemens_kaffeemaschine_coffee_milk_ratio
+    bean_container_entity: select.siemens_kaffeemaschine_bean_container
+    water_temperature_entity: select.siemens_kaffeemaschine_hot_water_temperature
+    flow_rate_entity: select.siemens_kaffeemaschine_flow_rate
+    multiple_beverages_entity: switch.siemens_kaffeemaschine_multiple_beverages
+    start_entity: button.siemens_kaffeemaschine_start
+    pause_entity: button.siemens_kaffeemaschine_pause
+    resume_entity: button.siemens_kaffeemaschine_fortsetzen
+    cancel_entity: button.siemens_kaffeemaschine_abbrechen
+    water_tank_entity: sensor.siemens_kaffeemaschine_wassertank
+    beans_empty_entity: binary_sensor.siemens_kaffeemaschine_bohnenbehalter_leer
+    drip_tray_entity: sensor.siemens_kaffeemaschine_drip_tray
+    door_entity: binary_sensor.siemens_kaffeemaschine_tur
+    cup_warmer_entity: switch.siemens_kaffeemaschine_tassenwarmer
+    child_lock_entity: switch.siemens_kaffeemaschine_child_lock
+
+  - type: custom:home-connect-dryer-card
+    entity: sensor.bosch_trockner_betriebszustand
+    name: Bosch Trockner
+    power_entity: switch.bosch_trockner_einschalter
+    status_entity: sensor.bosch_trockner_power_state
+    operating_state_entity: sensor.bosch_trockner_betriebszustand
+    selected_program_entity: select.bosch_trockner_ausgewahltes_programm
+    active_program_entity: sensor.bosch_trockner_aktives_programm
+    progress_entity: sensor.bosch_trockner_programmfortschritt
+    remaining_time_entity: sensor.bosch_trockner_verbleibende_programmlaufzeit
+    finish_at_entity: sensor.bosch_trockner_fertig_in
+    phase_entity: sensor.bosch_trockner_process_phase
+    drying_target_entity: select.bosch_trockner_drying_target
+    duration_entity: number.bosch_trockner_duration
+    start_entity: button.bosch_trockner_start
+    pause_entity: button.bosch_trockner_pause
+    resume_entity: button.bosch_trockner_fortsetzen
+    cancel_entity: button.bosch_trockner_abbrechen
+    speed_perfect_entity: switch.bosch_trockner_speed_perfect
+    hygiene_entity: switch.bosch_trockner_hygiene
+    half_load_entity: switch.bosch_trockner_half_load
+    gentle_entity: switch.bosch_trockner_gentle
+    wrinkle_guard_entity: switch.bosch_trockner_wrinkle_guard
+    silent_entity: switch.bosch_trockner_silent_mode
+    door_entity: binary_sensor.bosch_trockner_tur
+    reload_entity: sensor.bosch_trockner_laundry_reload
+    condensate_entity: binary_sensor.bosch_trockner_condensate_container
+    lint_filter_entity: binary_sensor.bosch_trockner_lint_filter
+    care_entity: binary_sensor.bosch_trockner_care_cycle_recommended
+    load_recommendation_entity: sensor.bosch_trockner_beladungsempfehlung
+    drum_light_entity: light.bosch_trockner_trommellicht
+    door_light_entity: light.bosch_trockner_tur_ringlicht
+    signal_volume_entity: select.bosch_trockner_end_signal_volume
+    brightness_entity: number.bosch_trockner_brightness
+    auto_power_off_entity: select.bosch_trockner_auto_power_off

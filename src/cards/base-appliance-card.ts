@@ -1,0 +1,220 @@
+import { LitElement, PropertyValues, css, html, nothing } from "lit";
+import { commonCardStyles } from "../styles/common";
+import type { ApplianceCardConfig } from "../types/config";
+import type { HomeAssistant, HassEntity } from "../types/home-assistant";
+import type { ApplianceDefinition, FieldDefinition, SectionId } from "../types/schema";
+import { configuredEntityIds, relevantStatesChanged, stateFor } from "../helpers/entity";
+import { deriveMode, displayState, isAvailable, isWarningActive, progressValue } from "../helpers/formatting";
+import { pressEntity, selectOption, setNumber, toggleEntity } from "../helpers/services";
+import { fieldLabel, translate } from "../helpers/localize";
+import type { ControlEventDetail } from "../components/entity-control";
+import type { ApplianceAction } from "../components/action-buttons";
+import "../components/appliance-header";
+import "../components/progress-display";
+import "../components/status-chip";
+import "../components/entity-control";
+import "../components/expandable-section";
+import "../components/action-buttons";
+
+const SECTION_META: Record<SectionId, { title: string; icon: string }> = {
+  program: { title: "Program", icon: "mdi:tune-variant" },
+  options: { title: "Options", icon: "mdi:toggle-switch-outline" },
+  status: { title: "Status & care", icon: "mdi:information-outline" },
+  settings: { title: "Device settings", icon: "mdi:cog-outline" },
+};
+
+export abstract class BaseApplianceCard extends LitElement {
+  static properties = {
+    hass: { attribute: false },
+    _config: { state: true },
+    _expanded: { state: true },
+    _busyIds: { state: true },
+    _error: { state: true },
+  };
+
+  hass?: HomeAssistant;
+  protected _config?: ApplianceCardConfig;
+  protected _expanded = false;
+  protected _busyIds = new Set<string>();
+  protected _error = "";
+  private _expandedByUser = false;
+  protected abstract definition: ApplianceDefinition;
+
+  static styles = [commonCardStyles, css`
+    .section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; }
+    .entity-slot { min-width: 0; border-bottom: 1px solid color-mix(in srgb, var(--divider-color), transparent 45%); }
+    .entity-slot:nth-last-child(-n+2) { border-bottom-color: transparent; }
+    .program-grid .entity-slot:first-child { grid-column: 1 / -1; }
+    .power-row { padding: 2px 11px; border: 1px solid color-mix(in srgb, var(--hc-accent), transparent 82%); border-radius: 13px; background: color-mix(in srgb, var(--hc-accent), transparent 94%); }
+    .program-focus { padding: 2px 0 5px; }
+    .activity { display: grid; gap: 10px; padding: 12px; border: 1px solid color-mix(in srgb, var(--hc-accent), transparent 80%); border-radius: 14px; background: linear-gradient(135deg, color-mix(in srgb, var(--hc-accent), transparent 91%), color-mix(in srgb, var(--secondary-background-color), transparent 24%)); }
+    .activity-top { display: flex; align-items: end; justify-content: space-between; gap: 12px; }
+    .activity-copy { min-width: 0; }
+    .activity-label { margin-bottom: 3px; color: var(--secondary-text-color); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .activity-program { overflow: hidden; color: var(--primary-text-color); font-size: 15px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .activity-time { flex: none; padding: 5px 8px; border-radius: 9px; color: var(--hc-accent); background: color-mix(in srgb, var(--hc-accent), transparent 88%); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    @container (max-width: 620px) {
+      .section-grid { grid-template-columns: 1fr; }
+      .program-grid .entity-slot:first-child { grid-column: auto; }
+      .entity-slot:nth-last-child(-n+2) { border-bottom-color: color-mix(in srgb, var(--divider-color), transparent 45%); }
+      .entity-slot:last-child { border-bottom-color: transparent; }
+    }
+  `];
+
+  setConfig(config: ApplianceCardConfig): void {
+    if (!config || typeof config !== "object") throw new Error("Invalid card configuration.");
+    const first = !this._config;
+    const defaultChanged = this._config?.default_expanded !== config.default_expanded;
+    this._config = { ...config };
+    if (first || (defaultChanged && !this._expandedByUser)) this._expanded = config.default_expanded === true;
+  }
+
+  getCardSize(): number { return this._expanded ? 6 : 1; }
+
+  protected shouldUpdate(changed: PropertyValues<this>): boolean {
+    if (!changed.has("hass")) return true;
+    if (!this._config) return true;
+    return relevantStatesChanged(changed.get("hass") as HomeAssistant | undefined, this.hass, configuredEntityIds(this._config));
+  }
+
+  private getState(key: string): HassEntity | undefined {
+    return this._config && stateFor(this.hass, this._config, key);
+  }
+
+  private configuredFields(section: SectionId): Array<{ field: FieldDefinition; entity: HassEntity }> {
+    if (!this._config || !this.hass) return [];
+    return this.definition.fields
+      .filter((field) => field.section === section)
+      .filter((field) => !["active_program_entity", "progress_entity", "remaining_time_entity"].includes(field.key))
+      .map((field) => ({ field, entity: this.getState(field.key)! }))
+      .filter(({ entity }) => !!entity);
+  }
+
+  private async withBusy(entity: HassEntity, task: () => Promise<void>): Promise<void> {
+    if (this._busyIds.has(entity.entity_id)) return;
+    this._busyIds = new Set(this._busyIds).add(entity.entity_id);
+    this._error = "";
+    try { await task(); }
+    catch (error) { this._error = error instanceof Error ? error.message : "The Home Assistant service call failed."; }
+    finally {
+      const next = new Set(this._busyIds);
+      next.delete(entity.entity_id);
+      this._busyIds = next;
+    }
+  }
+
+  private handleControl(event: CustomEvent<ControlEventDetail>): void {
+    const { entity, action, value } = event.detail;
+    void this.withBusy(entity, async () => {
+      if (!this.hass) return;
+      if (action === "toggle") await toggleEntity(this.hass, entity);
+      if (action === "select" && typeof value === "string") await selectOption(this.hass, entity, value);
+      if (action === "number" && typeof value === "number") await setNumber(this.hass, entity, value);
+    });
+  }
+
+  private handleAction(event: CustomEvent<ApplianceAction>): void {
+    const entity = this.hass?.states[event.detail.entityId];
+    if (entity) void this.withBusy(entity, () => pressEntity(this.hass!, entity));
+  }
+
+  private renderPower(disabled: boolean) {
+    const power = this.getState("power_entity") || this.getState("power_state_entity");
+    if (!power) return nothing;
+    const domain = power.entity_id.split(".")[0];
+    const kind = domain === "select" || domain === "input_select" ? "select" : domain === "light" ? "light" : domain === "switch" || domain === "input_boolean" ? "toggle" : "status";
+    return html`<div class="power-row"><hc-entity-control .hass=${this.hass} .entity=${power} .label=${translate(this.hass, "power", "Power")} .kind=${kind} .busy=${this._busyIds.has(power.entity_id)} .disabled=${disabled}></hc-entity-control></div>`;
+  }
+
+  private renderActions(mode: ReturnType<typeof deriveMode>) {
+    if (!this._config || !this.hass || mode === "off" || mode === "unavailable") return nothing;
+    const actionSpec = mode === "paused"
+      ? [["resume_entity", translate(this.hass, "action.resume", "Resume"), "mdi:play", true, false], ["cancel_entity", translate(this.hass, "action.cancel", "Cancel"), "mdi:stop", false, true]]
+      : mode === "running"
+        ? [["pause_entity", translate(this.hass, "action.pause", "Pause"), "mdi:pause", false, false], ["cancel_entity", translate(this.hass, "action.cancel", "Cancel"), "mdi:stop", false, true]]
+        : [["start_entity", translate(this.hass, "action.start", "Start"), "mdi:play", true, false]];
+    const actions: ApplianceAction[] = actionSpec.flatMap(([key, label, icon, primary, danger]) => {
+      const id = this._config?.[key as string];
+      const entity = typeof id === "string" ? this.hass?.states[id] : undefined;
+      const domain = entity?.entity_id.split(".")[0];
+      return entity ? [{ key, label, icon, entityId: id as string, primary, danger, disabled: entity.state === "unavailable" || (domain !== "button" && domain !== "input_button") } as ApplianceAction] : [];
+    });
+    return actions.length ? html`<div class="primary-actions"><hc-action-buttons .actions=${actions} .busyIds=${this._busyIds}></hc-action-buttons></div>` : nothing;
+  }
+
+  private renderSection(section: SectionId, disabled: boolean) {
+    if (!this._config) return nothing;
+    if (section === "options" && this._config.show_options_section === false) return nothing;
+    if (section === "status" && this._config.show_status_section === false) return nothing;
+    if (section === "settings" && this._config.show_settings_section === false) return nothing;
+    const fields = this.configuredFields(section);
+    if (!fields.length) return nothing;
+    const meta = SECTION_META[section];
+    return html`<hc-expandable-section .title=${translate(this.hass, `section.${section}`, meta.title)} .icon=${meta.icon} .open=${section !== "settings"}>
+      <div class="section-grid ${section === "program" ? "program-grid" : ""}">${fields.map(({ field, entity }) => html`
+        <div class="entity-slot"><hc-entity-control .hass=${this.hass} .entity=${entity} .label=${fieldLabel(this.hass, field)} .kind=${this.controlKind(field, entity)}
+          .busy=${this._busyIds.has(entity.entity_id)} .disabled=${disabled && field.kind !== "status"}></hc-entity-control>
+        </div>
+      `)}</div>
+    </hc-expandable-section>`;
+  }
+
+  private controlKind(field: FieldDefinition, entity: HassEntity): FieldDefinition["kind"] {
+    if (field.kind === "status") return "status";
+    const domain = entity.entity_id.split(".")[0];
+    if (domain === "select" || domain === "input_select") return "select";
+    if (domain === "number" || domain === "input_number") return "number";
+    if (domain === "light") return "light";
+    if (domain === "switch" || domain === "input_boolean") return "toggle";
+    return "status";
+  }
+
+  render() {
+    if (!this._config || !this.hass) return nothing;
+    const status = this.getState("operating_state_entity") || this.getState("status_entity") || this.getState("power_state_entity") || this.getState("power_entity") || this.getState("entity");
+    const power = this.getState("power_entity") || this.getState("power_state_entity");
+    const program = this.getState("active_program_entity") || this.getState("selected_program_entity");
+    const progress = progressValue(this.getState("progress_entity"));
+    const remaining = this.getState("remaining_time_entity") || this.getState("finish_at_entity");
+    const mode = deriveMode(power, status);
+    const animations = this._config.animations !== false;
+    const warnings = this.definition.fields
+      .filter((field) => field.warning)
+      .map((field) => ({ field, entity: this.getState(field.key) }))
+      .filter(({ entity }) => entity && isWarningActive(entity));
+    const prominent = this.definition.fields
+      .filter((field) => field.prominent)
+      .map((field) => ({ field, entity: this.getState(field.key) }))
+      .filter(({ entity }) => isAvailable(entity));
+    const detailsDisabled = mode === "running" || mode === "paused";
+
+    const showActivity = mode !== "off" && (isAvailable(program) || isAvailable(remaining) || progress !== undefined);
+
+    return html`<ha-card style=${`--hc-accent:${this.definition.accent}`} @hc-control=${this.handleControl} @hc-action=${this.handleAction}>
+      <div class="shell mode-${mode} ${this._expanded ? "expanded" : ""} ${animations ? "" : "no-animation"} ${mode === "unavailable" ? "unavailable" : ""}">
+        <button class="summary" type="button" @click=${() => { this._expandedByUser = true; this._expanded = !this._expanded; }} aria-expanded=${String(this._expanded)}>
+          <hc-appliance-header .name=${this._config.name || translate(this.hass, `device.${this.definition.kind}`, this.definition.defaultName)} .icon=${this._config.icon || this.definition.defaultIcon}
+            .status=${displayState(this.hass, status)} .program=${isAvailable(program) ? displayState(this.hass, program) : ""} .mode=${mode} .accent=${this.definition.accent}></hc-appliance-header>
+          <div class="summary-end"><div class="metrics">
+            ${prominent.map(({ entity }) => html`<span class="metric">${displayState(this.hass!, entity)}</span>`)}
+            ${progress !== undefined && this._config.show_progress !== false ? html`<span class="metric progress">${Math.round(progress)}%</span>` : ""}
+            ${isAvailable(remaining) && this._config.show_remaining_time !== false ? html`<span class="metric">${displayState(this.hass, remaining)}</span>` : ""}
+          </div><ha-icon class="chevron" icon="mdi:chevron-down"></ha-icon></div>
+        </button>
+        <div class="details"><div class="details-inner"><div class="details-content">
+          ${warnings.length ? html`<div class="warning-strip">${warnings.map(({ field, entity }) => html`<hc-status-chip .label=${fieldLabel(this.hass, field)} .value=${entity?.entity_id.startsWith("binary_sensor.") ? "" : displayState(this.hass!, entity)} warning icon="mdi:alert-outline"></hc-status-chip>`)}</div>` : ""}
+          ${this.renderPower(false)}
+          ${mode !== "off" ? html`
+            ${showActivity ? html`<div class="activity"><div class="activity-top"><div class="activity-copy"><div class="activity-label">${mode === "running" ? translate(this.hass, "running", "Now running") : mode === "paused" ? translate(this.hass, "paused", "Paused") : translate(this.hass, "ready", "Ready")}</div><div class="activity-program">${isAvailable(program) ? displayState(this.hass, program) : translate(this.hass, "appliance_status", "Appliance status")}</div></div>${isAvailable(remaining) && this._config.show_remaining_time !== false ? html`<div class="activity-time">${displayState(this.hass, remaining)}</div>` : ""}</div>${progress !== undefined && this._config.show_progress !== false ? html`<hc-progress-display .value=${progress} .label=${translate(this.hass, "progress", "Program progress")} .animated=${animations}></hc-progress-display>` : ""}</div>` : ""}
+            ${this.renderActions(mode)}
+            ${this.renderSection("program", detailsDisabled)}
+            ${this.renderSection("options", detailsDisabled)}
+            ${this.renderSection("status", false)}
+            ${this.renderSection("settings", detailsDisabled)}
+          ` : ""}
+        </div></div></div>
+        ${this._error ? html`<div class="error" role="alert">${this._error}</div>` : ""}
+      </div>
+    </ha-card>`;
+  }
+}

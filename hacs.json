@@ -1,0 +1,7 @@
+{
+  "name": "Home Connect Card Pack",
+  "content_in_root": false,
+  "filename": "home-connect-card-pack.js",
+  "render_readme": true,
+  "homeassistant": "2024.8.0"
+}

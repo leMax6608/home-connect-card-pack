@@ -1,0 +1,138 @@
+# Home Connect Card Pack
+
+A family of four native, dependency-light Lovelace custom cards for Home Assistant:
+
+- Bosch/Siemens Home Connect dishwasher
+- Home Connect oven
+- Home Connect coffee machine
+- Home Connect dryer
+
+The cards are built with TypeScript and Lit. They do **not** depend on `button-card`, Mushroom, or another custom card. All commands use Home Assistant services; entity state is never mutated directly.
+
+## Highlights
+
+- Compact summary with operating state, program, progress, remaining time and warnings
+- Smooth, CSS-only expand/collapse and progress transitions
+- Context-aware controls for off, idle, running and paused states
+- Program selects, number sliders, switches/lights, action buttons and grouped status
+- Four full visual editors using Home Assistant entity pickers
+- Device-registry-first entity discovery; manual assignments always win
+- Optional entities leave no placeholders or layout gaps
+- Safe handling of missing, `unknown` and `unavailable` entities
+- Relevant-entity `shouldUpdate()` filtering for busy Home Assistant dashboards
+- Responsive light/dark/theme-aware UI
+- English and German UI labels selected from the Home Assistant language
+- One small bundled module for all four cards
+
+## Installation
+
+### HACS custom repository
+
+1. Push this repository to GitHub and create a release containing `dist/home-connect-card-pack.js`.
+2. In HACS, open **Frontend**, choose **Custom repositories**, add the repository URL and select **Dashboard**.
+3. Install **Home Connect Card Pack** and reload the browser.
+
+HACS normally adds the Lovelace resource. If needed, add it manually:
+
+```yaml
+url: /hacsfiles/home-connect-card-pack/home-connect-card-pack.js
+type: module
+```
+
+### Manual
+
+1. Run `npm ci && npm run build`.
+2. Copy `dist/home-connect-card-pack.js` to `/config/www/home-connect-card-pack.js`.
+3. Add this dashboard resource and reload the browser:
+
+```yaml
+url: /local/home-connect-card-pack.js
+type: module
+```
+
+## Configure in the visual editor
+
+Add a card and search for **Home Connect**. Every card exposes a grouped editor.
+
+1. Under **General**, choose any entity belonging to the appliance as **Device anchor entity**.
+2. Discovery starts automatically; **Detect device entities** can run it again after manual changes.
+3. Review the proposed mappings and replace any duplicate/alternative entity with your preferred one.
+4. Configure only the functions you want. Unconfigured fields are not rendered.
+
+Discovery reads `config/entity_registry/list`, finds the anchor's `device_id`, considers only enabled entities on that same device, and scores their registry names, entity IDs and current friendly names against role-specific aliases. It only fills empty fields and never overwrites a manual choice. If the anchor has no device registry link, the editor explains that discovery is unavailable and remains fully usable manually.
+
+## Minimal YAML
+
+```yaml
+type: custom:home-connect-dishwasher-card
+name: Bosch Dishwasher
+power_entity: switch.bosch_dishwasher_power
+operating_state_entity: sensor.bosch_dishwasher_operation_state
+active_program_entity: sensor.bosch_dishwasher_active_program
+progress_entity: sensor.bosch_dishwasher_program_progress
+remaining_time_entity: sensor.bosch_dishwasher_remaining_program_time
+```
+
+Complete examples matching the reference entities are in [`examples.yaml`](examples.yaml).
+
+## Shared options
+
+| Key | Purpose | Default |
+| --- | --- | --- |
+| `entity` | Anchor used only for registry discovery | — |
+| `name` / `icon` | Override the card identity | Device-specific |
+| `power_entity` | Power switch or select | — |
+| `status_entity` | General status | — |
+| `operating_state_entity` | Primary state used for context | — |
+| `active_program_entity` | Program currently running | — |
+| `selected_program_entity` | Program selection | — |
+| `progress_entity` | Numeric program progress | — |
+| `remaining_time_entity` | Remaining time | — |
+| `start_entity` / `pause_entity` / `resume_entity` / `cancel_entity` | Button entities | — |
+| `default_expanded` | Open card initially | `false` |
+| `animations` | Enable card animations | `true` |
+| `show_progress` / `show_remaining_time` | Summary/detail visibility | `true` |
+| `show_status_section` / `show_options_section` / `show_settings_section` | Section visibility | `true` |
+
+Device-specific keys are presented by each card's visual editor and demonstrated in `examples.yaml`.
+
+## State-dependent behavior
+
+- **Off:** identity, status, warnings and the power control; program controls remain hidden.
+- **Idle:** program setup and Start are prominent.
+- **Running:** progress, Pause and Cancel are prominent; program-changing controls are disabled.
+- **Paused:** Resume and Cancel are prominent; program-changing controls remain disabled.
+- **Warning:** configured warning entities appear as warm, non-aggressive chips.
+
+The state classifier recognizes common Home Connect/HA running, paused, off and idle terms. Unknown integrations safely fall back to idle behavior instead of breaking the card.
+
+## Services
+
+The pack dispatches only standard services based on the configured entity domain:
+
+- `switch.turn_on` / `switch.turn_off`
+- `light.turn_on` / `light.turn_off`
+- `button.press`
+- `select.select_option`
+- `number.set_value`
+
+Each entity has an in-flight lock to prevent double submits. A failed service call is shown inside the card without blocking the rest of the dashboard.
+
+## Development
+
+```bash
+npm ci
+npm run typecheck
+npm test
+npm run build
+```
+
+The release file is `dist/home-connect-card-pack.js`. Keep this file in GitHub releases (or commit `dist/` for a direct-source HACS workflow). See [`ARCHITECTURE.md`](ARCHITECTURE.md) for design decisions.
+
+## Browser and Home Assistant support
+
+The bundle targets modern browsers supported by contemporary Home Assistant and declares Home Assistant `2024.8.0` as its HACS minimum. It uses CSS `color-mix()` with Home Assistant theme variables for subtle surfaces.
+
+## License
+
+MIT

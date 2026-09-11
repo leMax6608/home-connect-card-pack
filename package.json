@@ -1,0 +1,21 @@
+{
+  "name": "home-connect-card-pack",
+  "version": "1.1.0",
+  "description": "Native Lovelace cards for Home Connect appliances",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite build --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "files": ["dist"],
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5",
+    "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "lit": "^3.3.1"
+  }
+}
