@@ -21,4 +21,4 @@ for (const definition of definitions) {
   }
 }
 
-console.info(`%c HOME-CONNECT-CARD-PACK %c v1.2.0 `, "color:white;background:#445b78;font-weight:700", "color:#445b78;background:#eef2f7");
+console.info(`%c HOME-CONNECT-CARD-PACK %c v1.2.1 `, "color:white;background:#445b78;font-weight:700", "color:#445b78;background:#eef2f7");

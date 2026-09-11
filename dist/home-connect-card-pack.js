@@ -1408,7 +1408,7 @@ class q extends _ {
     const i = this.configuredFields(e);
     if (!i.length) return u;
     const n = At[e];
-    return h`<hc-expandable-section .title=${g(this.hass, `section.${e}`, n.title)} .icon=${n.icon} .open=${e !== "settings"}>
+    return h`<hc-expandable-section .title=${g(this.hass, `section.${e}`, n.title)} .icon=${n.icon} .open=${!1}>
       <div class="section-grid ${e === "program" ? "program-grid" : ""}">${i.map(({ field: r, entity: a }) => h`
         <div class="entity-slot"><hc-entity-control .hass=${this.hass} .entity=${a} .label=${Q(this.hass, r)} .kind=${this.controlKind(r, a)}
           .busy=${this._busyIds.has(a.entity_id)} .disabled=${t && r.kind !== "status"}></hc-entity-control>
@@ -1510,5 +1510,5 @@ for (const s of Tt)
     description: s.description,
     preview: !0
   });
-console.info("%c HOME-CONNECT-CARD-PACK %c v1.2.0 ", "color:white;background:#445b78;font-weight:700", "color:#445b78;background:#eef2f7");
+console.info("%c HOME-CONNECT-CARD-PACK %c v1.2.1 ", "color:white;background:#445b78;font-weight:700", "color:#445b78;background:#eef2f7");
 //# sourceMappingURL=home-connect-card-pack.js.map

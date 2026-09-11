@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- Start all nested detail sections collapsed by default
+
 ## 1.2.0
 
 - Add a compact animated progress bar to the collapsed card while a program is running or paused

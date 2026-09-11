@@ -155,7 +155,7 @@ export abstract class BaseApplianceCard extends LitElement {
     const fields = this.configuredFields(section);
     if (!fields.length) return nothing;
     const meta = SECTION_META[section];
-    return html`<hc-expandable-section .title=${translate(this.hass, `section.${section}`, meta.title)} .icon=${meta.icon} .open=${section !== "settings"}>
+    return html`<hc-expandable-section .title=${translate(this.hass, `section.${section}`, meta.title)} .icon=${meta.icon} .open=${false}>
       <div class="section-grid ${section === "program" ? "program-grid" : ""}">${fields.map(({ field, entity }) => html`
         <div class="entity-slot"><hc-entity-control .hass=${this.hass} .entity=${entity} .label=${fieldLabel(this.hass, field)} .kind=${this.controlKind(field, entity)}
           .busy=${this._busyIds.has(entity.entity_id)} .disabled=${disabled && field.kind !== "status"}></hc-entity-control>
