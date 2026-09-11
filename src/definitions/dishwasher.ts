@@ -10,7 +10,7 @@ export const dishwasherDefinition: ApplianceDefinition = {
   defaultName: "Dishwasher",
   defaultIcon: "mdi:dishwasher",
   accent: "#4f8cff",
-  fields: [...commonFields,
+  fields: [...commonFields.filter((field) => field.key !== "pause_entity" && field.key !== "resume_entity"),
     { key: "phase_entity", label: "Program phase", section: "status", kind: "status", domains: ["sensor"], aliases: ["program phase", "programmphase"] },
     { key: "door_entity", label: "Door", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["door", "tur"] },
     { key: "water_entity", label: "Estimated water", section: "status", kind: "status", domains: ["sensor"], aliases: ["water consumption", "wasserverbrauch"] },

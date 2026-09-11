@@ -22,10 +22,13 @@ export const commonCardStyles = css`
     opacity: .9;
   }
   .summary {
-    width: 100%; min-height: 76px; display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    position: relative; width: 100%; min-height: 76px; display: grid; grid-template-columns: minmax(0, 1fr) auto;
     align-items: center; gap: 12px; padding: 13px 14px; border: 0; color: inherit;
     background: transparent; text-align: left; font: inherit; cursor: pointer;
   }
+  .summary.has-progress { min-height: 88px; padding-bottom: 24px; }
+  .summary-progress { position: absolute; left: 14px; right: 14px; bottom: 10px; height: 5px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--secondary-background-color), var(--divider-color) 18%); box-shadow: inset 0 1px 1px #0001; }
+  .summary-progress-fill { width: 100%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, color-mix(in srgb, var(--hc-accent), white 12%), var(--hc-accent)); box-shadow: 0 0 8px color-mix(in srgb, var(--hc-accent), transparent 58%); transform-origin: left; transition: transform 420ms cubic-bezier(.2,.8,.2,1); }
   .summary:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
     outline: 2px solid var(--hc-accent); outline-offset: -2px;
   }
@@ -40,6 +43,7 @@ export const commonCardStyles = css`
   .details-inner { min-height: 0; overflow: hidden; }
   .details-content { padding: 2px 14px 15px; display: grid; gap: 12px; }
   .no-animation .details, .no-animation .chevron { transition: none; }
+  .no-animation .summary-progress-fill { transition: none; }
   .unavailable { opacity: .72; }
   .warning-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 1px; scrollbar-width: none; }
   .warning-strip::-webkit-scrollbar { display: none; }
@@ -52,6 +56,8 @@ export const commonCardStyles = css`
   .mode-unavailable ha-card { border-color: color-mix(in srgb, var(--error-color), transparent 55%); }
   @container (max-width: 520px) {
     .summary { min-height: 70px; grid-template-columns: minmax(0, 1fr) auto; padding: 11px 12px; }
+    .summary.has-progress { min-height: 84px; padding-bottom: 23px; }
+    .summary-progress { left: 12px; right: 12px; bottom: 9px; }
     .summary-end { max-width: none; }
     .metric { padding: 4px 6px; }
     .details-content { padding-inline: 12px; }
@@ -61,6 +67,6 @@ export const commonCardStyles = css`
     .details-content { padding-inline: 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .details, .chevron { transition: none !important; }
+    .details, .chevron, .summary-progress-fill { transition: none !important; }
   }
 `;

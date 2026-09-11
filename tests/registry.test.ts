@@ -1,9 +1,57 @@
 import { describe, expect, it, vi } from "vitest";
 import { discoverEntities } from "../src/helpers/registry";
-import { dishwasherDefinition } from "../src/definitions";
+import { dishwasherDefinition, dryerDefinition, ovenDefinition } from "../src/definitions";
 import type { HomeAssistant } from "../src/types/home-assistant";
 
 describe("registry-first discovery", () => {
+  it("assigns a dryer power-state anchor to Status and finds its remaining device roles", async () => {
+    const entries = [
+      { entity_id: "sensor.bosch_trockner_power_state", device_id: "dryer-1", original_name: "Power State" },
+      { entity_id: "sensor.bosch_trockner_betriebszustand", device_id: "dryer-1", original_name: "Betriebszustand" },
+      { entity_id: "switch.bosch_trockner_einschalter", device_id: "dryer-1", original_name: "Einschalter" },
+      { entity_id: "sensor.bosch_trockner_programmfortschritt", device_id: "dryer-1", original_name: "Programmfortschritt" },
+    ];
+    const hass = {
+      states: Object.fromEntries(entries.map((entry) => [entry.entity_id, { attributes: { friendly_name: entry.original_name } }])),
+      callWS: vi.fn(async () => entries),
+    } as unknown as HomeAssistant;
+
+    const result = await discoverEntities(hass, "sensor.bosch_trockner_power_state", dryerDefinition, {
+      type: dryerDefinition.cardType,
+      entity: "sensor.bosch_trockner_power_state",
+    });
+
+    expect(result.status_entity).toBe("sensor.bosch_trockner_power_state");
+    expect(result.operating_state_entity).toBe("sensor.bosch_trockner_betriebszustand");
+    expect(result.power_entity).toBe("switch.bosch_trockner_einschalter");
+    expect(result.progress_entity).toBe("sensor.bosch_trockner_programmfortschritt");
+  });
+
+  it("can reuse the anchor itself as the matching status role", async () => {
+    const entries = [
+      { entity_id: "sensor.siemens_backofen_status", device_id: "oven-1", original_name: "Status" },
+      { entity_id: "sensor.siemens_backofen_betriebszustand", device_id: "oven-1", original_name: "Betriebszustand" },
+      { entity_id: "switch.siemens_backofen_einschalter", device_id: "oven-1", original_name: "Einschalter" },
+    ];
+    const hass = {
+      states: {
+        "sensor.siemens_backofen_status": { attributes: { friendly_name: "Siemens Backofen Status" } },
+        "sensor.siemens_backofen_betriebszustand": { attributes: { friendly_name: "Siemens Backofen Betriebszustand" } },
+        "switch.siemens_backofen_einschalter": { attributes: { friendly_name: "Siemens Backofen Einschalter" } },
+      },
+      callWS: vi.fn(async () => entries),
+    } as unknown as HomeAssistant;
+
+    const result = await discoverEntities(hass, "sensor.siemens_backofen_status", ovenDefinition, {
+      type: ovenDefinition.cardType,
+      entity: "sensor.siemens_backofen_status",
+    });
+
+    expect(result.status_entity).toBe("sensor.siemens_backofen_status");
+    expect(result.operating_state_entity).toBe("sensor.siemens_backofen_betriebszustand");
+    expect(result.power_entity).toBe("switch.siemens_backofen_einschalter");
+  });
+
   it("uses only enabled entities from the anchor device and preserves manual choices", async () => {
     const entries = [
       { entity_id: "sensor.anchor", device_id: "device-a", original_name: "Status" },

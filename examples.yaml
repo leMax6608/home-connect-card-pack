@@ -60,7 +60,6 @@ cards:
     entity: sensor.siemens_kaffeemaschine_betriebszustand
     name: Siemens Kaffeemaschine
     power_entity: switch.siemens_kaffeemaschine_einschalter
-    power_state_entity: select.siemens_coffeemaker_power_state
     status_entity: sensor.siemens_kaffeemaschine_power_state
     operating_state_entity: sensor.siemens_kaffeemaschine_betriebszustand
     selected_program_entity: select.siemens_kaffeemaschine_ausgewahltes_programm

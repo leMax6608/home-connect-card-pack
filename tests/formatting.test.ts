@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canonicalState, cleanLabel, deriveMode, displayState, isWarningActive, progressValue } from "../src/helpers/formatting";
+import { canonicalState, cleanLabel, deriveMode, displayState, isActiveMode, isWarningActive, progressValue } from "../src/helpers/formatting";
 import type { HassEntity, HomeAssistant } from "../src/types/home-assistant";
 
 function entity(state: string, entityId = "sensor.test", attributes: HassEntity["attributes"] = {}): HassEntity {
@@ -45,5 +45,9 @@ describe("Home Connect state formatting", () => {
     expect(deriveMode(entity("BSH.Common.EnumType.PowerState.Off"))).toBe("off");
     expect(deriveMode(entity("BSH.Common.EnumType.PowerState.Off"), entity("BSH.Common.EnumType.OperationState.Run"))).toBe("off");
     expect(deriveMode(entity("unavailable"))).toBe("unavailable");
+    expect(isActiveMode("running")).toBe(true);
+    expect(isActiveMode("paused")).toBe(true);
+    expect(isActiveMode("idle")).toBe(false);
+    expect(isActiveMode("off")).toBe(false);
   });
 });

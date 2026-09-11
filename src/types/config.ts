@@ -59,7 +59,6 @@ export interface OvenCardConfig extends BaseApplianceCardConfig {
 }
 
 export interface CoffeeCardConfig extends BaseApplianceCardConfig {
-  power_state_entity?: string;
   cups_entity?: string;
   bean_amount_entity?: string;
   fill_quantity_entity?: string;

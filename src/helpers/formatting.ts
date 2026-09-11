@@ -86,6 +86,10 @@ export function isWarningActive(state?: HassEntity): boolean {
 
 export type ApplianceMode = "off" | "idle" | "running" | "paused" | "unavailable";
 
+export function isActiveMode(mode: ApplianceMode): boolean {
+  return mode === "running" || mode === "paused";
+}
+
 export function deriveMode(...states: Array<HassEntity | undefined>): ApplianceMode {
   const available = states.filter((state): state is HassEntity => !!state && isAvailable(state));
   if (!available.length && states.some(Boolean)) return "unavailable";

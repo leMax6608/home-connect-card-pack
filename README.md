@@ -11,7 +11,7 @@ The cards are built with TypeScript and Lit. They do **not** depend on `button-c
 
 ## Highlights
 
-- Compact summary with operating state, program, progress, remaining time and warnings
+- Compact summary with operating state, program, progress bar, remaining time and warnings
 - Smooth, CSS-only expand/collapse and progress transitions
 - Context-aware controls for off, idle, running and paused states
 - Program selects, number sliders, switches/lights, action buttons and grouped status
@@ -59,7 +59,7 @@ Add a card and search for **Home Connect**. Every card exposes a grouped editor.
 3. Review the proposed mappings and replace any duplicate/alternative entity with your preferred one.
 4. Configure only the functions you want. Unconfigured fields are not rendered.
 
-Discovery reads `config/entity_registry/list`, finds the anchor's `device_id`, considers only enabled entities on that same device, and scores their registry names, entity IDs and current friendly names against role-specific aliases. It only fills empty fields and never overwrites a manual choice. If the anchor has no device registry link, the editor explains that discovery is unavailable and remains fully usable manually.
+Discovery reads `config/entity_registry/list`, finds the anchor's `device_id`, considers only enabled entities on that same device, and scores their registry names, entity IDs, domains and selected state attributes against role-specific aliases. The anchor itself may also fill the matching role—for example, an oven status anchor becomes `status_entity`. Discovery only fills empty fields and never overwrites a manual choice. If the anchor has no device registry link, the editor explains that discovery is unavailable and remains fully usable manually.
 
 ## Minimal YAML
 

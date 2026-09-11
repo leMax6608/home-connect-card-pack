@@ -19,9 +19,16 @@ function scoreEntry(hass: HomeAssistant, entry: RegistryEntry, field: FieldDefin
   const domain = entry.entity_id.split(".")[0];
   if (field.domains?.length && !field.domains.includes(domain)) return -1000;
   const state = hass.states[entry.entity_id];
-  const haystack = normalize([entry.entity_id, entry.name, entry.original_name, state?.attributes.friendly_name]
+  const haystack = normalize([
+    entry.entity_id, entry.name, entry.original_name, state?.attributes.friendly_name,
+    state?.attributes.device_class, state?.attributes.unit_of_measurement, state?.attributes.icon,
+  ]
     .filter(Boolean).join(" "));
   let score = 10;
+  if (field.domains?.length) {
+    const domainIndex = field.domains.indexOf(domain);
+    score += (field.domains.length - domainIndex) * 8;
+  }
   for (const alias of field.aliases || []) {
     const needle = normalize(alias);
     if (haystack.includes(needle)) score = Math.max(score, 100 + needle.length);
@@ -43,7 +50,9 @@ export async function discoverEntities(
   if (!anchor?.device_id) throw new Error("The selected anchor entity has no device registry link.");
   const candidates = registry.filter((entry) => entry.device_id === anchor.device_id && !entry.disabled_by && !entry.hidden_by);
   const suggestions: Partial<BaseApplianceCardConfig> = {};
-  const used = new Set(Object.values(current).filter((value): value is string => typeof value === "string" && value.includes(".")));
+  const used = new Set(Object.entries(current)
+    .filter(([key, value]) => key !== "entity" && typeof value === "string" && value.includes("."))
+    .map(([, value]) => value as string));
 
   for (const field of definition.fields) {
     if (field.key === "entity" || current[field.key]) continue;

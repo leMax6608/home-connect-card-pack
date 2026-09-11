@@ -4,7 +4,7 @@ import type { ApplianceCardConfig } from "../types/config";
 import type { HomeAssistant, HassEntity } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition, SectionId } from "../types/schema";
 import { configuredEntityIds, relevantStatesChanged, stateFor } from "../helpers/entity";
-import { deriveMode, displayState, isAvailable, isWarningActive, progressValue } from "../helpers/formatting";
+import { deriveMode, displayState, isActiveMode, isAvailable, isWarningActive, progressValue } from "../helpers/formatting";
 import { pressEntity, selectOption, setNumber, toggleEntity } from "../helpers/services";
 import { fieldLabel, translate } from "../helpers/localize";
 import type { ControlEventDetail } from "../components/entity-control";
@@ -81,6 +81,10 @@ export abstract class BaseApplianceCard extends LitElement {
     return this._config && stateFor(this.hass, this._config, key);
   }
 
+  private supportsField(key: string): boolean {
+    return this.definition.fields.some((field) => field.key === key);
+  }
+
   private configuredFields(section: SectionId): Array<{ field: FieldDefinition; entity: HassEntity }> {
     if (!this._config || !this.hass) return [];
     return this.definition.fields
@@ -134,6 +138,7 @@ export abstract class BaseApplianceCard extends LitElement {
         ? [["pause_entity", translate(this.hass, "action.pause", "Pause"), "mdi:pause", false, false], ["cancel_entity", translate(this.hass, "action.cancel", "Cancel"), "mdi:stop", false, true]]
         : [["start_entity", translate(this.hass, "action.start", "Start"), "mdi:play", true, false]];
     const actions: ApplianceAction[] = actionSpec.flatMap(([key, label, icon, primary, danger]) => {
+      if (!this.definition.fields.some((field) => field.key === key)) return [];
       const id = this._config?.[key as string];
       const entity = typeof id === "string" ? this.hass?.states[id] : undefined;
       const domain = entity?.entity_id.split(".")[0];
@@ -173,10 +178,18 @@ export abstract class BaseApplianceCard extends LitElement {
     if (!this._config || !this.hass) return nothing;
     const status = this.getState("operating_state_entity") || this.getState("status_entity") || this.getState("power_state_entity") || this.getState("power_entity") || this.getState("entity");
     const power = this.getState("power_entity") || this.getState("power_state_entity");
-    const program = this.getState("active_program_entity") || this.getState("selected_program_entity");
+    const activeProgram = this.getState("active_program_entity");
+    const selectedProgram = this.getState("selected_program_entity");
     const progress = progressValue(this.getState("progress_entity"));
-    const remaining = this.getState("remaining_time_entity") || this.getState("finish_at_entity");
+    const remaining = (this.supportsField("remaining_time_entity") ? this.getState("remaining_time_entity") : undefined)
+      || (this.supportsField("finish_at_entity") ? this.getState("finish_at_entity") : undefined);
     const mode = deriveMode(power, status);
+    const active = isActiveMode(mode);
+    const program = active ? activeProgram || selectedProgram : selectedProgram || activeProgram;
+    const summaryProgram = mode === "off" ? undefined : program;
+    const summaryProgress = active ? progress : undefined;
+    const summaryRemaining = active ? remaining : undefined;
+    const headerStatus = mode === "off" && power ? power : status;
     const animations = this._config.animations !== false;
     const warnings = this.definition.fields
       .filter((field) => field.warning)
@@ -188,30 +201,29 @@ export abstract class BaseApplianceCard extends LitElement {
       .filter(({ entity }) => isAvailable(entity));
     const detailsDisabled = mode === "running" || mode === "paused";
 
-    const showActivity = mode !== "off" && (isAvailable(program) || isAvailable(remaining) || progress !== undefined);
+    const showActivity = mode !== "off" && (isAvailable(program) || isAvailable(summaryRemaining) || summaryProgress !== undefined);
 
     return html`<ha-card style=${`--hc-accent:${this.definition.accent}`} @hc-control=${this.handleControl} @hc-action=${this.handleAction}>
       <div class="shell mode-${mode} ${this._expanded ? "expanded" : ""} ${animations ? "" : "no-animation"} ${mode === "unavailable" ? "unavailable" : ""}">
-        <button class="summary" type="button" @click=${() => { this._expandedByUser = true; this._expanded = !this._expanded; }} aria-expanded=${String(this._expanded)}>
+        <button class="summary ${summaryProgress !== undefined && this._config.show_progress !== false ? "has-progress" : ""}" type="button" @click=${() => { this._expandedByUser = true; this._expanded = !this._expanded; }} aria-expanded=${String(this._expanded)}>
           <hc-appliance-header .name=${this._config.name || translate(this.hass, `device.${this.definition.kind}`, this.definition.defaultName)} .icon=${this._config.icon || this.definition.defaultIcon}
-            .status=${displayState(this.hass, status)} .program=${isAvailable(program) ? displayState(this.hass, program) : ""} .mode=${mode} .accent=${this.definition.accent}></hc-appliance-header>
+            .status=${displayState(this.hass, headerStatus)} .program=${isAvailable(summaryProgram) ? displayState(this.hass, summaryProgram) : ""} .mode=${mode} .accent=${this.definition.accent}></hc-appliance-header>
           <div class="summary-end"><div class="metrics">
             ${prominent.map(({ entity }) => html`<span class="metric">${displayState(this.hass!, entity)}</span>`)}
-            ${progress !== undefined && this._config.show_progress !== false ? html`<span class="metric progress">${Math.round(progress)}%</span>` : ""}
-            ${isAvailable(remaining) && this._config.show_remaining_time !== false ? html`<span class="metric">${displayState(this.hass, remaining)}</span>` : ""}
+            ${summaryProgress !== undefined && this._config.show_progress !== false ? html`<span class="metric progress">${Math.round(summaryProgress)}%</span>` : ""}
+            ${isAvailable(summaryRemaining) && this._config.show_remaining_time !== false ? html`<span class="metric">${displayState(this.hass, summaryRemaining)}</span>` : ""}
           </div><ha-icon class="chevron" icon="mdi:chevron-down"></ha-icon></div>
+          ${summaryProgress !== undefined && this._config.show_progress !== false ? html`<div class="summary-progress" aria-hidden="true"><div class="summary-progress-fill" style=${`transform:scaleX(${summaryProgress / 100})`}></div></div>` : ""}
         </button>
         <div class="details"><div class="details-inner"><div class="details-content">
           ${warnings.length ? html`<div class="warning-strip">${warnings.map(({ field, entity }) => html`<hc-status-chip .label=${fieldLabel(this.hass, field)} .value=${entity?.entity_id.startsWith("binary_sensor.") ? "" : displayState(this.hass!, entity)} warning icon="mdi:alert-outline"></hc-status-chip>`)}</div>` : ""}
           ${this.renderPower(false)}
-          ${mode !== "off" ? html`
-            ${showActivity ? html`<div class="activity"><div class="activity-top"><div class="activity-copy"><div class="activity-label">${mode === "running" ? translate(this.hass, "running", "Now running") : mode === "paused" ? translate(this.hass, "paused", "Paused") : translate(this.hass, "ready", "Ready")}</div><div class="activity-program">${isAvailable(program) ? displayState(this.hass, program) : translate(this.hass, "appliance_status", "Appliance status")}</div></div>${isAvailable(remaining) && this._config.show_remaining_time !== false ? html`<div class="activity-time">${displayState(this.hass, remaining)}</div>` : ""}</div>${progress !== undefined && this._config.show_progress !== false ? html`<hc-progress-display .value=${progress} .label=${translate(this.hass, "progress", "Program progress")} .animated=${animations}></hc-progress-display>` : ""}</div>` : ""}
-            ${this.renderActions(mode)}
-            ${this.renderSection("program", detailsDisabled)}
-            ${this.renderSection("options", detailsDisabled)}
-            ${this.renderSection("status", false)}
-            ${this.renderSection("settings", detailsDisabled)}
-          ` : ""}
+          ${showActivity ? html`<div class="activity"><div class="activity-top"><div class="activity-copy"><div class="activity-label">${mode === "running" ? translate(this.hass, "running", "Now running") : mode === "paused" ? translate(this.hass, "paused", "Paused") : translate(this.hass, "ready", "Ready")}</div><div class="activity-program">${isAvailable(program) ? displayState(this.hass, program) : translate(this.hass, "appliance_status", "Appliance status")}</div></div>${isAvailable(summaryRemaining) && this._config.show_remaining_time !== false ? html`<div class="activity-time">${displayState(this.hass, summaryRemaining)}</div>` : ""}</div>${summaryProgress !== undefined && this._config.show_progress !== false ? html`<hc-progress-display .value=${summaryProgress} .label=${translate(this.hass, "progress", "Program progress")} .animated=${animations}></hc-progress-display>` : ""}</div>` : ""}
+          ${this.renderActions(mode)}
+          ${this.renderSection("program", detailsDisabled)}
+          ${this.renderSection("options", detailsDisabled)}
+          ${this.renderSection("status", false)}
+          ${this.renderSection("settings", detailsDisabled)}
         </div></div></div>
         ${this._error ? html`<div class="error" role="alert">${this._error}</div>` : ""}
       </div>
