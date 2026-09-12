@@ -2,13 +2,19 @@ import type { BaseApplianceCardConfig } from "../types/config";
 import type { HomeAssistant } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition } from "../types/schema";
 
-interface RegistryEntry {
+export interface RegistryEntry {
   entity_id: string;
   device_id?: string | null;
   original_name?: string | null;
   name?: string | null;
   disabled_by?: string | null;
   hidden_by?: string | null;
+}
+
+export interface DiscoveryAnalysis {
+  anchor: RegistryEntry;
+  candidates: RegistryEntry[];
+  suggestions: Partial<BaseApplianceCardConfig>;
 }
 
 function normalize(value: string): string {
@@ -39,12 +45,12 @@ function scoreEntry(hass: HomeAssistant, entry: RegistryEntry, field: FieldDefin
   return score;
 }
 
-export async function discoverEntities(
+export async function analyzeEntityDiscovery(
   hass: HomeAssistant,
   anchorEntity: string,
   definition: ApplianceDefinition,
   current: BaseApplianceCardConfig,
-): Promise<Partial<BaseApplianceCardConfig>> {
+): Promise<DiscoveryAnalysis> {
   const registry = await hass.callWS<RegistryEntry[]>({ type: "config/entity_registry/list" });
   const anchor = registry.find((entry) => entry.entity_id === anchorEntity);
   if (!anchor?.device_id) throw new Error("The selected anchor entity has no device registry link.");
@@ -66,5 +72,14 @@ export async function discoverEntities(
       used.add(ranked[0].entry.entity_id);
     }
   }
-  return suggestions;
+  return { anchor, candidates, suggestions };
+}
+
+export async function discoverEntities(
+  hass: HomeAssistant,
+  anchorEntity: string,
+  definition: ApplianceDefinition,
+  current: BaseApplianceCardConfig,
+): Promise<Partial<BaseApplianceCardConfig>> {
+  return (await analyzeEntityDiscovery(hass, anchorEntity, definition, current)).suggestions;
 }

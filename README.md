@@ -56,6 +56,9 @@ The preview above gives an overview of the card pack. Real Home Assistant screen
 - Program selects, number sliders, switches/lights, action buttons and grouped status
 - Four full visual editors using Home Assistant entity pickers
 - Device-registry-first entity discovery; manual assignments always win
+- One-click YAML export and a privacy-conscious entity discovery report in every editor
+- Click the appliance identity for Home Assistant's More Info dialog; use the metrics/chevron to expand the card
+- Compact and expanded warnings for configured entities that are missing or unavailable
 - Optional entities leave no placeholders or layout gaps
 - Safe handling of missing, `unknown` and `unavailable` entities
 - Relevant-entity `shouldUpdate()` filtering for busy Home Assistant dashboards
@@ -97,6 +100,8 @@ Add a card and search for **Home Connect**. Every card exposes a grouped editor.
 2. Discovery starts automatically; **Detect device entities** can run it again after manual changes.
 3. Review the proposed mappings and replace any duplicate/alternative entity with your preferred one.
 4. Configure only the functions you want. Unconfigured fields are not rendered.
+
+The two utility buttons below discovery copy either a paste-ready YAML configuration or an entity discovery report. The report is intended for troubleshooting mapping issues and deliberately excludes entity states, attributes, device-registry IDs, IP addresses and credentials. Entity IDs and display names can still contain personal labels, so review it before posting it publicly.
 
 Discovery reads `config/entity_registry/list`, finds the anchor's `device_id`, considers only enabled entities on that same device, and scores their registry names, entity IDs, domains and selected state attributes against role-specific aliases. The anchor itself may also fill the matching role—for example, an oven status anchor becomes `status_entity`. Discovery only fills empty fields and never overwrites a manual choice. If the anchor has no device registry link, the editor explains that discovery is unavailable and remains fully usable manually.
 

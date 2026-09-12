@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0
+
+- Add editor buttons to copy paste-ready YAML and a privacy-conscious entity discovery report
+- Open Home Assistant's More Info dialog by clicking the appliance identity in the card header
+- Keep the metrics and chevron area dedicated to expanding and collapsing card details
+- Warn in both compact and expanded views when configured entities are missing or unavailable
+- Add regression tests for configuration export, diagnostic reports and unavailable-entity detection
+
 ## 1.3.0
 
 - Add auto-detected dishwasher warnings for filter-system checks and triggered AquaStop events

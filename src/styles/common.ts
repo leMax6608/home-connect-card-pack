@@ -23,19 +23,23 @@ export const commonCardStyles = css`
   }
   .summary {
     position: relative; width: 100%; min-height: 76px; display: grid; grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center; gap: 12px; padding: 13px 14px; border: 0; color: inherit;
-    background: transparent; text-align: left; font: inherit; cursor: pointer;
+    align-items: center; gap: 12px; padding: 13px 14px; color: inherit; background: transparent;
   }
+  .summary-button { min-width: 0; padding: 0; border: 0; color: inherit; background: transparent; font: inherit; cursor: pointer; }
+  .header-button { display: block; width: 100%; text-align: left; border-radius: 12px; }
+  .summary-toggle { display: flex; align-items: center; justify-content: flex-end; gap: 10px; max-width: min(48vw, 420px); border-radius: 999px; }
+  .header-button:disabled { cursor: default; }
   .summary.has-progress { min-height: 88px; padding-bottom: 24px; }
   .summary-progress { position: absolute; left: 14px; right: 14px; bottom: 10px; height: 5px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--secondary-background-color), var(--divider-color) 18%); box-shadow: inset 0 1px 1px #0001; }
   .summary-progress-fill { width: 100%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, color-mix(in srgb, var(--hc-accent), white 12%), var(--hc-accent)); box-shadow: 0 0 8px color-mix(in srgb, var(--hc-accent), transparent 58%); transform-origin: left; transition: transform 420ms cubic-bezier(.2,.8,.2,1); }
-  .summary:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+  .summary-button:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
     outline: 2px solid var(--hc-accent); outline-offset: -2px;
   }
-  .summary-end { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-width: 0; max-width: min(48%, 420px); }
   .metrics { display: flex; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; overflow: hidden; white-space: nowrap; }
   .metric { padding: 5px 8px; border-radius: 999px; background: color-mix(in srgb, var(--secondary-background-color), transparent 20%); font-size: 11px; color: var(--secondary-text-color); font-variant-numeric: tabular-nums; }
   .metric.progress { color: var(--hc-accent); background: color-mix(in srgb, var(--hc-accent), transparent 88%); font-weight: 700; }
+  .metric.issue { display: inline-flex; align-items: center; gap: 3px; color: var(--error-color); background: color-mix(in srgb, var(--error-color), transparent 90%); font-weight: 700; }
+  .metric.issue ha-icon { --mdc-icon-size: 14px; }
   .chevron { flex: none; padding: 4px; border-radius: 999px; background: color-mix(in srgb, var(--secondary-background-color), transparent 18%); transition: transform 220ms ease, background 180ms ease; color: var(--secondary-text-color); }
   .expanded .chevron { transform: rotate(180deg); }
   .details { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 260ms cubic-bezier(.2,.8,.2,1); }
@@ -47,6 +51,9 @@ export const commonCardStyles = css`
   .unavailable { opacity: .72; }
   .warning-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 1px; scrollbar-width: none; }
   .warning-strip::-webkit-scrollbar { display: none; }
+  .entity-warning { display: flex; align-items: flex-start; gap: 9px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--error-color), transparent 74%); border-radius: 11px; color: var(--error-color); background: color-mix(in srgb, var(--error-color), transparent 92%); font-size: 12px; line-height: 1.4; }
+  .entity-warning ha-icon { --mdc-icon-size: 18px; flex: none; }
+  .entity-warning code { color: inherit; overflow-wrap: anywhere; }
   .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .primary-actions { padding-top: 2px; }
   .error {
@@ -58,7 +65,7 @@ export const commonCardStyles = css`
     .summary { min-height: 70px; grid-template-columns: minmax(0, 1fr) auto; padding: 11px 12px; }
     .summary.has-progress { min-height: 84px; padding-bottom: 23px; }
     .summary-progress { left: 12px; right: 12px; bottom: 9px; }
-    .summary-end { max-width: none; }
+    .summary-toggle { max-width: none; }
     .metric { padding: 4px 6px; }
     .details-content { padding-inline: 12px; }
   }

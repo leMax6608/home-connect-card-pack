@@ -7,6 +7,7 @@ import "./cards/oven-card";
 import "./cards/coffee-card";
 import "./cards/dryer-card";
 import { coffeeDefinition, dishwasherDefinition, dryerDefinition, ovenDefinition } from "./definitions";
+import { VERSION } from "./version";
 
 const definitions = [dishwasherDefinition, ovenDefinition, coffeeDefinition, dryerDefinition];
 window.customCards = window.customCards || [];
@@ -21,4 +22,4 @@ for (const definition of definitions) {
   }
 }
 
-console.info(`%c HOME-CONNECT-CARD-PACK %c v1.3.0 `, "color:white;background:#445b78;font-weight:700", "color:#445b78;background:#eef2f7");
+console.info(`%c HOME-CONNECT-CARD-PACK %c v${VERSION} `, "color:white;background:#445b78;font-weight:700", "color:#445b78;background:#eef2f7");

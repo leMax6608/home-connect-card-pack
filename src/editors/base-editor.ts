@@ -4,6 +4,8 @@ import type { HomeAssistant } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition } from "../types/schema";
 import { discoverEntities } from "../helpers/registry";
 import { fieldLabel, translate } from "../helpers/localize";
+import { copyText } from "../helpers/clipboard";
+import { createDiscoveryReport, serializeCardConfig } from "../helpers/export";
 
 const GROUPS = [
   { id: "general", label: "General", icon: "mdi:information-outline" },
@@ -16,11 +18,12 @@ const GROUPS = [
 
 export abstract class BaseApplianceEditor extends LitElement {
   static properties = {
-    hass: { attribute: false }, _config: { state: true }, _discovering: { state: true }, _notice: { state: true },
+    hass: { attribute: false }, _config: { state: true }, _discovering: { state: true }, _copying: { state: true }, _notice: { state: true },
   };
   hass?: HomeAssistant;
   protected _config?: ApplianceCardConfig;
   protected _discovering = false;
+  protected _copying = "";
   protected _notice = "";
   protected abstract definition: ApplianceDefinition;
 
@@ -40,9 +43,15 @@ export abstract class BaseApplianceEditor extends LitElement {
     .toggle label { color: var(--primary-text-color); font-size: 13px; }
     .detect { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 10px; padding: 0 14px; color: var(--text-primary-color, white); background: var(--primary-color); font: inherit; font-weight: 650; cursor: pointer; }
     .detect:disabled { opacity: .55; cursor: not-allowed; }
+    .tool-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .tool { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 10px; border: 1px solid var(--divider-color); border-radius: 10px; color: var(--primary-text-color); background: var(--secondary-background-color); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .tool:hover { border-color: var(--primary-color); }
+    .tool:disabled { opacity: .55; cursor: not-allowed; }
+    .tool ha-icon { --mdc-icon-size: 18px; }
     .notice { font-size: 12px; color: var(--secondary-text-color); }
     .loading { animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 480px) { .tool-row { grid-template-columns: 1fr; } }
   `;
 
   setConfig(config: ApplianceCardConfig): void { this._config = { ...config }; }
@@ -82,6 +91,33 @@ export abstract class BaseApplianceEditor extends LitElement {
     }
   }
 
+  private async copyYaml(): Promise<void> {
+    if (!this._config || this._copying) return;
+    this._copying = "yaml";
+    try {
+      await copyText(serializeCardConfig(this._config, this.definition));
+      this._notice = translate(this.hass, "editor.yaml_copied", "YAML configuration copied to the clipboard.");
+    } catch (error) {
+      this._notice = error instanceof Error ? error.message : "Could not copy the YAML configuration.";
+    } finally {
+      this._copying = "";
+    }
+  }
+
+  private async copyDiscoveryReport(): Promise<void> {
+    if (!this.hass || !this._config?.entity || this._copying) return;
+    this._copying = "report";
+    try {
+      const report = await createDiscoveryReport(this.hass, this._config.entity, this.definition, this._config);
+      await copyText(report);
+      this._notice = translate(this.hass, "editor.report_copied", "Entity discovery report copied. Review personal labels before sharing it.");
+    } catch (error) {
+      this._notice = error instanceof Error ? error.message : "Could not create the entity discovery report.";
+    } finally {
+      this._copying = "";
+    }
+  }
+
   private entitySelector(field: FieldDefinition) {
     const domain = field.domains && field.domains.length === 1 ? field.domains[0] : field.domains;
     return { entity: domain ? { domain } : {} };
@@ -116,7 +152,13 @@ export abstract class BaseApplianceEditor extends LitElement {
         const fields = this.definition.fields.filter((field) => field.section === group.id);
         if (!fields.length) return nothing;
         return html`<section class="group"><h3 class="group-title"><ha-icon .icon=${group.icon}></ha-icon>${translate(this.hass, `section.${group.id}`, group.label)}</h3><div class="fields">${fields.map((field) => this.renderEntityField(field))}
-          ${group.id === "general" ? html`<button type="button" class="detect" ?disabled=${!this._config?.entity || this._discovering} @click=${this.autoDetect}><ha-icon class=${this._discovering ? "loading" : ""} .icon=${this._discovering ? "mdi:loading" : "mdi:auto-fix"}></ha-icon>${translate(this.hass, "editor.detect", "Detect device entities")}</button>${this._notice ? html`<div class="notice">${this._notice}</div>` : ""}` : ""}
+          ${group.id === "general" ? html`
+            <button type="button" class="detect" ?disabled=${!this._config?.entity || this._discovering} @click=${this.autoDetect}><ha-icon class=${this._discovering ? "loading" : ""} .icon=${this._discovering ? "mdi:loading" : "mdi:auto-fix"}></ha-icon>${translate(this.hass, "editor.detect", "Detect device entities")}</button>
+            <div class="tool-row">
+              <button type="button" class="tool" ?disabled=${Boolean(this._copying)} @click=${this.copyYaml}><ha-icon icon="mdi:content-copy"></ha-icon>${translate(this.hass, "editor.copy_yaml", "Copy YAML")}</button>
+              <button type="button" class="tool" ?disabled=${!this._config?.entity || Boolean(this._copying)} @click=${this.copyDiscoveryReport}><ha-icon class=${this._copying === "report" ? "loading" : ""} .icon=${this._copying === "report" ? "mdi:loading" : "mdi:clipboard-text-search-outline"}></ha-icon>${translate(this.hass, "editor.copy_report", "Copy discovery report")}</button>
+            </div>
+            ${this._notice ? html`<div class="notice" role="status">${this._notice}</div>` : ""}` : ""}
         </div></section>`;
       })}
       <section class="group"><h3 class="group-title"><ha-icon icon="mdi:eye-outline"></ha-icon>${translate(this.hass, "section.layout", "Layout & behavior")}</h3><div class="fields">
