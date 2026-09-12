@@ -1,14 +1,16 @@
 import { LitElement, PropertyValues, css, html, nothing } from "lit";
+import { styleMap } from "lit/directives/style-map.js";
 import { commonCardStyles } from "../styles/common";
 import type { ApplianceCardConfig } from "../types/config";
 import type { HomeAssistant, HassEntity } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition, SectionId } from "../types/schema";
 import { configuredEntityIds, relevantStatesChanged, stateFor, unavailableEntityIds } from "../helpers/entity";
-import { deriveMode, displayState, isActiveMode, isAvailable, isWarningActive, progressValue } from "../helpers/formatting";
+import { deriveMode, displayState, isActiveMode, isAvailable, isWarningActive, progressValue, resolveAccentColor } from "../helpers/formatting";
 import { pressEntity, selectOption, setNumber, toggleEntity } from "../helpers/services";
 import { fieldLabel, translate } from "../helpers/localize";
 import type { ControlEventDetail } from "../components/entity-control";
 import type { ApplianceAction } from "../components/action-buttons";
+import { fireMoreInfo } from "../helpers/actions";
 import "../components/appliance-header";
 import "../components/progress-display";
 import "../components/status-chip";
@@ -30,6 +32,7 @@ export abstract class BaseApplianceCard extends LitElement {
     _expanded: { state: true },
     _busyIds: { state: true },
     _error: { state: true },
+    _confirmingId: { state: true },
   };
 
   hass?: HomeAssistant;
@@ -37,7 +40,9 @@ export abstract class BaseApplianceCard extends LitElement {
   protected _expanded = false;
   protected _busyIds = new Set<string>();
   protected _error = "";
+  protected _confirmingId = "";
   private _expandedByUser = false;
+  private _confirmationTimer?: number;
   protected abstract definition: ApplianceDefinition;
 
   static styles = [commonCardStyles, css`
@@ -71,6 +76,13 @@ export abstract class BaseApplianceCard extends LitElement {
 
   getCardSize(): number { return this._expanded ? 6 : 1; }
 
+  getGridOptions() { return { columns: 6, min_columns: 3 }; }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.clearConfirmation();
+  }
+
   protected shouldUpdate(changed: PropertyValues<this>): boolean {
     if (!changed.has("hass")) return true;
     if (!this._config) return true;
@@ -98,7 +110,13 @@ export abstract class BaseApplianceCard extends LitElement {
   private showMoreInfo(): void {
     const entityId = this.infoEntityId();
     if (!entityId) return;
-    this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId }, bubbles: true, composed: true }));
+    fireMoreInfo(this, entityId);
+  }
+
+  private clearConfirmation(): void {
+    if (this._confirmationTimer !== undefined) window.clearTimeout(this._confirmationTimer);
+    this._confirmationTimer = undefined;
+    this._confirmingId = "";
   }
 
   private supportsField(key: string): boolean {
@@ -138,7 +156,15 @@ export abstract class BaseApplianceCard extends LitElement {
   }
 
   private handleAction(event: CustomEvent<ApplianceAction>): void {
-    const entity = this.hass?.states[event.detail.entityId];
+    const action = event.detail;
+    if (action.danger && this._config?.confirm_cancel !== false && this._confirmingId !== action.entityId) {
+      this.clearConfirmation();
+      this._confirmingId = action.entityId;
+      this._confirmationTimer = window.setTimeout(() => this.clearConfirmation(), 5000);
+      return;
+    }
+    this.clearConfirmation();
+    const entity = this.hass?.states[action.entityId];
     if (entity) void this.withBusy(entity, () => pressEntity(this.hass!, entity));
   }
 
@@ -162,9 +188,9 @@ export abstract class BaseApplianceCard extends LitElement {
       const id = this._config?.[key as string];
       const entity = typeof id === "string" ? this.hass?.states[id] : undefined;
       const domain = entity?.entity_id.split(".")[0];
-      return entity ? [{ key, label, icon, entityId: id as string, primary, danger, disabled: entity.state === "unavailable" || (domain !== "button" && domain !== "input_button") } as ApplianceAction] : [];
+      return entity ? [{ key, label, confirmLabel: danger ? translate(this.hass, "action.confirm_cancel", "Confirm cancel") : undefined, icon, entityId: id as string, primary, danger, disabled: entity.state === "unavailable" || (domain !== "button" && domain !== "input_button") } as ApplianceAction] : [];
     });
-    return actions.length ? html`<div class="primary-actions"><hc-action-buttons .actions=${actions} .busyIds=${this._busyIds}></hc-action-buttons></div>` : nothing;
+    return actions.length ? html`<div class="primary-actions"><hc-action-buttons .actions=${actions} .busyIds=${this._busyIds} .confirmingId=${this._confirmingId}></hc-action-buttons></div>` : nothing;
   }
 
   private renderSection(section: SectionId, disabled: boolean) {
@@ -227,15 +253,16 @@ export abstract class BaseApplianceCard extends LitElement {
       unavailableIds.length === 1 ? "configured entity unavailable" : "configured entities unavailable",
     );
     const infoEntityId = this.infoEntityId();
+    const accent = resolveAccentColor(this._config.accent_color, this.definition.accent);
 
     const showActivity = mode !== "off" && (isAvailable(program) || isAvailable(summaryRemaining) || summaryProgress !== undefined);
 
-    return html`<ha-card style=${`--hc-accent:${this.definition.accent}`} @hc-control=${this.handleControl} @hc-action=${this.handleAction}>
+    return html`<ha-card style=${styleMap({ "--hc-accent": accent })} @hc-control=${this.handleControl} @hc-action=${this.handleAction}>
       <div class="shell mode-${mode} ${this._expanded ? "expanded" : ""} ${animations ? "" : "no-animation"} ${mode === "unavailable" ? "unavailable" : ""}">
         <div class="summary ${summaryProgress !== undefined && this._config.show_progress !== false ? "has-progress" : ""}">
           <button class="summary-button header-button" type="button" ?disabled=${!infoEntityId} @click=${this.showMoreInfo} title=${translate(this.hass, "action.more_info", "More information")} aria-label=${translate(this.hass, "action.more_info", "More information")}>
             <hc-appliance-header .name=${this._config.name || translate(this.hass, `device.${this.definition.kind}`, this.definition.defaultName)} .icon=${this._config.icon || this.definition.defaultIcon}
-              .status=${displayState(this.hass, headerStatus)} .program=${isAvailable(summaryProgram) ? displayState(this.hass, summaryProgram) : ""} .mode=${mode} .accent=${this.definition.accent}></hc-appliance-header>
+              .status=${displayState(this.hass, headerStatus)} .program=${isAvailable(summaryProgram) ? displayState(this.hass, summaryProgram) : ""} .mode=${mode} .accent=${accent}></hc-appliance-header>
           </button>
           <button class="summary-button summary-toggle" type="button" @click=${this.toggleExpanded} aria-expanded=${String(this._expanded)} aria-label=${translate(this.hass, "action.toggle_details", "Toggle details")}><div class="metrics">
             ${prominent.map(({ entity }) => html`<span class="metric">${displayState(this.hass!, entity)}</span>`)}
@@ -256,7 +283,7 @@ export abstract class BaseApplianceCard extends LitElement {
           ${this.renderSection("status", false)}
           ${this.renderSection("settings", detailsDisabled)}
         </div></div></div>
-        ${this._error ? html`<div class="error" role="alert">${this._error}</div>` : ""}
+        ${this._error ? html`<div class="error" role="alert"><span>${this._error}</span><button type="button" @click=${() => { this._error = ""; }} aria-label=${translate(this.hass, "action.dismiss", "Dismiss")} title=${translate(this.hass, "action.dismiss", "Dismiss")}><ha-icon icon="mdi:close"></ha-icon></button></div>` : ""}
       </div>
     </ha-card>`;
   }

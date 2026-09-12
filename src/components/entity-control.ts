@@ -3,6 +3,7 @@ import type { ControlKind } from "../types/schema";
 import type { HassEntity, HomeAssistant } from "../types/home-assistant";
 import { displayState, isAvailable, isOn, numericState } from "../helpers/formatting";
 import { registerElement } from "../helpers/register";
+import { fireMoreInfo } from "../helpers/actions";
 
 export interface ControlEventDetail { entity: HassEntity; action: "toggle" | "select" | "number"; value?: string | number; }
 
@@ -21,6 +22,8 @@ export class EntityControl extends LitElement {
     .line { min-height: 45px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .label { min-width: 0; color: var(--secondary-text-color); font-size: 12px; font-weight: 520; }
     .value { padding: 4px 0; color: var(--primary-text-color); font-size: 13px; font-weight: 600; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .status-line { width: 100%; padding: 0; border: 0; color: inherit; background: transparent; text-align: left; font: inherit; cursor: pointer; }
+    .status-line:hover .value { color: var(--hc-accent); }
     select { max-width: 62%; min-width: 120px; height: 37px; padding: 0 30px 0 11px; color: var(--primary-text-color); background: var(--card-background-color); border: 1px solid color-mix(in srgb, var(--divider-color), var(--primary-text-color) 8%); border-radius: 11px; font: inherit; font-size: 13px; transition: border-color 150ms ease, box-shadow 150ms ease; }
     select:hover:not(:disabled) { border-color: color-mix(in srgb, var(--hc-accent), var(--divider-color) 45%); }
     .switch { position: relative; width: 42px; height: 24px; flex: none; border: 0; border-radius: 999px; padding: 2px; background: var(--switch-unchecked-track-color, var(--disabled-color)); cursor: pointer; transition: background 160ms ease; }
@@ -59,7 +62,7 @@ export class EntityControl extends LitElement {
       const step = Number(this.entity.attributes.step ?? 1);
       return html`<div class="control ${unavailable ? "unavailable" : ""}"><div class="number-head"><label class="label" for="range">${this.label}</label><span class="number-value">${displayState(this.hass, this.entity)}</span></div><input id="range" type="range" min=${min} max=${max} step=${step} .value=${String(value)} ?disabled=${blocked} @change=${(ev: Event) => this.emit("number", Number((ev.target as HTMLInputElement).value))}></div>`;
     }
-    return html`<div class="line ${unavailable ? "unavailable" : ""}"><span class="label">${this.label}</span><span class="value">${displayState(this.hass, this.entity)}</span></div>`;
+    return html`<button type="button" class="line status-line ${unavailable ? "unavailable" : ""}" @click=${() => fireMoreInfo(this, this.entity!.entity_id)} aria-label=${`${this.label}: ${displayState(this.hass, this.entity)}`}><span class="label">${this.label}</span><span class="value">${displayState(this.hass, this.entity)}</span></button>`;
   }
 }
 registerElement("hc-entity-control", EntityControl);

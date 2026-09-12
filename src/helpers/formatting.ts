@@ -84,6 +84,16 @@ export function isWarningActive(state?: HassEntity): boolean {
   return !["off", "closed", "ok", "normal", "none", "false", "0", "available", "full", "notpresent", "ready", "good"].includes(value);
 }
 
+export function resolveAccentColor(value: string | undefined, fallback: string): string {
+  const color = value?.trim();
+  if (!color || color.length > 96 || /[;{}]/.test(color)) return fallback;
+  if (/^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(color)) return color;
+  if (/^[a-z]+$/i.test(color)) return color;
+  if (/^var\(--[a-z0-9_-]+\)$/i.test(color)) return color;
+  if (/^(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\([\d\s.,%+\-/a-z]+\)$/i.test(color)) return color;
+  return fallback;
+}
+
 export type ApplianceMode = "off" | "idle" | "running" | "paused" | "unavailable";
 
 export function isActiveMode(mode: ApplianceMode): boolean {

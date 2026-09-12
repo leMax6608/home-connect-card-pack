@@ -11,9 +11,9 @@ function yamlValue(value: string | boolean): string {
 
 export function serializeCardConfig(config: BaseApplianceCardConfig, definition: ApplianceDefinition): string {
   const preferredKeys = [
-    "type", "entity", "name", "icon",
+    "type", "entity", "name", "icon", "accent_color",
     ...definition.fields.map((field) => field.key),
-    "default_expanded", "animations", "show_progress", "show_remaining_time",
+    "default_expanded", "animations", "confirm_cancel", "show_progress", "show_remaining_time",
     "show_status_section", "show_options_section", "show_settings_section",
   ];
   const remainingKeys = Object.keys(config).filter((key) => !preferredKeys.includes(key)).sort();

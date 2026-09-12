@@ -57,9 +57,12 @@ export const commonCardStyles = css`
   .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .primary-actions { padding-top: 2px; }
   .error {
-    margin: 0 14px 14px; padding: 10px 12px; border-radius: 10px;
+    margin: 0 14px 14px; padding: 9px 9px 9px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 10px;
     color: var(--error-color); background: color-mix(in srgb, var(--error-color), transparent 88%); font-size: 13px;
   }
+  .error button { width: 30px; height: 30px; flex: none; display: grid; place-items: center; padding: 0; border: 0; border-radius: 9px; color: inherit; background: transparent; cursor: pointer; }
+  .error button:hover { background: color-mix(in srgb, var(--error-color), transparent 84%); }
+  .error ha-icon { --mdc-icon-size: 18px; }
   .mode-unavailable ha-card { border-color: color-mix(in srgb, var(--error-color), transparent 55%); }
   @container (max-width: 520px) {
     .summary { min-height: 70px; grid-template-columns: minmax(0, 1fr) auto; padding: 11px 12px; }

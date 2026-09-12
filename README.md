@@ -53,12 +53,16 @@ The preview above gives an overview of the card pack. Real Home Assistant screen
 - Compact summary with operating state, program, progress bar, remaining time and warnings
 - Smooth, CSS-only expand/collapse and progress transitions
 - Context-aware controls for off, idle, running and paused states
+- Two-tap confirmation for Cancel prevents accidental program termination
 - Program selects, number sliders, switches/lights, action buttons and grouped status
 - Four full visual editors using Home Assistant entity pickers
 - Device-registry-first entity discovery; manual assignments always win
 - One-click YAML export and a privacy-conscious entity discovery report in every editor
 - Click the appliance identity for Home Assistant's More Info dialog; use the metrics/chevron to expand the card
 - Compact and expanded warnings for configured entities that are missing or unavailable
+- Click any read-only status row to open its native Home Assistant More Info dialog
+- Optional custom accent colors while retaining safe appliance-specific defaults
+- Sections-dashboard sizing hints and appliance-aware card suggestions on supported Home Assistant versions
 - Optional entities leave no placeholders or layout gaps
 - Safe handling of missing, `unknown` and `unavailable` entities
 - Relevant-entity `shouldUpdate()` filtering for busy Home Assistant dashboards
@@ -103,6 +107,8 @@ Add a card and search for **Home Connect**. Every card exposes a grouped editor.
 
 The two utility buttons below discovery copy either a paste-ready YAML configuration or an entity discovery report. The report is intended for troubleshooting mapping issues and deliberately excludes entity states, attributes, device-registry IDs, IP addresses and credentials. Entity IDs and display names can still contain personal labels, so review it before posting it publicly.
 
+If a card is created from YAML with only an `entity` anchor, opening its visual editor now starts discovery automatically. On Home Assistant 2026.6 and newer, matching dishwasher, oven, coffee-machine and dryer entities can also suggest the appropriate card directly in the entity-based card picker. Older Home Assistant versions simply ignore this optional picker capability.
+
 Discovery reads `config/entity_registry/list`, finds the anchor's `device_id`, considers only enabled entities on that same device, and scores their registry names, entity IDs, domains and selected state attributes against role-specific aliases. The anchor itself may also fill the matching role—for example, an oven status anchor becomes `status_entity`. Discovery only fills empty fields and never overwrites a manual choice. If the anchor has no device registry link, the editor explains that discovery is unavailable and remains fully usable manually.
 
 ## Minimal YAML
@@ -127,6 +133,7 @@ Complete examples matching the reference entities are in [`examples.yaml`](examp
 | --- | --- | --- |
 | `entity` | Anchor used only for registry discovery | — |
 | `name` / `icon` | Override the card identity | Device-specific |
+| `accent_color` | CSS color or theme variable used as the card accent | Device-specific |
 | `power_entity` | Power switch or select | — |
 | `status_entity` | General status | — |
 | `operating_state_entity` | Primary state used for context | — |
@@ -137,6 +144,7 @@ Complete examples matching the reference entities are in [`examples.yaml`](examp
 | `start_entity` / `pause_entity` / `resume_entity` / `cancel_entity` | Button entities | — |
 | `default_expanded` | Open card initially | `false` |
 | `animations` | Enable card animations | `true` |
+| `confirm_cancel` | Require a second click within five seconds before Cancel | `true` |
 | `show_progress` / `show_remaining_time` | Summary/detail visibility | `true` |
 | `show_status_section` / `show_options_section` / `show_settings_section` | Section visibility | `true` |
 
@@ -149,6 +157,8 @@ Device-specific keys are presented by each card's visual editor and demonstrated
 - **Running:** progress, Pause and Cancel are prominent; program-changing controls are disabled.
 - **Paused:** Resume and Cancel are prominent; program-changing controls remain disabled.
 - **Warning:** configured warning entities appear as warm, non-aggressive chips.
+
+Cancel is guarded by default: the first click changes the button to **Confirm cancel**, and only a second click within five seconds sends the command. Set `confirm_cancel: false` if you explicitly prefer one-click cancellation.
 
 The state classifier recognizes common Home Connect/HA running, paused, off and idle terms. Unknown integrations safely fall back to idle behavior instead of breaking the card.
 
@@ -177,7 +187,7 @@ The release file is `dist/home-connect-card-pack.js`. Keep this file in GitHub r
 
 ## Browser and Home Assistant support
 
-The bundle targets modern browsers supported by contemporary Home Assistant and declares Home Assistant `2024.8.0` as its HACS minimum. It uses CSS `color-mix()` with Home Assistant theme variables for subtle surfaces.
+The bundle targets modern browsers supported by contemporary Home Assistant and declares Home Assistant `2024.8.0` as its HACS minimum. It uses CSS `color-mix()` with Home Assistant theme variables for subtle surfaces. Sections-view sizing is used when supported; entity-based card suggestions require Home Assistant 2026.6 or newer. Both enhancements degrade safely on older supported versions.
 
 ## License
 

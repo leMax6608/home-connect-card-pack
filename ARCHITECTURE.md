@@ -45,6 +45,7 @@ Adding a function usually requires a definition entry and a typed config propert
 - There is no polling, timer-driven state, external request, or animation loop.
 - Expand/collapse uses `grid-template-rows`; progress and switches use CSS transforms.
 - Container queries adapt each card to its actual Lovelace column width instead of the browser viewport.
+- `getGridOptions()` supplies a six-column default and three-column minimum to Home Assistant Sections dashboards while leaving vertical sizing content-driven.
 - Service locks update only a small `Set` and prevent repeated calls per entity.
 
 ## Localization
@@ -56,6 +57,8 @@ Fixed UI copy and all device-field labels use the Home Assistant language. Versi
 The editor requests the Entity Registry only after the user explicitly chooses discovery. It resolves the anchor's `device_id`, limits candidates to that device, filters disabled entries, applies domain constraints and then scores role aliases. A candidate is used at most once. Scores below the confidence threshold are not assigned.
 
 Names remain a secondary signal inside a registry-confirmed device boundary, never a global fuzzy search. Existing configuration is immutable from discovery's perspective.
+
+The card picker uses conservative appliance-name matching before suggesting a card for an entity. Suggested configurations contain the selected entity as their anchor, and the visual editor then performs the same device-registry-bounded discovery used for manual setup.
 
 ## Failure behavior
 

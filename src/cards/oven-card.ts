@@ -6,6 +6,6 @@ import { registerElement } from "../helpers/register";
 export class HomeConnectOvenCard extends BaseApplianceCard {
   protected definition = ovenDefinition;
   static getConfigElement() { return document.createElement(ovenDefinition.editorTag); }
-  static getStubConfig(): OvenCardConfig { return { type: ovenDefinition.cardType, name: ovenDefinition.defaultName }; }
+  static getStubConfig(): Partial<OvenCardConfig> { return { name: ovenDefinition.defaultName }; }
 }
 registerElement("home-connect-oven-card", HomeConnectOvenCard);

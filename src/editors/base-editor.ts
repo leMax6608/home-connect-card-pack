@@ -1,4 +1,4 @@
-import { LitElement, css, html, nothing } from "lit";
+import { LitElement, PropertyValues, css, html, nothing } from "lit";
 import type { ApplianceCardConfig, BaseApplianceCardConfig } from "../types/config";
 import type { HomeAssistant } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition } from "../types/schema";
@@ -25,6 +25,7 @@ export abstract class BaseApplianceEditor extends LitElement {
   protected _discovering = false;
   protected _copying = "";
   protected _notice = "";
+  private _autoDetectedAnchor = "";
   protected abstract definition: ApplianceDefinition;
 
   static styles = css`
@@ -55,6 +56,15 @@ export abstract class BaseApplianceEditor extends LitElement {
   `;
 
   setConfig(config: ApplianceCardConfig): void { this._config = { ...config }; }
+
+  protected updated(_changed: PropertyValues<this>): void {
+    const anchor = this._config?.entity;
+    if (!anchor) this._autoDetectedAnchor = "";
+    if (this.hass && anchor && anchor !== this._autoDetectedAnchor) {
+      this._autoDetectedAnchor = anchor;
+      void this.autoDetect();
+    }
+  }
 
   private notify(config: ApplianceCardConfig): void {
     this._config = config;
@@ -147,6 +157,7 @@ export abstract class BaseApplianceEditor extends LitElement {
       <section class="group"><h3 class="group-title"><ha-icon icon="mdi:palette-outline"></ha-icon>${translate(this.hass, "section.appearance", "Appearance")}</h3><div class="fields">
         <div class="field"><label for="name">${translate(this.hass, "editor.name", "Name override")}</label><input id="name" type="text" .value=${this._config.name || ""} placeholder=${this.definition.defaultName} @change=${(ev: Event) => this.change("name", (ev.currentTarget as HTMLInputElement).value)}></div>
         <div class="field"><label for="icon">${translate(this.hass, "editor.icon", "Icon override")}</label><input id="icon" type="text" .value=${this._config.icon || ""} placeholder=${this.definition.defaultIcon} @change=${(ev: Event) => this.change("icon", (ev.currentTarget as HTMLInputElement).value)}></div>
+        <div class="field"><label for="accent_color">${translate(this.hass, "editor.accent_color", "Accent color")}</label><input id="accent_color" type="text" .value=${this._config.accent_color || ""} placeholder=${`${this.definition.accent} / var(--primary-color)`} @change=${(ev: Event) => this.change("accent_color", (ev.currentTarget as HTMLInputElement).value)}></div>
       </div></section>
       ${GROUPS.map((group) => {
         const fields = this.definition.fields.filter((field) => field.section === group.id);
@@ -164,6 +175,7 @@ export abstract class BaseApplianceEditor extends LitElement {
       <section class="group"><h3 class="group-title"><ha-icon icon="mdi:eye-outline"></ha-icon>${translate(this.hass, "section.layout", "Layout & behavior")}</h3><div class="fields">
         ${this.renderToggle("default_expanded", translate(this.hass, "option.default_expanded", "Expanded by default"), false)}
         ${this.renderToggle("animations", translate(this.hass, "option.animations", "Animations"), true)}
+        ${this.renderToggle("confirm_cancel", translate(this.hass, "option.confirm_cancel", "Require a second tap to cancel a program"), true)}
         ${this.renderToggle("show_progress", translate(this.hass, "option.show_progress", "Show progress"), true)}
         ${this.renderToggle("show_remaining_time", translate(this.hass, "option.show_remaining_time", "Show remaining time"), true)}
         ${this.renderToggle("show_status_section", translate(this.hass, "option.show_status_section", "Show status section"), true)}

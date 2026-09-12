@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.5.0
+
+- Add a five-second two-tap safeguard before sending Cancel commands, enabled by default
+- Add configurable per-card accent colors with safe fallback to each appliance theme
+- Make every read-only status row open Home Assistant's native More Info dialog
+- Use Home Assistant's official `hass-action` event for More Info interactions
+- Automatically run entity discovery when an editor receives an anchor from YAML or an entity suggestion
+- Add card-picker suggestions for matching appliance entities on supported Home Assistant versions
+- Add native sizing hints for Sections dashboards and a direct documentation link in the card picker
+- Add a dismiss button to service error messages
+- Align card-picker stub configurations with Home Assistant's custom-card API
+- Add regression tests for safe accent colors and appliance entity suggestions
+
 ## 1.4.0
 
 - Add editor buttons to copy paste-ready YAML and a privacy-conscious entity discovery report

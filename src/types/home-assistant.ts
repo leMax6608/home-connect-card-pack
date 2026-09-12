@@ -26,6 +26,13 @@ export interface HomeAssistant {
 
 declare global {
   interface Window {
-    customCards?: Array<{ type: string; name: string; description: string; preview?: boolean }>;
+    customCards?: Array<{
+      type: string;
+      name: string;
+      description: string;
+      preview?: boolean;
+      documentationURL?: string;
+      getEntitySuggestion?: (hass: HomeAssistant, entityId: string) => { config: Record<string, unknown>; label?: string } | null;
+    }>;
   }
 }

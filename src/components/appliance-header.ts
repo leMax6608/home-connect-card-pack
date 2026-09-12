@@ -1,6 +1,7 @@
 import { LitElement, css, html } from "lit";
 import type { ApplianceMode } from "../helpers/formatting";
 import { registerElement } from "../helpers/register";
+import { styleMap } from "lit/directives/style-map.js";
 
 export class ApplianceHeader extends LitElement {
   static properties = {
@@ -43,7 +44,7 @@ export class ApplianceHeader extends LitElement {
   `;
 
   render() {
-    return html`<div class="header ${this.mode}" style=${`--hc-accent:${this.accent}`}>
+    return html`<div class="header ${this.mode}" style=${styleMap({ "--hc-accent": this.accent })}>
       <div class="icon"><ha-icon .icon=${this.icon}></ha-icon></div>
       <div class="copy">
         <div class="name">${this.name}</div>

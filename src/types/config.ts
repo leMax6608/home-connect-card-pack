@@ -5,6 +5,7 @@ export interface BaseApplianceCardConfig {
   entity?: string;
   name?: string;
   icon?: string;
+  accent_color?: string;
   power_entity?: string;
   status_entity?: string;
   operating_state_entity?: string;
@@ -18,6 +19,7 @@ export interface BaseApplianceCardConfig {
   cancel_entity?: string;
   default_expanded?: boolean;
   animations?: boolean;
+  confirm_cancel?: boolean;
   show_progress?: boolean;
   show_remaining_time?: boolean;
   show_status_section?: boolean;

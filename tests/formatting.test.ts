@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canonicalState, cleanLabel, deriveMode, displayState, isActiveMode, isWarningActive, progressValue } from "../src/helpers/formatting";
+import { canonicalState, cleanLabel, deriveMode, displayState, isActiveMode, isWarningActive, progressValue, resolveAccentColor } from "../src/helpers/formatting";
 import type { HassEntity, HomeAssistant } from "../src/types/home-assistant";
 
 function entity(state: string, entityId = "sensor.test", attributes: HassEntity["attributes"] = {}): HassEntity {
@@ -49,5 +49,13 @@ describe("Home Connect state formatting", () => {
     expect(isActiveMode("paused")).toBe(true);
     expect(isActiveMode("idle")).toBe(false);
     expect(isActiveMode("off")).toBe(false);
+  });
+
+  it("accepts safe CSS colors and falls back for malformed values", () => {
+    expect(resolveAccentColor("#4f8cff", "blue")).toBe("#4f8cff");
+    expect(resolveAccentColor("var(--primary-color)", "blue")).toBe("var(--primary-color)");
+    expect(resolveAccentColor("oklch(70% 0.15 240)", "blue")).toBe("oklch(70% 0.15 240)");
+    expect(resolveAccentColor("red; display:none", "blue")).toBe("blue");
+    expect(resolveAccentColor("#12345", "blue")).toBe("blue");
   });
 });

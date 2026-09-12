@@ -6,6 +6,6 @@ import { registerElement } from "../helpers/register";
 export class HomeConnectDryerCard extends BaseApplianceCard {
   protected definition = dryerDefinition;
   static getConfigElement() { return document.createElement(dryerDefinition.editorTag); }
-  static getStubConfig(): DryerCardConfig { return { type: dryerDefinition.cardType, name: dryerDefinition.defaultName }; }
+  static getStubConfig(): Partial<DryerCardConfig> { return { name: dryerDefinition.defaultName }; }
 }
 registerElement("home-connect-dryer-card", HomeConnectDryerCard);

@@ -8,6 +8,7 @@ import "./cards/coffee-card";
 import "./cards/dryer-card";
 import { coffeeDefinition, dishwasherDefinition, dryerDefinition, ovenDefinition } from "./definitions";
 import { VERSION } from "./version";
+import { matchesApplianceEntity } from "./helpers/suggestion";
 
 const definitions = [dishwasherDefinition, ovenDefinition, coffeeDefinition, dryerDefinition];
 window.customCards = window.customCards || [];
@@ -18,6 +19,10 @@ for (const definition of definitions) {
       name: definition.displayName,
       description: definition.description,
       preview: true,
+      documentationURL: "https://github.com/leMax6608/home-connect-card-pack#readme",
+      getEntitySuggestion: (hass, entityId) => matchesApplianceEntity(hass, entityId, definition.kind)
+        ? { config: { type: definition.cardType, entity: entityId } }
+        : null,
     });
   }
 }

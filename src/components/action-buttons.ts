@@ -1,12 +1,13 @@
 import { LitElement, css, html } from "lit";
 import { registerElement } from "../helpers/register";
 
-export interface ApplianceAction { key: string; label: string; icon: string; entityId: string; primary?: boolean; danger?: boolean; disabled?: boolean; }
+export interface ApplianceAction { key: string; label: string; confirmLabel?: string; icon: string; entityId: string; primary?: boolean; danger?: boolean; disabled?: boolean; }
 
 export class ActionButtons extends LitElement {
-  static properties = { actions: { attribute: false }, busyIds: { attribute: false } };
+  static properties = { actions: { attribute: false }, busyIds: { attribute: false }, confirmingId: {} };
   actions: ApplianceAction[] = [];
   busyIds = new Set<string>();
+  confirmingId = "";
   static styles = css`
     :host { display: block; }
     .row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -15,6 +16,7 @@ export class ActionButtons extends LitElement {
     button:active:not(:disabled) { transform: translateY(0); }
     button.primary { color: var(--text-primary-color, white); border-color: transparent; background: linear-gradient(135deg, color-mix(in srgb, var(--hc-accent), white 10%), var(--hc-accent)); box-shadow: 0 5px 14px color-mix(in srgb, var(--hc-accent), transparent 74%); }
     button.danger { color: var(--error-color); background: color-mix(in srgb, var(--error-color), transparent 95%); }
+    button.confirming { color: var(--text-primary-color, white); border-color: var(--error-color); background: var(--error-color); box-shadow: 0 5px 14px color-mix(in srgb, var(--error-color), transparent 72%); }
     button:disabled { opacity: .5; cursor: not-allowed; }
     ha-icon { --mdc-icon-size: 17px; }
     .busy ha-icon { animation: spin .8s linear infinite; }
@@ -22,7 +24,8 @@ export class ActionButtons extends LitElement {
   `;
   render() { return html`<div class="row">${this.actions.map((action) => {
     const busy = this.busyIds.has(action.entityId);
-    return html`<button type="button" class="${action.primary ? "primary" : ""} ${action.danger ? "danger" : ""} ${busy ? "busy" : ""}" ?disabled=${action.disabled || busy} @click=${() => this.dispatchEvent(new CustomEvent("hc-action", { detail: action, bubbles: true, composed: true }))}><ha-icon .icon=${busy ? "mdi:loading" : action.icon}></ha-icon><span>${action.label}</span></button>`;
+    const confirming = this.confirmingId === action.entityId;
+    return html`<button type="button" class="${action.primary ? "primary" : ""} ${action.danger ? "danger" : ""} ${confirming ? "confirming" : ""} ${busy ? "busy" : ""}" ?disabled=${action.disabled || busy} @click=${() => this.dispatchEvent(new CustomEvent("hc-action", { detail: action, bubbles: true, composed: true }))}><ha-icon .icon=${busy ? "mdi:loading" : confirming ? "mdi:alert-circle-outline" : action.icon}></ha-icon><span>${confirming ? action.confirmLabel || action.label : action.label}</span></button>`;
   })}</div>`; }
 }
 registerElement("hc-action-buttons", ActionButtons);
