@@ -1,6 +1,11 @@
 # Home Connect Card Pack
 
-A family of four native, dependency-light Lovelace custom cards for Home Assistant:
+[![HACS validation](https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml/badge.svg)](https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+![Home Connect Card Pack preview](docs/images/cards-preview.png)
+
+An **independent, unofficial** family of four native, dependency-light Lovelace custom cards for Home Assistant:
 
 - Bosch/Siemens Home Connect dishwasher
 - Home Connect oven
@@ -8,6 +13,40 @@ A family of four native, dependency-light Lovelace custom cards for Home Assista
 - Home Connect dryer
 
 The cards are built with TypeScript and Lit. They do **not** depend on `button-card`, Mushroom, or another custom card. All commands use Home Assistant services; entity state is never mutated directly.
+
+## Recommended Home Assistant integration
+
+This card pack is primarily recommended for use with [Home Connect Local](https://github.com/chris-mc1/homeconnect_local_hass), which communicates with supported appliances over the local network. The standard Home Connect integration may also work, but available entities and entity names can differ. All mappings remain manually configurable in the visual editor.
+
+## Screenshots
+
+The preview above gives an overview of the card pack. Real Home Assistant screenshots can be added here as they become available.
+
+1. Add the images to `docs/images/` using these recommended filenames:
+   - `dishwasher.png`
+   - `oven.png`
+   - `coffee-machine.png`
+   - `dryer.png`
+2. Open this README and remove the surrounding `<!--` and `-->` lines from the prepared block below.
+3. Commit the images together with the updated README. Landscape screenshots with a consistent width work best.
+
+<!--
+### Dishwasher
+
+![Dishwasher card in Home Assistant](docs/images/dishwasher.png)
+
+### Oven
+
+![Oven card in Home Assistant](docs/images/oven.png)
+
+### Coffee machine
+
+![Coffee machine card in Home Assistant](docs/images/coffee-machine.png)
+
+### Dryer
+
+![Dryer card in Home Assistant](docs/images/dryer.png)
+-->
 
 ## Highlights
 
@@ -71,6 +110,8 @@ operating_state_entity: sensor.bosch_dishwasher_operation_state
 active_program_entity: sensor.bosch_dishwasher_active_program
 progress_entity: sensor.bosch_dishwasher_program_progress
 remaining_time_entity: sensor.bosch_dishwasher_remaining_program_time
+filter_check_entity: binary_sensor.bosch_dishwasher_filtersystem_prufen
+aquastop_entity: binary_sensor.bosch_dishwasher_aquastop_aufgetreten
 ```
 
 Complete examples matching the reference entities are in [`examples.yaml`](examples.yaml).
@@ -135,4 +176,12 @@ The bundle targets modern browsers supported by contemporary Home Assistant and 
 
 ## License
 
-MIT
+The source code is available under the [MIT License](LICENSE).
+
+## Trademark notice
+
+Home Connect Card Pack is an independent, unofficial open-source project. It is not affiliated with, endorsed by, sponsored by, or otherwise officially connected to Home Connect GmbH, BSH Hausgeräte GmbH, Bosch, Siemens, Home Assistant, or their affiliates.
+
+“Home Connect”, “Bosch”, “Siemens”, “Home Assistant”, and associated marks are trademarks of their respective owners. Names are used only to describe compatibility. No company logos or official brand artwork are included. The MIT License applies to this project's source code and does not grant rights to any third-party trademarks.
+
+<p><sub>Disclosure: This project and parts of its documentation were created with the assistance of generative AI, then reviewed and tested.</sub></p>

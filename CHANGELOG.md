@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.0
+
+- Add auto-detected dishwasher warnings for filter-system checks and triggered AquaStop events
+- Keep the existing machine-care filter role distinct during automatic entity discovery
+- Add a README preview image required by HACS default-repository validation
+- Use a canonical, attributable MIT license and package metadata for license detection
+- Add an explicit unofficial-project and trademark notice
+- Recommend Home Connect Local while documenting compatibility with alternative integrations
+- Add prepared screenshot slots and a transparent generative-AI disclosure to the documentation
+
 ## 1.2.1
 
 - Start all nested detail sections collapsed by default

@@ -326,7 +326,7 @@ class je {
     for (; o !== void 0; ) {
       if (a === o.index) {
         let d;
-        o.type === 2 ? d = new L(r, r.nextSibling, this, e) : o.type === 1 ? d = new o.ctor(r, o.name, o.strings, this, e) : o.type === 6 && (d = new Ke(r, this, e)), this._$AV.push(d), o = i[++l];
+        o.type === 2 ? d = new L(r, r.nextSibling, this, e) : o.type === 1 ? d = new o.ctor(r, o.name, o.strings, this, e) : o.type === 6 && (d = new qe(r, this, e)), this._$AV.push(d), o = i[++l];
       }
       a !== o?.index && (r = S.nextNode(), a++);
     }
@@ -450,7 +450,7 @@ class Ve extends V {
     typeof this._$AH == "function" ? this._$AH.call(this.options?.host ?? this.element, e) : this._$AH.handleEvent(e);
   }
 }
-class Ke {
+class qe {
   constructor(e, t, i) {
     this.element = e, this.type = 6, this._$AN = void 0, this._$AM = t, this.options = i;
   }
@@ -461,9 +461,9 @@ class Ke {
     O(this, e);
   }
 }
-const Ge = ie.litHtmlPolyfillSupport;
-Ge?.(I, L), (ie.litHtmlVersions ??= []).push("3.3.3");
-const qe = (s, e, t) => {
+const Ke = ie.litHtmlPolyfillSupport;
+Ke?.(I, L), (ie.litHtmlVersions ??= []).push("3.3.3");
+const Ge = (s, e, t) => {
   const i = t?.renderBefore ?? e;
   let n = i._$litPart$;
   if (n === void 0) {
@@ -483,7 +483,7 @@ class _ extends N {
   }
   update(e) {
     const t = this.render();
-    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(e), this._$Do = qe(t, this.renderRoot, this.renderOptions);
+    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(e), this._$Do = Ge(t, this.renderRoot, this.renderOptions);
   }
   connectedCallback() {
     super.connectedCallback(), this._$Do?.setConnected(!0);
@@ -587,7 +587,9 @@ const Ye = {
   "field.half_load_entity": "Halbe Ladung",
   "field.silent_entity": "Leisemodus",
   "field.care_entity": "Wartungsprogramm",
-  "field.filter_entity": "Filterwarnung",
+  "field.filter_check_entity": "Filtersystem prüfen",
+  "field.filter_entity": "Maschinenreinigungsfilter",
+  "field.aquastop_entity": "AquaStop aufgetreten",
   "field.heater_scale_entity": "Wasserheizung verkalkt",
   "field.current_temperature_entity": "Aktuelle Temperatur",
   "field.target_temperature_entity": "Solltemperatur",
@@ -656,7 +658,7 @@ const Qe = [
   { id: "status", label: "Status & care", icon: "mdi:heart-pulse" },
   { id: "settings", label: "Device settings", icon: "mdi:cog-outline" }
 ];
-class K extends _ {
+class q extends _ {
   constructor() {
     super(...arguments), this._discovering = !1, this._notice = "";
   }
@@ -759,7 +761,7 @@ class K extends _ {
     </div>`;
   }
 }
-const G = [
+const K = [
   { key: "entity", label: "Device anchor entity", section: "general" },
   { key: "power_entity", label: "Power", section: "general", domains: ["switch", "select"], aliases: ["power", "einschalter", "power state"] },
   { key: "status_entity", label: "Status", section: "general", domains: ["sensor", "select"], aliases: ["status", "power state"] },
@@ -782,7 +784,7 @@ const G = [
   defaultIcon: "mdi:dishwasher",
   accent: "#4f8cff",
   fields: [
-    ...G.filter((s) => s.key !== "pause_entity" && s.key !== "resume_entity"),
+    ...K.filter((s) => s.key !== "pause_entity" && s.key !== "resume_entity"),
     { key: "phase_entity", label: "Program phase", section: "status", kind: "status", domains: ["sensor"], aliases: ["program phase", "programmphase"] },
     { key: "door_entity", label: "Door", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["door", "tur"] },
     { key: "water_entity", label: "Estimated water", section: "status", kind: "status", domains: ["sensor"], aliases: ["water consumption", "wasserverbrauch"] },
@@ -793,8 +795,10 @@ const G = [
     { key: "hygiene_entity", label: "Hygiene Plus", section: "options", kind: "toggle", domains: ["switch"], aliases: ["hygiene plus"] },
     { key: "half_load_entity", label: "Half load", section: "options", kind: "toggle", domains: ["switch"], aliases: ["half load", "halbe ladung"] },
     { key: "silent_entity", label: "Silent", section: "options", kind: "toggle", domains: ["switch"], aliases: ["silent", "leise"] },
+    { key: "filter_check_entity", label: "Check filter system", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["filtersystem prufen", "filter system check", "check filter system", "check filter"], warning: !0 },
+    { key: "filter_entity", label: "Machine-care filter", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["maschinenreinigung filter", "machine care filter"], warning: !0 },
+    { key: "aquastop_entity", label: "AquaStop triggered", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["aquastop aufgetreten", "aquastop triggered", "aquastop occurred", "aquastop"], warning: !0 },
     { key: "care_entity", label: "Machine care", section: "status", kind: "status", domains: ["binary_sensor", "sensor"], aliases: ["machine care", "maschinenreinigung"], warning: !0 },
-    { key: "filter_entity", label: "Filter warning", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["filter"], warning: !0 },
     { key: "heater_scale_entity", label: "Heater scale warning", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["heater scale", "wasserheizung verkalkt"], warning: !0 }
   ]
 }, C = {
@@ -807,7 +811,7 @@ const G = [
   defaultIcon: "mdi:stove",
   accent: "#ff8a45",
   fields: [
-    ...G,
+    ...K,
     { key: "current_temperature_entity", label: "Current temperature", section: "status", kind: "status", domains: ["sensor"], aliases: ["current temperature", "aktuelle temperatur"], prominent: !0 },
     { key: "target_temperature_entity", label: "Target temperature", section: "program", kind: "number", domains: ["number"], aliases: ["target temperature", "sollwert temperatur"] },
     { key: "duration_entity", label: "Duration", section: "program", kind: "number", domains: ["number"], aliases: ["duration", "dauer"] },
@@ -832,7 +836,7 @@ const G = [
   defaultIcon: "mdi:coffee-maker",
   accent: "#b9794a",
   fields: [
-    ...G.filter((s) => s.key !== "remaining_time_entity"),
+    ...K.filter((s) => s.key !== "remaining_time_entity"),
     { key: "cups_entity", label: "Cups", section: "program", kind: "select", domains: ["select"], aliases: ["cups", "tassen"] },
     { key: "bean_amount_entity", label: "Bean amount", section: "program", kind: "select", domains: ["select"], aliases: ["bean amount", "bohnenmenge"] },
     { key: "fill_quantity_entity", label: "Fill quantity", section: "program", kind: "number", domains: ["number"], aliases: ["fill quantity", "fullmenge"] },
@@ -859,7 +863,7 @@ const G = [
   defaultIcon: "mdi:tumble-dryer",
   accent: "#8c70e8",
   fields: [
-    ...G,
+    ...K,
     { key: "phase_entity", label: "Process phase", section: "status", kind: "status", domains: ["sensor"], aliases: ["process phase", "prozessphase"] },
     { key: "finish_at_entity", label: "Finish at", section: "status", kind: "status", domains: ["sensor"], aliases: ["finish at", "fertig in"] },
     { key: "drying_target_entity", label: "Drying target", section: "program", kind: "select", domains: ["select"], aliases: ["drying target", "trockenziel"] },
@@ -886,25 +890,25 @@ const G = [
 function b(s, e) {
   customElements.get(s) || customElements.define(s, e);
 }
-class et extends K {
+class et extends q {
   constructor() {
     super(...arguments), this.definition = E;
   }
 }
 b(E.editorTag, et);
-class tt extends K {
+class tt extends q {
   constructor() {
     super(...arguments), this.definition = C;
   }
 }
 b(C.editorTag, tt);
-class it extends K {
+class it extends q {
   constructor() {
     super(...arguments), this.definition = P;
   }
 }
 b(P.editorTag, it);
-class st extends K {
+class st extends q {
   constructor() {
     super(...arguments), this.definition = T;
   }
@@ -1310,7 +1314,7 @@ const At = {
   status: { title: "Status & care", icon: "mdi:information-outline" },
   settings: { title: "Device settings", icon: "mdi:cog-outline" }
 };
-class q extends _ {
+class G extends _ {
   constructor() {
     super(...arguments), this._expanded = !1, this._busyIds = /* @__PURE__ */ new Set(), this._error = "", this._expandedByUser = !1;
   }
@@ -1453,7 +1457,7 @@ class q extends _ {
     </ha-card>`;
   }
 }
-class St extends q {
+class St extends G {
   constructor() {
     super(...arguments), this.definition = E;
   }
@@ -1465,7 +1469,7 @@ class St extends q {
   }
 }
 b("home-connect-dishwasher-card", St);
-class Et extends q {
+class Et extends G {
   constructor() {
     super(...arguments), this.definition = C;
   }
@@ -1477,7 +1481,7 @@ class Et extends q {
   }
 }
 b("home-connect-oven-card", Et);
-class Ct extends q {
+class Ct extends G {
   constructor() {
     super(...arguments), this.definition = P;
   }
@@ -1489,7 +1493,7 @@ class Ct extends q {
   }
 }
 b("home-connect-coffee-card", Ct);
-class Pt extends q {
+class Pt extends G {
   constructor() {
     super(...arguments), this.definition = T;
   }
@@ -1510,5 +1514,5 @@ for (const s of Tt)
     description: s.description,
     preview: !0
   });
-console.info("%c HOME-CONNECT-CARD-PACK %c v1.2.1 ", "color:white;background:#445b78;font-weight:700", "color:#445b78;background:#eef2f7");
+console.info("%c HOME-CONNECT-CARD-PACK %c v1.3.0 ", "color:white;background:#445b78;font-weight:700", "color:#445b78;background:#eef2f7");
 //# sourceMappingURL=home-connect-card-pack.js.map

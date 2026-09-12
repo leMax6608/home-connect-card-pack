@@ -38,7 +38,9 @@ export interface DishwasherCardConfig extends BaseApplianceCardConfig {
   half_load_entity?: string;
   silent_entity?: string;
   care_entity?: string;
+  filter_check_entity?: string;
   filter_entity?: string;
+  aquastop_entity?: string;
   heater_scale_entity?: string;
 }
 

@@ -26,6 +26,8 @@ cards:
     door_entity: binary_sensor.bosch_spulmaschine_tur
     care_entity: binary_sensor.bosch_spulmaschine_maschinenreinigung
     filter_entity: binary_sensor.bosch_spulmaschine_maschinenreinigung_filter
+    filter_check_entity: binary_sensor.bosch_dishwasher_filtersystem_prufen
+    aquastop_entity: binary_sensor.bosch_dishwasher_aquastop_aufgetreten
     heater_scale_entity: binary_sensor.bosch_spulmaschine_wasserheizung_verkalkt
 
   - type: custom:home-connect-oven-card

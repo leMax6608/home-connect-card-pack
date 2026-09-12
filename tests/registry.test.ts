@@ -82,4 +82,26 @@ describe("registry-first discovery", () => {
     expect(result.start_entity).toBeUndefined();
     expect(Object.values(result)).not.toContain("sensor.other_progress");
   });
+
+  it("detects dishwasher filter-system and AquaStop warnings without mixing filter roles", async () => {
+    const entries = [
+      { entity_id: "sensor.bosch_dishwasher_status", device_id: "dishwasher-1", original_name: "Status" },
+      { entity_id: "binary_sensor.bosch_dishwasher_filtersystem_prufen", device_id: "dishwasher-1", original_name: "Filtersystem prüfen" },
+      { entity_id: "binary_sensor.bosch_dishwasher_maschinenreinigung_filter", device_id: "dishwasher-1", original_name: "Maschinenreinigung Filter" },
+      { entity_id: "binary_sensor.bosch_dishwasher_aquastop_aufgetreten", device_id: "dishwasher-1", original_name: "AquaStop aufgetreten" },
+    ];
+    const hass = {
+      states: Object.fromEntries(entries.map((entry) => [entry.entity_id, { attributes: { friendly_name: entry.original_name } }])),
+      callWS: vi.fn(async () => entries),
+    } as unknown as HomeAssistant;
+
+    const result = await discoverEntities(hass, "sensor.bosch_dishwasher_status", dishwasherDefinition, {
+      type: dishwasherDefinition.cardType,
+      entity: "sensor.bosch_dishwasher_status",
+    });
+
+    expect(result.filter_check_entity).toBe("binary_sensor.bosch_dishwasher_filtersystem_prufen");
+    expect(result.filter_entity).toBe("binary_sensor.bosch_dishwasher_maschinenreinigung_filter");
+    expect(result.aquastop_entity).toBe("binary_sensor.bosch_dishwasher_aquastop_aufgetreten");
+  });
 });

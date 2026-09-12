@@ -15,4 +15,11 @@ describe("device-specific editor roles", () => {
     expect(keys(dishwasherDefinition)).not.toContain("pause_entity");
     expect(keys(dishwasherDefinition)).not.toContain("resume_entity");
   });
+
+  it("exposes both dishwasher safety and filter warnings", () => {
+    expect(keys(dishwasherDefinition)).toContain("filter_check_entity");
+    expect(keys(dishwasherDefinition)).toContain("aquastop_entity");
+    expect(dishwasherDefinition.fields.find((field) => field.key === "filter_check_entity")?.warning).toBe(true);
+    expect(dishwasherDefinition.fields.find((field) => field.key === "aquastop_entity")?.warning).toBe(true);
+  });
 });

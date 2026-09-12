@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Home Connect Card Pack preview</title>
+  <desc id="desc">Four dark Home Assistant-style appliance cards for a dishwasher, oven, coffee machine and dryer.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a1020"/>
+      <stop offset="1" stop-color="#151b2d"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#4f8cff"/>
+      <stop offset="1" stop-color="#6eb8ff"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity=".34"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" rx="34" fill="url(#background)"/>
+  <circle cx="1040" cy="20" r="260" fill="#4f8cff" opacity=".08"/>
+  <circle cx="120" cy="610" r="230" fill="#6eb8ff" opacity=".05"/>
+  <text x="74" y="82" fill="#f6f8ff" font-family="Inter,Segoe UI,sans-serif" font-size="34" font-weight="700">Home Connect Card Pack</text>
+  <text x="76" y="116" fill="#98a3ba" font-family="Inter,Segoe UI,sans-serif" font-size="17">Unofficial Lovelace cards · compact, contextual and theme-aware</text>
+
+  <g transform="translate(70 160)" filter="url(#shadow)">
+    <rect width="510" height="176" rx="24" fill="#202636" stroke="#344057"/>
+    <rect width="510" height="4" rx="2" fill="url(#blue)"/>
+    <rect x="22" y="24" width="58" height="58" rx="17" fill="#161c2a" stroke="#395079"/>
+    <path d="M41 38h20v29H41zM45 34h12M46 55h10" fill="none" stroke="#aab7cb" stroke-width="3" stroke-linecap="round"/>
+    <text x="98" y="50" fill="#f8f9fd" font-family="Inter,Segoe UI,sans-serif" font-size="20" font-weight="700">Dishwasher</text>
+    <circle cx="105" cy="73" r="4" fill="#64b5f6"/><text x="118" y="78" fill="#adb7c9" font-family="Inter,Segoe UI,sans-serif" font-size="15">Running · Eco 50°</text>
+    <rect x="356" y="30" width="52" height="30" rx="15" fill="#193b72"/><text x="370" y="50" fill="#79afff" font-family="Inter,Segoe UI,sans-serif" font-size="14" font-weight="700">64%</text>
+    <rect x="418" y="30" width="70" height="30" rx="15" fill="#2c3344"/><text x="430" y="50" fill="#c0c8d6" font-family="Inter,Segoe UI,sans-serif" font-size="13">42 min</text>
+    <rect x="22" y="108" width="466" height="10" rx="5" fill="#131a27"/><rect x="22" y="108" width="298" height="10" rx="5" fill="url(#blue)"/>
+    <rect x="22" y="136" width="171" height="25" rx="12.5" fill="#3e3022" stroke="#76532b"/><circle cx="37" cy="148.5" r="4" fill="#ffb74d"/><text x="48" y="153" fill="#ffd08a" font-family="Inter,Segoe UI,sans-serif" font-size="12">Check filter system</text>
+  </g>
+
+  <g transform="translate(620 160)" filter="url(#shadow)">
+    <rect width="510" height="176" rx="24" fill="#202636" stroke="#344057"/>
+    <rect width="510" height="4" rx="2" fill="#ff8f5b"/>
+    <rect x="22" y="24" width="58" height="58" rx="17" fill="#161c2a" stroke="#704632"/>
+    <path d="M40 39h22v27H40zM46 46h10M47 57h8" fill="none" stroke="#c9b0a5" stroke-width="3" stroke-linecap="round"/>
+    <text x="98" y="50" fill="#f8f9fd" font-family="Inter,Segoe UI,sans-serif" font-size="20" font-weight="700">Oven</text>
+    <circle cx="105" cy="73" r="4" fill="#ff9f72"/><text x="118" y="78" fill="#adb7c9" font-family="Inter,Segoe UI,sans-serif" font-size="15">Heating · Convection</text>
+    <text x="389" y="58" fill="#ffb18b" font-family="Inter,Segoe UI,sans-serif" font-size="24" font-weight="700">180°</text>
+    <rect x="22" y="108" width="466" height="10" rx="5" fill="#131a27"/><rect x="22" y="108" width="205" height="10" rx="5" fill="#ff8f5b"/>
+    <text x="22" y="151" fill="#8e9ab0" font-family="Inter,Segoe UI,sans-serif" font-size="13">Target temperature</text><text x="454" y="151" text-anchor="end" fill="#d9deea" font-family="Inter,Segoe UI,sans-serif" font-size="13">200 °C</text>
+  </g>
+
+  <g transform="translate(70 376)" filter="url(#shadow)">
+    <rect width="510" height="176" rx="24" fill="#202636" stroke="#344057"/>
+    <rect width="510" height="4" rx="2" fill="#b386ff"/>
+    <rect x="22" y="24" width="58" height="58" rx="17" fill="#161c2a" stroke="#574477"/>
+    <path d="M42 48h20v15a8 8 0 01-8 8h-4a8 8 0 01-8-8zm20 4h5a6 6 0 010 12h-4" fill="none" stroke="#bfb0d5" stroke-width="3" stroke-linecap="round"/>
+    <text x="98" y="50" fill="#f8f9fd" font-family="Inter,Segoe UI,sans-serif" font-size="20" font-weight="700">Coffee machine</text>
+    <circle cx="105" cy="73" r="4" fill="#b895ff"/><text x="118" y="78" fill="#adb7c9" font-family="Inter,Segoe UI,sans-serif" font-size="15">Ready · Espresso</text>
+    <rect x="357" y="28" width="131" height="38" rx="19" fill="#34264f" stroke="#634b8b"/><text x="422" y="52" text-anchor="middle" fill="#d3bfff" font-family="Inter,Segoe UI,sans-serif" font-size="14" font-weight="700">Prepare</text>
+    <rect x="22" y="108" width="143" height="45" rx="14" fill="#171d2b"/><text x="38" y="128" fill="#8792a7" font-family="Inter,Segoe UI,sans-serif" font-size="11">Amount</text><text x="38" y="146" fill="#e2e5ee" font-family="Inter,Segoe UI,sans-serif" font-size="14">40 ml</text>
+    <rect x="176" y="108" width="143" height="45" rx="14" fill="#171d2b"/><text x="192" y="128" fill="#8792a7" font-family="Inter,Segoe UI,sans-serif" font-size="11">Strength</text><text x="192" y="146" fill="#e2e5ee" font-family="Inter,Segoe UI,sans-serif" font-size="14">Strong</text>
+  </g>
+
+  <g transform="translate(620 376)" filter="url(#shadow)">
+    <rect width="510" height="176" rx="24" fill="#202636" stroke="#344057"/>
+    <rect width="510" height="4" rx="2" fill="#34cda2"/>
+    <rect x="22" y="24" width="58" height="58" rx="17" fill="#161c2a" stroke="#2c6d61"/>
+    <circle cx="51" cy="53" r="15" fill="none" stroke="#9bcac0" stroke-width="3"/><path d="M51 43a10 10 0 018 6" fill="none" stroke="#9bcac0" stroke-width="3" stroke-linecap="round"/>
+    <text x="98" y="50" fill="#f8f9fd" font-family="Inter,Segoe UI,sans-serif" font-size="20" font-weight="700">Dryer</text>
+    <circle cx="105" cy="73" r="4" fill="#44d6af"/><text x="118" y="78" fill="#adb7c9" font-family="Inter,Segoe UI,sans-serif" font-size="15">Drying · Cotton</text>
+    <rect x="356" y="30" width="52" height="30" rx="15" fill="#153f39"/><text x="370" y="50" fill="#62e1bf" font-family="Inter,Segoe UI,sans-serif" font-size="14" font-weight="700">38%</text>
+    <rect x="418" y="30" width="70" height="30" rx="15" fill="#2c3344"/><text x="430" y="50" fill="#c0c8d6" font-family="Inter,Segoe UI,sans-serif" font-size="13">1:12 h</text>
+    <rect x="22" y="108" width="466" height="10" rx="5" fill="#131a27"/><rect x="22" y="108" width="177" height="10" rx="5" fill="#34cda2"/>
+    <text x="22" y="151" fill="#8e9ab0" font-family="Inter,Segoe UI,sans-serif" font-size="13">Gentle drying</text><text x="454" y="151" text-anchor="end" fill="#60dfbd" font-family="Inter,Segoe UI,sans-serif" font-size="13">On</text>
+  </g>
+</svg>
