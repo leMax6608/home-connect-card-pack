@@ -1,7 +1,13 @@
-# Home Connect Card Pack
+<p align="center">
+  <img src="docs/images/logo.png" alt="Home Connect Card Pack logo showing four connected appliance cards" width="180">
+</p>
 
-[![HACS validation](https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml/badge.svg)](https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+<h1 align="center">Home Connect Card Pack</h1>
+
+<p align="center">
+  <a href="https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml"><img src="https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml/badge.svg" alt="HACS validation"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+</p>
 
 ![Home Connect Card Pack preview](docs/images/cards-preview.png)
 

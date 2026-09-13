@@ -18,3 +18,5 @@ After adding both images for an appliance, enable its prepared block in the repo
 Use the same width and browser zoom level for both states. Prefer tightly cropped screenshots without personal information, hostnames, IP addresses, location names, or unrelated dashboard content.
 
 The files `cards-preview.svg` and `cards-preview.png` are the existing generic project preview and should remain in place for HACS validation.
+
+`logo.png` is the original, brand-neutral repository logo. Keep the transparent outer canvas intact when deriving smaller icon sizes.
