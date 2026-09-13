@@ -39,7 +39,6 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 ![Dishwasher card — expanded view with all configured information](docs/images/dishwasher-expanded.png)
 
 </details>
--->
 
 <!--
 ### Oven
