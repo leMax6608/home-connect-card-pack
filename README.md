@@ -20,32 +20,70 @@ This card pack is primarily recommended for use with [Home Connect Local](https:
 
 ## Screenshots
 
-The preview above gives an overview of the card pack. Real Home Assistant screenshots can be added here as they become available.
+The preview above gives an overview of the card pack. Each appliance has a prepared two-image showcase: the compact card is always visible, while the complete card can be opened on demand. This keeps the README easy to scan without hiding the detailed view.
 
-1. Add the images to `docs/images/` using these recommended filenames:
-   - `dishwasher.png`
-   - `oven.png`
-   - `coffee-machine.png`
-   - `dryer.png`
-2. Open this README and remove the surrounding `<!--` and `-->` lines from the prepared block below.
-3. Commit the images together with the updated README. Landscape screenshots with a consistent width work best.
+To add real Home Assistant screenshots:
+
+1. Add both images for an appliance to `docs/images/` using the filenames shown below.
+2. Remove only the `<!--` and `-->` lines surrounding that appliance's prepared block.
+3. Commit the two images together with the updated README.
+
+Use equally wide, tightly cropped screenshots and remove personal information, hostnames, IP addresses and unrelated dashboard content. Keep the compact and expanded screenshots at the same browser zoom level.
 
 <!--
 ### Dishwasher
 
-![Dishwasher card in Home Assistant](docs/images/dishwasher.png)
+![Dishwasher card — compact view](docs/images/dishwasher-compact.png)
 
+<details>
+<summary>Show expanded dishwasher card</summary>
+<br>
+
+![Dishwasher card — expanded view with all configured information](docs/images/dishwasher-expanded.png)
+
+</details>
+-->
+
+<!--
 ### Oven
 
-![Oven card in Home Assistant](docs/images/oven.png)
+![Oven card — compact view](docs/images/oven-compact.png)
 
+<details>
+<summary>Show expanded oven card</summary>
+<br>
+
+![Oven card — expanded view with all configured information](docs/images/oven-expanded.png)
+
+</details>
+-->
+
+<!--
 ### Coffee machine
 
-![Coffee machine card in Home Assistant](docs/images/coffee-machine.png)
+![Coffee machine card — compact view](docs/images/coffee-machine-compact.png)
 
+<details>
+<summary>Show expanded coffee-machine card</summary>
+<br>
+
+![Coffee machine card — expanded view with all configured information](docs/images/coffee-machine-expanded.png)
+
+</details>
+-->
+
+<!--
 ### Dryer
 
-![Dryer card in Home Assistant](docs/images/dryer.png)
+![Dryer card — compact view](docs/images/dryer-compact.png)
+
+<details>
+<summary>Show expanded dryer card</summary>
+<br>
+
+![Dryer card — expanded view with all configured information](docs/images/dryer-expanded.png)
+
+</details>
 -->
 
 ## Highlights
@@ -60,7 +98,6 @@ The preview above gives an overview of the card pack. Real Home Assistant screen
 - Device-registry-first entity discovery; manual assignments always win
 - One-click YAML export and a privacy-conscious entity discovery report in every editor
 - Click the appliance identity for Home Assistant's More Info dialog; use the metrics/chevron to expand the card
-- Expanded diagnostics for configured entities that are missing or unavailable, without a counter in the compact header
 - Click any read-only status row to open its native Home Assistant More Info dialog
 - Optional custom accent colors while retaining safe appliance-specific defaults
 - Sections-dashboard sizing hints and appliance-aware card suggestions on supported Home Assistant versions
