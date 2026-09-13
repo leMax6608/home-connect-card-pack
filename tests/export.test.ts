@@ -42,7 +42,7 @@ describe("configuration exports", () => {
       entity: "sensor.dishwasher_status",
     });
 
-    expect(report).toContain("Version: 1.5.0");
+    expect(report).toContain("Version: 1.5.1");
     expect(report).toContain("status_entity: sensor.dishwasher_status (suggested)");
     expect(report).toContain("switch.dishwasher_power");
     expect(report).not.toContain("private-device-id");

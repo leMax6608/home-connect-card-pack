@@ -247,11 +247,7 @@ export abstract class BaseApplianceCard extends LitElement {
       .filter(({ entity }) => isAvailable(entity));
     const detailsDisabled = mode === "running" || mode === "paused";
     const unavailableIds = unavailableEntityIds(this.hass, this._config);
-    const unavailableLabel = translate(
-      this.hass,
-      unavailableIds.length === 1 ? "configured_entity_unavailable" : "configured_entities_unavailable",
-      unavailableIds.length === 1 ? "configured entity unavailable" : "configured entities unavailable",
-    );
+    const unavailableLabel = translate(this.hass, "configured_entities_unavailable", "Configured entities unavailable");
     const infoEntityId = this.infoEntityId();
     const accent = resolveAccentColor(this._config.accent_color, this.definition.accent);
 
@@ -268,13 +264,12 @@ export abstract class BaseApplianceCard extends LitElement {
             ${prominent.map(({ entity }) => html`<span class="metric">${displayState(this.hass!, entity)}</span>`)}
             ${summaryProgress !== undefined && this._config.show_progress !== false ? html`<span class="metric progress">${Math.round(summaryProgress)}%</span>` : ""}
             ${isAvailable(summaryRemaining) && this._config.show_remaining_time !== false ? html`<span class="metric">${displayState(this.hass, summaryRemaining)}</span>` : ""}
-            ${unavailableIds.length ? html`<span class="metric issue" title=${`${unavailableIds.length} ${unavailableLabel}`}><ha-icon icon="mdi:cloud-alert-outline"></ha-icon>${unavailableIds.length}</span>` : ""}
           </div><ha-icon class="chevron" icon="mdi:chevron-down"></ha-icon></button>
           ${summaryProgress !== undefined && this._config.show_progress !== false ? html`<div class="summary-progress" aria-hidden="true"><div class="summary-progress-fill" style=${`transform:scaleX(${summaryProgress / 100})`}></div></div>` : ""}
         </div>
         <div class="details"><div class="details-inner"><div class="details-content">
           ${warnings.length ? html`<div class="warning-strip">${warnings.map(({ field, entity }) => html`<hc-status-chip .label=${fieldLabel(this.hass, field)} .value=${entity?.entity_id.startsWith("binary_sensor.") ? "" : displayState(this.hass!, entity)} warning icon="mdi:alert-outline"></hc-status-chip>`)}</div>` : ""}
-          ${unavailableIds.length ? html`<div class="entity-warning" role="alert"><ha-icon icon="mdi:cloud-alert-outline"></ha-icon><div><strong>${unavailableIds.length} ${unavailableLabel}</strong><br><code>${unavailableIds.join(", ")}</code></div></div>` : ""}
+          ${unavailableIds.length ? html`<div class="entity-warning" role="alert"><ha-icon icon="mdi:cloud-alert-outline"></ha-icon><div><strong>${unavailableLabel}</strong><br><code>${unavailableIds.join(", ")}</code></div></div>` : ""}
           ${this.renderPower(false)}
           ${showActivity ? html`<div class="activity"><div class="activity-top"><div class="activity-copy"><div class="activity-label">${mode === "running" ? translate(this.hass, "running", "Now running") : mode === "paused" ? translate(this.hass, "paused", "Paused") : translate(this.hass, "ready", "Ready")}</div><div class="activity-program">${isAvailable(program) ? displayState(this.hass, program) : translate(this.hass, "appliance_status", "Appliance status")}</div></div>${isAvailable(summaryRemaining) && this._config.show_remaining_time !== false ? html`<div class="activity-time">${displayState(this.hass, summaryRemaining)}</div>` : ""}</div>${summaryProgress !== undefined && this._config.show_progress !== false ? html`<hc-progress-display .value=${summaryProgress} .label=${translate(this.hass, "progress", "Program progress")} .animated=${animations}></hc-progress-display>` : ""}</div>` : ""}
           ${this.renderActions(mode)}

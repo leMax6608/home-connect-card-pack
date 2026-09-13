@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1
+
+- Remove the unavailable-entity count from the compact card header
+- Keep the expanded unavailable-entity diagnostic and affected entity IDs without displaying a count
+
 ## 1.5.0
 
 - Add a five-second two-tap safeguard before sending Cancel commands, enabled by default

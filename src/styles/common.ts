@@ -38,8 +38,6 @@ export const commonCardStyles = css`
   .metrics { display: flex; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; overflow: hidden; white-space: nowrap; }
   .metric { padding: 5px 8px; border-radius: 999px; background: color-mix(in srgb, var(--secondary-background-color), transparent 20%); font-size: 11px; color: var(--secondary-text-color); font-variant-numeric: tabular-nums; }
   .metric.progress { color: var(--hc-accent); background: color-mix(in srgb, var(--hc-accent), transparent 88%); font-weight: 700; }
-  .metric.issue { display: inline-flex; align-items: center; gap: 3px; color: var(--error-color); background: color-mix(in srgb, var(--error-color), transparent 90%); font-weight: 700; }
-  .metric.issue ha-icon { --mdc-icon-size: 14px; }
   .chevron { flex: none; padding: 4px; border-radius: 999px; background: color-mix(in srgb, var(--secondary-background-color), transparent 18%); transition: transform 220ms ease, background 180ms ease; color: var(--secondary-text-color); }
   .expanded .chevron { transform: rotate(180deg); }
   .details { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 260ms cubic-bezier(.2,.8,.2,1); }

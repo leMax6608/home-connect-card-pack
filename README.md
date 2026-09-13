@@ -59,7 +59,7 @@ The preview above gives an overview of the card pack. Real Home Assistant screen
 - Device-registry-first entity discovery; manual assignments always win
 - One-click YAML export and a privacy-conscious entity discovery report in every editor
 - Click the appliance identity for Home Assistant's More Info dialog; use the metrics/chevron to expand the card
-- Compact and expanded warnings for configured entities that are missing or unavailable
+- Expanded diagnostics for configured entities that are missing or unavailable, without a counter in the compact header
 - Click any read-only status row to open its native Home Assistant More Info dialog
 - Optional custom accent colors while retaining safe appliance-specific defaults
 - Sections-dashboard sizing hints and appliance-aware card suggestions on supported Home Assistant versions
