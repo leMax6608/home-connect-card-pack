@@ -24,6 +24,23 @@ describe("configuration exports", () => {
     ].join("\n"));
   });
 
+  it("serializes manual program display names as a nested YAML mapping", () => {
+    const yaml = serializeCardConfig({
+      type: dishwasherDefinition.cardType,
+      selected_program_entity: "select.dishwasher_program",
+      program_names: {
+        "Dishcare.Dishwasher.Program.Auto2": "Automatik",
+        "Dishcare.Dishwasher.Program.Quick45": "Schnell 45°",
+      },
+    }, dishwasherDefinition);
+
+    expect(yaml).toContain([
+      "program_names:",
+      "  Dishcare.Dishwasher.Program.Auto2: Automatik",
+      "  Dishcare.Dishwasher.Program.Quick45: \"Schnell 45°\"",
+    ].join("\n"));
+  });
+
   it("creates a privacy-conscious discovery report without states or registry device IDs", async () => {
     const entries = [
       { entity_id: "sensor.dishwasher_status", device_id: "private-device-id", original_name: "Dishwasher status" },
@@ -42,7 +59,7 @@ describe("configuration exports", () => {
       entity: "sensor.dishwasher_status",
     });
 
-    expect(report).toContain("Version: 1.5.1");
+    expect(report).toContain("Version: 1.6.0");
     expect(report).toContain("status_entity: sensor.dishwasher_status (suggested)");
     expect(report).toContain("switch.dishwasher_power");
     expect(report).not.toContain("private-device-id");

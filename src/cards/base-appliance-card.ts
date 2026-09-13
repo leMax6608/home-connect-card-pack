@@ -11,6 +11,7 @@ import { fieldLabel, translate } from "../helpers/localize";
 import type { ControlEventDetail } from "../components/entity-control";
 import type { ApplianceAction } from "../components/action-buttons";
 import { fireMoreInfo } from "../helpers/actions";
+import { displayProgramName } from "../helpers/programs";
 import "../components/appliance-header";
 import "../components/progress-display";
 import "../components/status-chip";
@@ -204,6 +205,7 @@ export abstract class BaseApplianceCard extends LitElement {
     return html`<hc-expandable-section .title=${translate(this.hass, `section.${section}`, meta.title)} .icon=${meta.icon} .open=${false}>
       <div class="section-grid ${section === "program" ? "program-grid" : ""}">${fields.map(({ field, entity }) => html`
         <div class="entity-slot"><hc-entity-control .hass=${this.hass} .entity=${entity} .label=${fieldLabel(this.hass, field)} .kind=${this.controlKind(field, entity)}
+          .valueLabels=${field.key === "selected_program_entity" || field.key === "active_program_entity" ? this._config?.program_names || {} : {}}
           .busy=${this._busyIds.has(entity.entity_id)} .disabled=${disabled && field.kind !== "status"}></hc-entity-control>
         </div>
       `)}</div>
@@ -250,6 +252,7 @@ export abstract class BaseApplianceCard extends LitElement {
     const unavailableLabel = translate(this.hass, "configured_entities_unavailable", "Configured entities unavailable");
     const infoEntityId = this.infoEntityId();
     const accent = resolveAccentColor(this._config.accent_color, this.definition.accent);
+    const programNames = this._config.program_names;
 
     const showActivity = mode !== "off" && (isAvailable(program) || isAvailable(summaryRemaining) || summaryProgress !== undefined);
 
@@ -258,7 +261,7 @@ export abstract class BaseApplianceCard extends LitElement {
         <div class="summary ${summaryProgress !== undefined && this._config.show_progress !== false ? "has-progress" : ""}">
           <button class="summary-button header-button" type="button" ?disabled=${!infoEntityId} @click=${this.showMoreInfo} title=${translate(this.hass, "action.more_info", "More information")} aria-label=${translate(this.hass, "action.more_info", "More information")}>
             <hc-appliance-header .name=${this._config.name || translate(this.hass, `device.${this.definition.kind}`, this.definition.defaultName)} .icon=${this._config.icon || this.definition.defaultIcon}
-              .status=${displayState(this.hass, headerStatus)} .program=${isAvailable(summaryProgram) ? displayState(this.hass, summaryProgram) : ""} .mode=${mode} .accent=${accent}></hc-appliance-header>
+              .status=${displayState(this.hass, headerStatus)} .program=${isAvailable(summaryProgram) ? displayProgramName(this.hass, summaryProgram!, programNames) : ""} .mode=${mode} .accent=${accent}></hc-appliance-header>
           </button>
           <button class="summary-button summary-toggle" type="button" @click=${this.toggleExpanded} aria-expanded=${String(this._expanded)} aria-label=${translate(this.hass, "action.toggle_details", "Toggle details")}><div class="metrics">
             ${prominent.map(({ entity }) => html`<span class="metric">${displayState(this.hass!, entity)}</span>`)}
@@ -271,7 +274,7 @@ export abstract class BaseApplianceCard extends LitElement {
           ${warnings.length ? html`<div class="warning-strip">${warnings.map(({ field, entity }) => html`<hc-status-chip .label=${fieldLabel(this.hass, field)} .value=${entity?.entity_id.startsWith("binary_sensor.") ? "" : displayState(this.hass!, entity)} warning icon="mdi:alert-outline"></hc-status-chip>`)}</div>` : ""}
           ${unavailableIds.length ? html`<div class="entity-warning" role="alert"><ha-icon icon="mdi:cloud-alert-outline"></ha-icon><div><strong>${unavailableLabel}</strong><br><code>${unavailableIds.join(", ")}</code></div></div>` : ""}
           ${this.renderPower(false)}
-          ${showActivity ? html`<div class="activity"><div class="activity-top"><div class="activity-copy"><div class="activity-label">${mode === "running" ? translate(this.hass, "running", "Now running") : mode === "paused" ? translate(this.hass, "paused", "Paused") : translate(this.hass, "ready", "Ready")}</div><div class="activity-program">${isAvailable(program) ? displayState(this.hass, program) : translate(this.hass, "appliance_status", "Appliance status")}</div></div>${isAvailable(summaryRemaining) && this._config.show_remaining_time !== false ? html`<div class="activity-time">${displayState(this.hass, summaryRemaining)}</div>` : ""}</div>${summaryProgress !== undefined && this._config.show_progress !== false ? html`<hc-progress-display .value=${summaryProgress} .label=${translate(this.hass, "progress", "Program progress")} .animated=${animations}></hc-progress-display>` : ""}</div>` : ""}
+          ${showActivity ? html`<div class="activity"><div class="activity-top"><div class="activity-copy"><div class="activity-label">${mode === "running" ? translate(this.hass, "running", "Now running") : mode === "paused" ? translate(this.hass, "paused", "Paused") : translate(this.hass, "ready", "Ready")}</div><div class="activity-program">${isAvailable(program) ? displayProgramName(this.hass, program!, programNames) : translate(this.hass, "appliance_status", "Appliance status")}</div></div>${isAvailable(summaryRemaining) && this._config.show_remaining_time !== false ? html`<div class="activity-time">${displayState(this.hass, summaryRemaining)}</div>` : ""}</div>${summaryProgress !== undefined && this._config.show_progress !== false ? html`<hc-progress-display .value=${summaryProgress} .label=${translate(this.hass, "progress", "Program progress")} .animated=${animations}></hc-progress-display>` : ""}</div>` : ""}
           ${this.renderActions(mode)}
           ${this.renderSection("program", detailsDisabled)}
           ${this.renderSection("options", detailsDisabled)}

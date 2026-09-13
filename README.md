@@ -55,6 +55,7 @@ The preview above gives an overview of the card pack. Real Home Assistant screen
 - Context-aware controls for off, idle, running and paused states
 - Two-tap confirmation for Cancel prevents accidental program termination
 - Program selects, number sliders, switches/lights, action buttons and grouped status
+- Fully manual display names for technical program values, used consistently across selector and status displays
 - Four full visual editors using Home Assistant entity pickers
 - Device-registry-first entity discovery; manual assignments always win
 - One-click YAML export and a privacy-conscious entity discovery report in every editor
@@ -103,7 +104,10 @@ Add a card and search for **Home Connect**. Every card exposes a grouped editor.
 1. Under **General**, choose any entity belonging to the appliance as **Device anchor entity**.
 2. Discovery starts automatically; **Detect device entities** can run it again after manual changes.
 3. Review the proposed mappings and replace any duplicate/alternative entity with your preferred one.
-4. Configure only the functions you want. Unconfigured fields are not rendered.
+4. Under **Program**, open **Rename programs manually** to assign optional display names to the available program values.
+5. Configure only the functions you want. Unconfigured fields are not rendered.
+
+Program names are never generated or guessed. The editor shows the original Home Assistant value next to an empty name field. A custom name changes only what the card displays; selections and service calls always retain the exact original option value.
 
 The two utility buttons below discovery copy either a paste-ready YAML configuration or an entity discovery report. The report is intended for troubleshooting mapping issues and deliberately excludes entity states, attributes, device-registry IDs, IP addresses and credentials. Entity IDs and display names can still contain personal labels, so review it before posting it publicly.
 
@@ -139,6 +143,7 @@ Complete examples matching the reference entities are in [`examples.yaml`](examp
 | `operating_state_entity` | Primary state used for context | — |
 | `active_program_entity` | Program currently running | — |
 | `selected_program_entity` | Program selection | — |
+| `program_names` | Original program values mapped to manual display names | — |
 | `progress_entity` | Numeric program progress | — |
 | `remaining_time_entity` | Remaining time | — |
 | `start_entity` / `pause_entity` / `resume_entity` / `cancel_entity` | Button entities | — |

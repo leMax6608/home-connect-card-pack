@@ -1,4 +1,5 @@
 export type ApplianceKind = "dishwasher" | "oven" | "coffee" | "dryer";
+export type ProgramNameMap = Record<string, string>;
 
 export interface BaseApplianceCardConfig {
   type: string;
@@ -13,6 +14,7 @@ export interface BaseApplianceCardConfig {
   selected_program_entity?: string;
   progress_entity?: string;
   remaining_time_entity?: string;
+  program_names?: ProgramNameMap;
   start_entity?: string;
   pause_entity?: string;
   resume_entity?: string;
@@ -25,7 +27,7 @@ export interface BaseApplianceCardConfig {
   show_status_section?: boolean;
   show_options_section?: boolean;
   show_settings_section?: boolean;
-  [key: string]: string | boolean | undefined;
+  [key: string]: string | boolean | ProgramNameMap | undefined;
 }
 
 export interface DishwasherCardConfig extends BaseApplianceCardConfig {

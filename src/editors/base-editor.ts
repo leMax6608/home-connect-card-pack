@@ -1,5 +1,5 @@
 import { LitElement, PropertyValues, css, html, nothing } from "lit";
-import type { ApplianceCardConfig, BaseApplianceCardConfig } from "../types/config";
+import type { ApplianceCardConfig } from "../types/config";
 import type { HomeAssistant } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition } from "../types/schema";
 import { discoverEntities } from "../helpers/registry";
@@ -49,10 +49,18 @@ export abstract class BaseApplianceEditor extends LitElement {
     .tool:hover { border-color: var(--primary-color); }
     .tool:disabled { opacity: .55; cursor: not-allowed; }
     .tool ha-icon { --mdc-icon-size: 18px; }
+    .program-names { border: 1px solid var(--divider-color); border-radius: 11px; background: color-mix(in srgb, var(--secondary-background-color), transparent 35%); }
+    .program-names summary { min-height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 11px; color: var(--primary-text-color); font-size: 13px; font-weight: 650; cursor: pointer; }
+    .program-names summary ha-icon { --mdc-icon-size: 18px; color: var(--primary-color); }
+    .program-names-body { display: grid; gap: 10px; padding: 0 11px 11px; }
+    .program-names-help { margin: 0; color: var(--secondary-text-color); font-size: 11px; line-height: 1.45; }
+    .program-rename { display: grid; grid-template-columns: minmax(0, 1fr) minmax(140px, 1fr); align-items: center; gap: 9px; }
+    .program-rename code { overflow: hidden; color: var(--secondary-text-color); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .program-rename input { height: 36px; font-size: 12px; }
     .notice { font-size: 12px; color: var(--secondary-text-color); }
     .loading { animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @media (max-width: 480px) { .tool-row { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { .tool-row, .program-rename { grid-template-columns: 1fr; } .program-rename { gap: 4px; } }
   `;
 
   setConfig(config: ApplianceCardConfig): void { this._config = { ...config }; }
@@ -150,6 +158,49 @@ export abstract class BaseApplianceEditor extends LitElement {
     return html`<div class="toggle"><label for=${key}>${label}</label><ha-switch id=${key} .checked=${checked} @change=${(ev: Event) => this.change(key, (ev.currentTarget as HTMLInputElement).checked)}></ha-switch></div>`;
   }
 
+  private availablePrograms(): string[] {
+    if (!this._config || !this.hass) return [];
+    const programs: string[] = [];
+    const add = (value: unknown, explicitlyConfigured = false) => {
+      if (typeof value !== "string" || !value.trim() || programs.includes(value)) return;
+      const normalized = value.toLowerCase().replace(/[\s_.-]+/g, "");
+      if (!explicitlyConfigured && (["unknown", "unavailable", "none", "null", "off"].includes(normalized) || /noprogram|notselected/.test(normalized))) return;
+      programs.push(value);
+    };
+    const selectedId = this._config.selected_program_entity;
+    const selected = typeof selectedId === "string" ? this.hass.states[selectedId] : undefined;
+    for (const option of selected?.attributes.options || []) add(option);
+    add(selected?.state);
+    const activeId = this._config.active_program_entity;
+    const active = typeof activeId === "string" ? this.hass.states[activeId] : undefined;
+    add(active?.state);
+    for (const original of Object.keys(this._config.program_names || {})) add(original, true);
+    return programs;
+  }
+
+  private changeProgramName(original: string, value: string): void {
+    if (!this._config) return;
+    const config = { ...this._config };
+    const names = { ...(config.program_names || {}) };
+    const label = value.trim();
+    if (label) names[original] = label;
+    else delete names[original];
+    if (Object.keys(names).length) config.program_names = names;
+    else delete config.program_names;
+    this.notify(config);
+  }
+
+  private renderProgramNames() {
+    if (!this._config) return nothing;
+    const programs = this.availablePrograms();
+    if (!programs.length) return nothing;
+    const names = this._config.program_names || {};
+    return html`<details class="program-names"><summary><ha-icon icon="mdi:rename-box-outline"></ha-icon>${translate(this.hass, "editor.program_names", "Rename programs manually")}</summary><div class="program-names-body">
+      <p class="program-names-help">${translate(this.hass, "editor.program_names_help", "Optional display names only. The original value is still sent to Home Assistant.")}</p>
+      ${programs.map((program) => html`<label class="program-rename"><code title=${program}>${program}</code><input type="text" .value=${names[program] || ""} placeholder=${translate(this.hass, "editor.custom_program_name", "Custom name")} aria-label=${`${translate(this.hass, "editor.custom_program_name", "Custom name")}: ${program}`} @change=${(event: Event) => this.changeProgramName(program, (event.currentTarget as HTMLInputElement).value)}></label>`)}
+    </div></details>`;
+  }
+
   render() {
     if (!this._config || !this.hass) return nothing;
     return html`<div class="editor">
@@ -163,6 +214,7 @@ export abstract class BaseApplianceEditor extends LitElement {
         const fields = this.definition.fields.filter((field) => field.section === group.id);
         if (!fields.length) return nothing;
         return html`<section class="group"><h3 class="group-title"><ha-icon .icon=${group.icon}></ha-icon>${translate(this.hass, `section.${group.id}`, group.label)}</h3><div class="fields">${fields.map((field) => this.renderEntityField(field))}
+          ${group.id === "program" ? this.renderProgramNames() : ""}
           ${group.id === "general" ? html`
             <button type="button" class="detect" ?disabled=${!this._config?.entity || this._discovering} @click=${this.autoDetect}><ha-icon class=${this._discovering ? "loading" : ""} .icon=${this._discovering ? "mdi:loading" : "mdi:auto-fix"}></ha-icon>${translate(this.hass, "editor.detect", "Detect device entities")}</button>
             <div class="tool-row">

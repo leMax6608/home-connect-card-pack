@@ -12,7 +12,7 @@ function yamlValue(value: string | boolean): string {
 export function serializeCardConfig(config: BaseApplianceCardConfig, definition: ApplianceDefinition): string {
   const preferredKeys = [
     "type", "entity", "name", "icon", "accent_color",
-    ...definition.fields.map((field) => field.key),
+    ...definition.fields.map((field) => field.key), "program_names",
     "default_expanded", "animations", "confirm_cancel", "show_progress", "show_remaining_time",
     "show_status_section", "show_options_section", "show_settings_section",
   ];
@@ -20,7 +20,14 @@ export function serializeCardConfig(config: BaseApplianceCardConfig, definition:
   const keys = [...new Set([...preferredKeys, ...remainingKeys])];
   return `${keys.flatMap((key) => {
     const value = config[key];
-    return typeof value === "string" || typeof value === "boolean" ? [`${key}: ${yamlValue(value)}`] : [];
+    if (typeof value === "string" || typeof value === "boolean") return [`${key}: ${yamlValue(value)}`];
+    if (value && typeof value === "object") {
+      const entries = Object.entries(value)
+        .filter((entry): entry is [string, string] => typeof entry[1] === "string" && Boolean(entry[1].trim()))
+        .sort(([left], [right]) => left.localeCompare(right));
+      return entries.length ? [`${key}:`, ...entries.map(([original, label]) => `  ${yamlValue(original)}: ${yamlValue(label)}`)] : [];
+    }
+    return [];
   }).join("\n")}\n`;
 }
 

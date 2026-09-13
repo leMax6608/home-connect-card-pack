@@ -4,13 +4,16 @@ import type { HassEntity, HomeAssistant } from "../types/home-assistant";
 import { displayState, isAvailable, isOn, numericState } from "../helpers/formatting";
 import { registerElement } from "../helpers/register";
 import { fireMoreInfo } from "../helpers/actions";
+import { customProgramName } from "../helpers/programs";
+import type { ProgramNameMap } from "../types/config";
 
 export interface ControlEventDetail { entity: HassEntity; action: "toggle" | "select" | "number"; value?: string | number; }
 
 export class EntityControl extends LitElement {
-  static properties = { hass: { attribute: false }, entity: { attribute: false }, label: {}, kind: {}, disabled: { type: Boolean }, busy: { type: Boolean } };
+  static properties = { hass: { attribute: false }, entity: { attribute: false }, valueLabels: { attribute: false }, label: {}, kind: {}, disabled: { type: Boolean }, busy: { type: Boolean } };
   hass?: HomeAssistant;
   entity?: HassEntity;
+  valueLabels: ProgramNameMap = {};
   label = "";
   kind: ControlKind = "status";
   disabled = false;
@@ -53,7 +56,7 @@ export class EntityControl extends LitElement {
     if (this.kind === "select") {
       const options = this.entity.attributes.options || [];
       const choices = options.includes(this.entity.state) || unavailable ? options : [this.entity.state, ...options];
-      return html`<div class="line ${unavailable ? "unavailable" : ""}"><label class="label" for="select">${this.label}</label><select id="select" ?disabled=${blocked} @change=${(ev: Event) => this.emit("select", (ev.target as HTMLSelectElement).value)}>${choices.map((option) => html`<option .value=${option} ?selected=${option === this.entity?.state}>${option}</option>`)}</select></div>`;
+      return html`<div class="line ${unavailable ? "unavailable" : ""}"><label class="label" for="select">${this.label}</label><select id="select" ?disabled=${blocked} @change=${(ev: Event) => this.emit("select", (ev.target as HTMLSelectElement).value)}>${choices.map((option) => html`<option .value=${option} ?selected=${option === this.entity?.state}>${customProgramName(option, this.valueLabels) || option}</option>`)}</select></div>`;
     }
     if (this.kind === "number") {
       const value = numericState(this.entity) ?? Number(this.entity.attributes.min ?? 0);
@@ -62,7 +65,8 @@ export class EntityControl extends LitElement {
       const step = Number(this.entity.attributes.step ?? 1);
       return html`<div class="control ${unavailable ? "unavailable" : ""}"><div class="number-head"><label class="label" for="range">${this.label}</label><span class="number-value">${displayState(this.hass, this.entity)}</span></div><input id="range" type="range" min=${min} max=${max} step=${step} .value=${String(value)} ?disabled=${blocked} @change=${(ev: Event) => this.emit("number", Number((ev.target as HTMLInputElement).value))}></div>`;
     }
-    return html`<button type="button" class="line status-line ${unavailable ? "unavailable" : ""}" @click=${() => fireMoreInfo(this, this.entity!.entity_id)} aria-label=${`${this.label}: ${displayState(this.hass, this.entity)}`}><span class="label">${this.label}</span><span class="value">${displayState(this.hass, this.entity)}</span></button>`;
+    const displayed = customProgramName(this.entity.state, this.valueLabels) || displayState(this.hass, this.entity);
+    return html`<button type="button" class="line status-line ${unavailable ? "unavailable" : ""}" @click=${() => fireMoreInfo(this, this.entity!.entity_id)} aria-label=${`${this.label}: ${displayed}`}><span class="label">${this.label}</span><span class="value">${displayed}</span></button>`;
   }
 }
 registerElement("hc-entity-control", EntityControl);

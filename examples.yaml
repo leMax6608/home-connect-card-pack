@@ -95,6 +95,9 @@ cards:
     operating_state_entity: sensor.bosch_trockner_betriebszustand
     selected_program_entity: select.bosch_trockner_ausgewahltes_programm
     active_program_entity: sensor.bosch_trockner_aktives_programm
+    program_names:
+      LaundryCare.Dryer.Program.Cotton: Baumwolle
+      LaundryCare.Dryer.Program.EasyCare: Pflegeleicht
     progress_entity: sensor.bosch_trockner_programmfortschritt
     remaining_time_entity: sensor.bosch_trockner_verbleibende_programmlaufzeit
     finish_at_entity: sensor.bosch_trockner_fertig_in

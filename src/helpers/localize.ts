@@ -48,6 +48,8 @@ const de: Record<string, string> = {
   "editor.detected": "passende Entities ergänzt. Bitte alle Vorschläge vor dem Speichern prüfen.",
   "editor.no_matches": "Keine weiteren eindeutigen Zuordnungen gefunden.",
   "editor.copy_yaml": "YAML kopieren", "editor.copy_report": "Erkennungsbericht kopieren",
+  "editor.program_names": "Programme manuell umbenennen", "editor.program_names_help": "Nur optionale Anzeigenamen. An Home Assistant wird weiterhin der unveränderte Originalwert gesendet.",
+  "editor.custom_program_name": "Eigener Name",
   "editor.yaml_copied": "YAML-Konfiguration in die Zwischenablage kopiert.",
   "editor.report_copied": "Erkennungsbericht kopiert. Bitte vor dem Teilen persönliche Bezeichnungen prüfen.",
   "configured_entity_unavailable": "konfigurierte Entity nicht verfügbar",

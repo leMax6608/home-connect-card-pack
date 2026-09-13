@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.6.0
+
+- Add optional, fully manual display names for every program reported by the configured program entities
+- List available program options in a collapsed editor panel without generating aliases automatically
+- Apply manual names consistently to the program selector, compact header and active-program summary
+- Keep service calls bound to the unchanged original Home Assistant option value
+- Preserve custom mappings in copied YAML and show mappings that are temporarily absent from the entity options
+- Add regression tests for program-name display, fallback behavior and YAML serialization
+
 ## 1.5.1
 
 - Remove the unavailable-entity count from the compact card header
