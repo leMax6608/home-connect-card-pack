@@ -22,15 +22,6 @@ This card pack is primarily recommended for use with [Home Connect Local](https:
 
 The preview above gives an overview of the card pack. Each appliance has a prepared two-image showcase: the compact card is always visible, while the complete card can be opened on demand. This keeps the README easy to scan without hiding the detailed view.
 
-To add real Home Assistant screenshots:
-
-1. Add both images for an appliance to `docs/images/` using the filenames shown below.
-2. Remove only the `<!--` and `-->` lines surrounding that appliance's prepared block.
-3. Commit the two images together with the updated README.
-
-Use equally wide, tightly cropped screenshots and remove personal information, hostnames, IP addresses and unrelated dashboard content. Keep the compact and expanded screenshots at the same browser zoom level.
-
-<!--
 ### Dishwasher
 
 ![Dishwasher card — compact view](docs/images/dishwasher-compact.png)
