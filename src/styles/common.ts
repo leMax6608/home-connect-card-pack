@@ -49,9 +49,6 @@ export const commonCardStyles = css`
   .unavailable { opacity: .72; }
   .warning-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 1px; scrollbar-width: none; }
   .warning-strip::-webkit-scrollbar { display: none; }
-  .entity-warning { display: flex; align-items: flex-start; gap: 9px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--error-color), transparent 74%); border-radius: 11px; color: var(--error-color); background: color-mix(in srgb, var(--error-color), transparent 92%); font-size: 12px; line-height: 1.4; }
-  .entity-warning ha-icon { --mdc-icon-size: 18px; flex: none; }
-  .entity-warning code { color: inherit; overflow-wrap: anywhere; }
   .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .primary-actions { padding-top: 2px; }
   .error {

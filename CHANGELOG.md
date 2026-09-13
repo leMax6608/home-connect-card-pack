@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1
+
+- Remove the unavailable-entity diagnostic completely from expanded cards
+- Keep unavailable controls unobtrusive without showing a count, warning banner or entity-ID list
+
 ## 1.6.0
 
 - Add optional, fully manual display names for every program reported by the configured program entities

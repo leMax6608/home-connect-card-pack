@@ -52,8 +52,6 @@ const de: Record<string, string> = {
   "editor.custom_program_name": "Eigener Name",
   "editor.yaml_copied": "YAML-Konfiguration in die Zwischenablage kopiert.",
   "editor.report_copied": "Erkennungsbericht kopiert. Bitte vor dem Teilen persönliche Bezeichnungen prüfen.",
-  "configured_entity_unavailable": "konfigurierte Entity nicht verfügbar",
-  "configured_entities_unavailable": "Konfigurierte Entities nicht verfügbar",
   "option.default_expanded": "Standardmäßig geöffnet", "option.animations": "Animationen",
   "option.confirm_cancel": "Programmabbruch durch zweiten Klick bestätigen",
   "option.show_progress": "Fortschritt anzeigen", "option.show_remaining_time": "Restzeit anzeigen",

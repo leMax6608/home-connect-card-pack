@@ -4,7 +4,7 @@ import { commonCardStyles } from "../styles/common";
 import type { ApplianceCardConfig } from "../types/config";
 import type { HomeAssistant, HassEntity } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition, SectionId } from "../types/schema";
-import { configuredEntityIds, relevantStatesChanged, stateFor, unavailableEntityIds } from "../helpers/entity";
+import { configuredEntityIds, relevantStatesChanged, stateFor } from "../helpers/entity";
 import { deriveMode, displayState, isActiveMode, isAvailable, isWarningActive, progressValue, resolveAccentColor } from "../helpers/formatting";
 import { pressEntity, selectOption, setNumber, toggleEntity } from "../helpers/services";
 import { fieldLabel, translate } from "../helpers/localize";
@@ -248,8 +248,6 @@ export abstract class BaseApplianceCard extends LitElement {
       .map((field) => ({ field, entity: this.getState(field.key) }))
       .filter(({ entity }) => isAvailable(entity));
     const detailsDisabled = mode === "running" || mode === "paused";
-    const unavailableIds = unavailableEntityIds(this.hass, this._config);
-    const unavailableLabel = translate(this.hass, "configured_entities_unavailable", "Configured entities unavailable");
     const infoEntityId = this.infoEntityId();
     const accent = resolveAccentColor(this._config.accent_color, this.definition.accent);
     const programNames = this._config.program_names;
@@ -272,7 +270,6 @@ export abstract class BaseApplianceCard extends LitElement {
         </div>
         <div class="details"><div class="details-inner"><div class="details-content">
           ${warnings.length ? html`<div class="warning-strip">${warnings.map(({ field, entity }) => html`<hc-status-chip .label=${fieldLabel(this.hass, field)} .value=${entity?.entity_id.startsWith("binary_sensor.") ? "" : displayState(this.hass!, entity)} warning icon="mdi:alert-outline"></hc-status-chip>`)}</div>` : ""}
-          ${unavailableIds.length ? html`<div class="entity-warning" role="alert"><ha-icon icon="mdi:cloud-alert-outline"></ha-icon><div><strong>${unavailableLabel}</strong><br><code>${unavailableIds.join(", ")}</code></div></div>` : ""}
           ${this.renderPower(false)}
           ${showActivity ? html`<div class="activity"><div class="activity-top"><div class="activity-copy"><div class="activity-label">${mode === "running" ? translate(this.hass, "running", "Now running") : mode === "paused" ? translate(this.hass, "paused", "Paused") : translate(this.hass, "ready", "Ready")}</div><div class="activity-program">${isAvailable(program) ? displayProgramName(this.hass, program!, programNames) : translate(this.hass, "appliance_status", "Appliance status")}</div></div>${isAvailable(summaryRemaining) && this._config.show_remaining_time !== false ? html`<div class="activity-time">${displayState(this.hass, summaryRemaining)}</div>` : ""}</div>${summaryProgress !== undefined && this._config.show_progress !== false ? html`<hc-progress-display .value=${summaryProgress} .label=${translate(this.hass, "progress", "Program progress")} .animated=${animations}></hc-progress-display>` : ""}</div>` : ""}
           ${this.renderActions(mode)}

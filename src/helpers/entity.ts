@@ -14,11 +14,6 @@ export function configuredEntityIds(config: BaseApplianceCardConfig): string[] {
   return [...result];
 }
 
-export function unavailableEntityIds(hass: HomeAssistant | undefined, config: BaseApplianceCardConfig): string[] {
-  if (!hass) return [];
-  return configuredEntityIds(config).filter((id) => !hass.states[id] || hass.states[id].state === "unavailable");
-}
-
 export function relevantStatesChanged(
   oldHass: HomeAssistant | undefined,
   newHass: HomeAssistant | undefined,
