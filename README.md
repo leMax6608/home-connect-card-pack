@@ -1,13 +1,11 @@
-<p align="center">
-  <img src="docs/images/logo.png" alt="Home Connect Card Pack logo" width="72">
-</p>
-
-<h1 align="center">Home Connect Card Pack</h1>
+<h1 align="center"><img src="docs/images/logo.png" alt="" width="52" valign="middle"> Home Connect Card Pack</h1>
 
 <p align="center">
   <a href="https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml"><img src="https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml/badge.svg" alt="HACS validation"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
 </p>
+
+![Large preview of all Home Connect cards](docs/images/cards-preview.png)
 
 An **independent, unofficial** family of four native, dependency-light Lovelace custom cards for Home Assistant:
 
@@ -30,7 +28,7 @@ The real compact cards are shown individually at a readable size. Open the detai
 <summary>Show expanded dishwasher card</summary>
 <br>
 
-![Dishwasher card — expanded view with all configured information](docs/images/dishwasher-expanded.png)
+<img src="docs/images/dishwasher-expanded.png" alt="Dishwasher card — expanded view with all configured information" width="552">
 
 </details>
 
@@ -56,7 +54,7 @@ The real compact cards are shown individually at a readable size. Open the detai
 <summary>Show expanded coffee-machine card</summary>
 <br>
 
-![Coffee machine card — expanded view with all configured information](docs/images/coffee-machine-expanded.png)
+<img src="docs/images/coffee-machine-expanded.png" alt="Coffee machine card — expanded view with all configured information" width="552">
 
 </details>
 
@@ -68,7 +66,7 @@ The real compact cards are shown individually at a readable size. Open the detai
 <summary>Show expanded dryer card</summary>
 <br>
 
-![Dryer card — expanded view with all configured information](docs/images/dryer-expanded.png)
+<img src="docs/images/dryer-expanded.png" alt="Dryer card — expanded view with all configured information" width="552">
 
 </details>
 

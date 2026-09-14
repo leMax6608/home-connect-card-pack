@@ -1,61 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="990" viewBox="0 0 1200 990" role="img" aria-labelledby="title desc">
   <title id="title">Home Connect Card Pack preview</title>
-  <desc id="desc">Four dark Home Assistant-style appliance cards for a dishwasher, oven, coffee machine and dryer.</desc>
+  <desc id="desc">Four large Home Assistant-style appliance cards for a dishwasher, oven, coffee machine and dryer.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0a1020"/>
-      <stop offset="1" stop-color="#151b2d"/>
+      <stop offset="0" stop-color="#090e18"/>
+      <stop offset="1" stop-color="#121827"/>
     </linearGradient>
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="0">
-      <stop stop-color="#4f8cff"/>
-      <stop offset="1" stop-color="#6eb8ff"/>
-    </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
-      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity=".34"/>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000" flood-opacity=".42"/>
     </filter>
-    <clipPath id="dishwasher-card-clip">
-      <rect width="510" height="86" rx="22"/>
-    </clipPath>
-    <clipPath id="coffee-card-clip">
-      <rect width="510" height="103" rx="23"/>
-    </clipPath>
-    <clipPath id="dryer-card-clip">
-      <rect width="510" height="103" rx="23"/>
-    </clipPath>
+    <clipPath id="dishwasher-clip"><rect x="80" y="45" width="1040" height="190" rx="42"/></clipPath>
+    <clipPath id="coffee-clip"><rect x="80" y="485" width="1040" height="222" rx="42"/></clipPath>
+    <clipPath id="dryer-clip"><rect x="80" y="727" width="1040" height="218" rx="42"/></clipPath>
   </defs>
-  <rect width="1200" height="630" rx="34" fill="url(#background)"/>
-  <circle cx="1040" cy="20" r="260" fill="#4f8cff" opacity=".08"/>
-  <circle cx="120" cy="610" r="230" fill="#6eb8ff" opacity=".05"/>
-  <text x="74" y="82" fill="#f6f8ff" font-family="Inter,Segoe UI,sans-serif" font-size="34" font-weight="700">Home Connect Card Pack</text>
-  <text x="76" y="116" fill="#98a3ba" font-family="Inter,Segoe UI,sans-serif" font-size="17">Unofficial Lovelace cards · compact, contextual and theme-aware</text>
 
-  <g transform="translate(70 205)" filter="url(#shadow)">
-    <g clip-path="url(#dishwasher-card-clip)">
-      <image href="dishwasher-compact.png" x="-4.7" y="-3.8" width="514.6" height="95.8"/>
-    </g>
+  <rect width="1200" height="990" rx="34" fill="url(#background)"/>
+  <circle cx="1110" cy="80" r="280" fill="#4f8cff" opacity=".055"/>
+  <circle cx="70" cy="930" r="250" fill="#9668ff" opacity=".045"/>
+
+  <g filter="url(#shadow)">
+    <image href="dishwasher-compact.png" x="80" y="45" width="1040" height="190" preserveAspectRatio="none" clip-path="url(#dishwasher-clip)"/>
   </g>
 
-  <g transform="translate(620 196.5)" filter="url(#shadow)">
+  <g transform="translate(80 255) scale(2.039215686)" filter="url(#shadow)">
     <rect width="510" height="103" rx="23" fill="#20232d" stroke="#3d3738"/>
     <rect width="510" height="3" rx="1.5" fill="#ff8f5b"/>
     <rect x="16" y="13" width="62" height="62" rx="18" fill="#28232a" stroke="#704632"/>
     <path d="M35 29h24v31H35zM40 35h14M41 48h12" fill="none" stroke="#d0b4aa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="94" y="39" fill="#f8f9fd" font-family="Inter,Segoe UI,sans-serif" font-size="20" font-weight="700">Backofen</text>
-    <circle cx="101" cy="62" r="4" fill="#ff8f5b"/><text x="113" y="67" fill="#adb7c9" font-family="Inter,Segoe UI,sans-serif" font-size="14">Im Betrieb · Heißluft</text>
-    <rect x="363" y="22" width="68" height="34" rx="17" fill="#3b2e30"/><text x="397" y="45" text-anchor="middle" fill="#ffad86" font-family="Inter,Segoe UI,sans-serif" font-size="16" font-weight="700">180°</text>
-    <rect x="447" y="16" width="48" height="48" rx="24" fill="#1b1e27"/><path d="M462 34l9 9 9-9" fill="none" stroke="#aeb4c2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    <rect x="17" y="84" width="476" height="7" rx="3.5" fill="#151820"/><rect x="17" y="84" width="210" height="7" rx="3.5" fill="#ff8f5b"/>
+    <circle cx="101" cy="62" r="4" fill="#ff8f5b"/>
+    <text x="113" y="67" fill="#adb7c9" font-family="Inter,Segoe UI,sans-serif" font-size="14">Im Betrieb · Heißluft</text>
+    <rect x="363" y="22" width="68" height="34" rx="17" fill="#3b2e30"/>
+    <text x="397" y="45" text-anchor="middle" fill="#ffad86" font-family="Inter,Segoe UI,sans-serif" font-size="16" font-weight="700">180°</text>
+    <rect x="447" y="16" width="48" height="48" rx="24" fill="#1b1e27"/>
+    <path d="M462 34l9 9 9-9" fill="none" stroke="#aeb4c2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="17" y="84" width="476" height="7" rx="3.5" fill="#151820"/>
+    <rect x="17" y="84" width="210" height="7" rx="3.5" fill="#ff8f5b"/>
   </g>
 
-  <g transform="translate(70 412.5)" filter="url(#shadow)">
-    <g clip-path="url(#coffee-card-clip)">
-      <image href="coffee-machine-compact.png" x="-4.1" y="-3.7" width="518.2" height="110.6"/>
-    </g>
-  </g>
-
-  <g transform="translate(620 412.5)" filter="url(#shadow)">
-    <g clip-path="url(#dryer-card-clip)">
-      <image href="dryer-compact.png" x="-1.2" y="-1.6" width="512.5" height="107.3"/>
-    </g>
+  <g filter="url(#shadow)">
+    <image href="coffee-machine-compact.png" x="80" y="485" width="1040" height="222" preserveAspectRatio="none" clip-path="url(#coffee-clip)"/>
+    <image href="dryer-compact.png" x="80" y="727" width="1040" height="218" preserveAspectRatio="none" clip-path="url(#dryer-clip)"/>
   </g>
 </svg>
