@@ -54,7 +54,7 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 </details>
 -->
 
-<!--
+
 ### Coffee machine
 
 ![Coffee machine card — compact view](docs/images/coffee-machine-compact.png)
@@ -66,9 +66,9 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 ![Coffee machine card — expanded view with all configured information](docs/images/coffee-machine-expanded.png)
 
 </details>
--->
 
-<!--
+
+
 ### Dryer
 
 ![Dryer card — compact view](docs/images/dryer-compact.png)
@@ -80,7 +80,7 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 ![Dryer card — expanded view with all configured information](docs/images/dryer-expanded.png)
 
 </details>
--->
+
 
 ## Highlights
 
