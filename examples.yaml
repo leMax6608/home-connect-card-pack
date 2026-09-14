@@ -67,7 +67,6 @@ cards:
     selected_program_entity: select.siemens_kaffeemaschine_ausgewahltes_programm
     active_program_entity: sensor.siemens_kaffeemaschine_aktives_programm
     progress_entity: sensor.siemens_kaffeemaschine_programmfortschritt
-    cups_entity: select.siemens_kaffeemaschine_cups
     bean_amount_entity: select.siemens_kaffeemaschine_bean_amount
     fill_quantity_entity: number.siemens_kaffeemaschine_fill_quantity
     coffee_temperature_entity: select.siemens_kaffeemaschine_coffee_temperature

@@ -29,7 +29,7 @@ const de: Record<string, string> = {
   "field.alarm_entity": "Timer", "field.child_lock_entity": "Kindersicherung",
   "field.display_brightness_entity": "Displayhelligkeit", "field.key_tones_entity": "Tastentöne",
   "field.cooling_fan_entity": "Kühllüfter-Laufzeit", "field.tone_duration_entity": "Tondauer",
-  "field.power_state_entity": "Betriebszustand", "field.cups_entity": "Tassen",
+  "field.power_state_entity": "Betriebszustand",
   "field.bean_amount_entity": "Bohnenmenge", "field.fill_quantity_entity": "Füllmenge",
   "field.coffee_temperature_entity": "Kaffeetemperatur", "field.milk_ratio_entity": "Kaffee-/Milch-Verhältnis",
   "field.bean_container_entity": "Bohnenbehälter", "field.water_temperature_entity": "Wassertemperatur",

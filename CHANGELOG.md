@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.2
+
+- Remove the incorrect coffee-machine Cups select
+- Model Multiple beverages exclusively as `switch.siemens_kaffeemaschine_multiple_beverages`
+- Add regression coverage for the coffee-machine field definition and automatic entity discovery
+
 ## 1.6.1
 
 - Remove the unavailable-entity diagnostic completely from expanded cards

@@ -611,7 +611,6 @@ const ht = {
   "field.cooling_fan_entity": "Kühllüfter-Laufzeit",
   "field.tone_duration_entity": "Tondauer",
   "field.power_state_entity": "Betriebszustand",
-  "field.cups_entity": "Tassen",
   "field.bean_amount_entity": "Bohnenmenge",
   "field.fill_quantity_entity": "Füllmenge",
   "field.coffee_temperature_entity": "Kaffeetemperatur",
@@ -678,7 +677,7 @@ async function $e(n) {
   const t = document.execCommand("copy");
   if (e.remove(), !t) throw new Error("Could not copy to the clipboard.");
 }
-const De = "1.6.1";
+const De = "1.6.2";
 function X(n) {
   return typeof n == "boolean" ? String(n) : /^[A-Za-z0-9_./:%-]+$/.test(n) ? n : JSON.stringify(n);
 }
@@ -1009,7 +1008,6 @@ const q = [
   accent: "#b9794a",
   fields: [
     ...q.filter((n) => n.key !== "remaining_time_entity"),
-    { key: "cups_entity", label: "Cups", section: "program", kind: "select", domains: ["select"], aliases: ["cups", "tassen"] },
     { key: "bean_amount_entity", label: "Bean amount", section: "program", kind: "select", domains: ["select"], aliases: ["bean amount", "bohnenmenge"] },
     { key: "fill_quantity_entity", label: "Fill quantity", section: "program", kind: "number", domains: ["number"], aliases: ["fill quantity", "fullmenge"] },
     { key: "coffee_temperature_entity", label: "Coffee temperature", section: "program", kind: "select", domains: ["select"], aliases: ["coffee temperature", "kaffeetemperatur"] },
@@ -1017,7 +1015,7 @@ const q = [
     { key: "bean_container_entity", label: "Bean container", section: "program", kind: "select", domains: ["select"], aliases: ["bean container", "bohnenbehalter"] },
     { key: "water_temperature_entity", label: "Water temperature", section: "program", kind: "select", domains: ["select"], aliases: ["hot water temperature", "wassertemperatur"] },
     { key: "flow_rate_entity", label: "Flow rate", section: "program", kind: "select", domains: ["select"], aliases: ["flow rate", "durchflussmenge"] },
-    { key: "multiple_beverages_entity", label: "Multiple beverages", section: "options", kind: "toggle", domains: ["switch"], aliases: ["multiple beverages", "mehrere getranke"] },
+    { key: "multiple_beverages_entity", label: "Multiple beverages", section: "options", kind: "toggle", domains: ["switch"], aliases: ["multiple beverages", "multiple beverage", "mehrere getranke", "mehrere getränke"] },
     { key: "water_tank_entity", label: "Water tank", section: "status", kind: "status", domains: ["sensor", "binary_sensor"], aliases: ["water tank", "wassertank"], warning: !0 },
     { key: "beans_empty_entity", label: "Beans empty", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["beans empty", "bohnenbehalter leer"], warning: !0 },
     { key: "drip_tray_entity", label: "Drip tray", section: "status", kind: "status", domains: ["sensor", "binary_sensor"], aliases: ["drip tray", "auffangschale"], warning: !0 },

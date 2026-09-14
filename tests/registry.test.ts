@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { discoverEntities } from "../src/helpers/registry";
-import { dishwasherDefinition, dryerDefinition, ovenDefinition } from "../src/definitions";
+import { coffeeDefinition, dishwasherDefinition, dryerDefinition, ovenDefinition } from "../src/definitions";
 import type { HomeAssistant } from "../src/types/home-assistant";
 
 describe("registry-first discovery", () => {
@@ -103,5 +103,25 @@ describe("registry-first discovery", () => {
     expect(result.filter_check_entity).toBe("binary_sensor.bosch_dishwasher_filtersystem_prufen");
     expect(result.filter_entity).toBe("binary_sensor.bosch_dishwasher_maschinenreinigung_filter");
     expect(result.aquastop_entity).toBe("binary_sensor.bosch_dishwasher_aquastop_aufgetreten");
+  });
+
+  it("detects multiple beverages as the coffee-machine switch without creating a cups select", async () => {
+    const entries = [
+      { entity_id: "sensor.siemens_kaffeemaschine_betriebszustand", device_id: "coffee-1", original_name: "Betriebszustand" },
+      { entity_id: "switch.siemens_kaffeemaschine_multiple_beverages", device_id: "coffee-1", original_name: "Multiple Beverages" },
+      { entity_id: "select.siemens_kaffeemaschine_ausgewahltes_programm", device_id: "coffee-1", original_name: "Ausgewähltes Programm" },
+    ];
+    const hass = {
+      states: Object.fromEntries(entries.map((entry) => [entry.entity_id, { attributes: { friendly_name: entry.original_name } }])),
+      callWS: vi.fn(async () => entries),
+    } as unknown as HomeAssistant;
+
+    const result = await discoverEntities(hass, "sensor.siemens_kaffeemaschine_betriebszustand", coffeeDefinition, {
+      type: coffeeDefinition.cardType,
+      entity: "sensor.siemens_kaffeemaschine_betriebszustand",
+    });
+
+    expect(result.multiple_beverages_entity).toBe("switch.siemens_kaffeemaschine_multiple_beverages");
+    expect(result).not.toHaveProperty("cups_entity");
   });
 });
