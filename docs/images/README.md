@@ -15,7 +15,7 @@ Recommended filenames:
 
 After adding both images for an appliance, enable its prepared block in the repository's main `README.md` by removing that block's surrounding HTML comment markers. The compact image is then always visible; the expanded image is placed inside a collapsible `<details>` section. This lets each appliance be enabled independently.
 
-Use the same width and browser zoom level for both states. Prefer tightly cropped screenshots without personal information, hostnames, IP addresses, location names, or unrelated dashboard content.
+Use the same browser zoom level for both states. The main README constrains every compact screenshot to 552 pixels so source images with different resolutions are displayed consistently. Prefer tightly cropped screenshots without personal information, hostnames, IP addresses, location names, or unrelated dashboard content.
 
 The files `cards-preview.svg` and `cards-preview.png` are the existing generic project preview and should remain in place for HACS validation.
 

@@ -30,7 +30,7 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 
 ### Dishwasher
 
-![Dishwasher card — compact view](docs/images/dishwasher-compact.png)
+<img src="docs/images/dishwasher-compact.png" alt="Dishwasher card — compact view" width="552">
 
 <details>
 <summary>Show expanded dishwasher card</summary>
@@ -43,7 +43,7 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 <!--
 ### Oven
 
-![Oven card — compact view](docs/images/oven-compact.png)
+<img src="docs/images/oven-compact.png" alt="Oven card — compact view" width="552">
 
 <details>
 <summary>Show expanded oven card</summary>
@@ -57,7 +57,7 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 
 ### Coffee machine
 
-![Coffee machine card — compact view](docs/images/coffee-machine-compact.png)
+<img src="docs/images/coffee-machine-compact.png" alt="Coffee machine card — compact view" width="552">
 
 <details>
 <summary>Show expanded coffee-machine card</summary>
@@ -71,7 +71,7 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 
 ### Dryer
 
-![Dryer card — compact view](docs/images/dryer-compact.png)
+<img src="docs/images/dryer-compact.png" alt="Dryer card — compact view" width="552">
 
 <details>
 <summary>Show expanded dryer card</summary>
