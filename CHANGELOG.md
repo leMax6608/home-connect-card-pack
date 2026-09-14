@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.3
+
+- Keep the coffee-machine Multiple beverages switch with the other drink-specific program controls
+- Leave general device functions such as the cup warmer in the Options section
+
 ## 1.6.2
 
 - Remove the incorrect coffee-machine Cups select

@@ -14,7 +14,7 @@ describe("device-specific editor roles", () => {
 
   it("models multiple beverages only as a switch", () => {
     const field = coffeeDefinition.fields.find(({ key }) => key === "multiple_beverages_entity");
-    expect(field).toMatchObject({ kind: "toggle", domains: ["switch"] });
+    expect(field).toMatchObject({ section: "program", kind: "toggle", domains: ["switch"] });
   });
 
   it("does not expose dishwasher pause or resume actions", () => {
