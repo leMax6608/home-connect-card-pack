@@ -231,7 +231,7 @@ export abstract class BaseApplianceEditor extends LitElement {
         ${this.renderToggle("show_progress", translate(this.hass, "option.show_progress", "Show progress"), true)}
         ${this.renderToggle("show_remaining_time", translate(this.hass, "option.show_remaining_time", "Show remaining time"), true)}
         ${this.renderToggle("show_status_section", translate(this.hass, "option.show_status_section", "Show status section"), true)}
-        ${this.renderToggle("show_options_section", translate(this.hass, "option.show_options_section", "Show options section"), true)}
+        ${this.definition.fields.some((field) => field.section === "options") ? this.renderToggle("show_options_section", translate(this.hass, "option.show_options_section", "Show options section"), true) : nothing}
         ${this.renderToggle("show_settings_section", translate(this.hass, "option.show_settings_section", "Show device settings"), true)}
       </div></section>
     </div>`;

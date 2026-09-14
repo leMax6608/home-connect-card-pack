@@ -677,7 +677,7 @@ async function $e(n) {
   const t = document.execCommand("copy");
   if (e.remove(), !t) throw new Error("Could not copy to the clipboard.");
 }
-const De = "1.6.3";
+const De = "1.6.4";
 function X(n) {
   return typeof n == "boolean" ? String(n) : /^[A-Za-z0-9_./:%-]+$/.test(n) ? n : JSON.stringify(n);
 }
@@ -926,7 +926,7 @@ class K extends _ {
         ${this.renderToggle("show_progress", h(this.hass, "option.show_progress", "Show progress"), !0)}
         ${this.renderToggle("show_remaining_time", h(this.hass, "option.show_remaining_time", "Show remaining time"), !0)}
         ${this.renderToggle("show_status_section", h(this.hass, "option.show_status_section", "Show status section"), !0)}
-        ${this.renderToggle("show_options_section", h(this.hass, "option.show_options_section", "Show options section"), !0)}
+        ${this.definition.fields.some((e) => e.section === "options") ? this.renderToggle("show_options_section", h(this.hass, "option.show_options_section", "Show options section"), !0) : p}
         ${this.renderToggle("show_settings_section", h(this.hass, "option.show_settings_section", "Show device settings"), !0)}
       </div></section>
     </div>`;
@@ -1020,7 +1020,7 @@ const q = [
     { key: "beans_empty_entity", label: "Beans empty", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["beans empty", "bohnenbehalter leer"], warning: !0 },
     { key: "drip_tray_entity", label: "Drip tray", section: "status", kind: "status", domains: ["sensor", "binary_sensor"], aliases: ["drip tray", "auffangschale"], warning: !0 },
     { key: "door_entity", label: "Door", section: "status", kind: "status", domains: ["binary_sensor"], aliases: ["door", "tur"], warning: !0 },
-    { key: "cup_warmer_entity", label: "Cup warmer", section: "options", kind: "toggle", domains: ["switch"], aliases: ["cup warmer", "tassenwarmer"] },
+    { key: "cup_warmer_entity", label: "Cup warmer", section: "settings", kind: "toggle", domains: ["switch"], aliases: ["cup warmer", "tassenwarmer"] },
     { key: "child_lock_entity", label: "Child lock", section: "settings", kind: "toggle", domains: ["switch"], aliases: ["child lock", "kindersicherung"] }
   ]
 }, D = {

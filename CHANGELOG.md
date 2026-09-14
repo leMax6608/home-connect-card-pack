@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.4
+
+- Move the coffee-machine cup warmer to Device settings
+- Remove the empty Options group and its visibility toggle from the coffee-machine editor
+
 ## 1.6.3
 
 - Keep the coffee-machine Multiple beverages switch with the other drink-specific program controls

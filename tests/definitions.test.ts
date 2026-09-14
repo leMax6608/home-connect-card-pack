@@ -17,6 +17,12 @@ describe("device-specific editor roles", () => {
     expect(field).toMatchObject({ section: "program", kind: "toggle", domains: ["switch"] });
   });
 
+  it("keeps the cup warmer in device settings and has no Options section", () => {
+    const cupWarmer = coffeeDefinition.fields.find(({ key }) => key === "cup_warmer_entity");
+    expect(cupWarmer).toMatchObject({ section: "settings", kind: "toggle", domains: ["switch"] });
+    expect(coffeeDefinition.fields.filter(({ section }) => section === "options")).toHaveLength(0);
+  });
+
   it("does not expose dishwasher pause or resume actions", () => {
     expect(keys(dishwasherDefinition)).not.toContain("pause_entity");
     expect(keys(dishwasherDefinition)).not.toContain("resume_entity");
