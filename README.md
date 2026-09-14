@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/logo.png" alt="Home Connect Card Pack logo showing four connected appliance cards" width="180">
+  <img src="docs/images/logo.png" alt="Home Connect Card Pack logo" width="72">
 </p>
 
 <h1 align="center">Home Connect Card Pack</h1>
@@ -8,8 +8,6 @@
   <a href="https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml"><img src="https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml/badge.svg" alt="HACS validation"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
 </p>
-
-![Home Connect Card Pack preview](docs/images/cards-preview.png)
 
 An **independent, unofficial** family of four native, dependency-light Lovelace custom cards for Home Assistant:
 
@@ -20,13 +18,9 @@ An **independent, unofficial** family of four native, dependency-light Lovelace 
 
 The cards are built with TypeScript and Lit. They do **not** depend on `button-card`, Mushroom, or another custom card. All commands use Home Assistant services; entity state is never mutated directly.
 
-## Recommended Home Assistant integration
-
-This card pack is primarily recommended for use with [Home Connect Local](https://github.com/chris-mc1/homeconnect_local_hass), which communicates with supported appliances over the local network. The standard Home Connect integration may also work, but available entities and entity names can differ. All mappings remain manually configurable in the visual editor.
-
 ## Screenshots
 
-The preview above gives an overview of the card pack. Each appliance has a prepared two-image showcase: the compact card is always visible, while the complete card can be opened on demand. This keeps the README easy to scan without hiding the detailed view.
+The real compact cards are shown individually at a readable size. Open the detailed view below a card to see all of its configured information and controls.
 
 ### Dishwasher
 
@@ -54,7 +48,6 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 </details>
 -->
 
-
 ### Coffee machine
 
 <img src="docs/images/coffee-machine-compact.png" alt="Coffee machine card — compact view" width="552">
@@ -66,8 +59,6 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 ![Coffee machine card — expanded view with all configured information](docs/images/coffee-machine-expanded.png)
 
 </details>
-
-
 
 ### Dryer
 
@@ -81,6 +72,9 @@ The preview above gives an overview of the card pack. Each appliance has a prepa
 
 </details>
 
+## Recommended Home Assistant integration
+
+This card pack is primarily recommended for use with [Home Connect Local](https://github.com/chris-mc1/homeconnect_local_hass), which communicates with supported appliances over the local network. The standard Home Connect integration may also work, but available entities and entity names can differ. All mappings remain manually configurable in the visual editor.
 
 ## Highlights
 

@@ -17,6 +17,6 @@ After adding both images for an appliance, enable its prepared block in the repo
 
 Use the same browser zoom level for both states. The main README constrains every compact screenshot to 552 pixels so source images with different resolutions are displayed consistently. Prefer tightly cropped screenshots without personal information, hostnames, IP addresses, location names, or unrelated dashboard content.
 
-The files `cards-preview.svg` and `cards-preview.png` are the existing generic project preview and should remain in place for HACS validation.
+The optional project preview (`cards-preview.svg` / `cards-preview.png`) can be reused for social posts or repository artwork. The main README uses the individual real card screenshots so every card remains easy to read. Keep the logo and at least one screenshot in the repository for HACS validation.
 
 `logo.png` is the original, brand-neutral repository logo. Keep the transparent outer canvas intact when deriving smaller icon sizes.
