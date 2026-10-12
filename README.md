@@ -96,6 +96,20 @@ This card pack is primarily recommended for use with [Home Connect Local](https:
 - English, German and Dutch UI labels selected from the Home Assistant language
 - One small bundled module for all four cards
 
+## Supported languages
+
+All four cards and their visual editors support:
+
+- English (`en`)
+- German / Deutsch (`de`)
+- Dutch / Nederlands (`nl`, available since v1.7.0)
+
+The cards automatically follow the language selected in your Home Assistant user profile. No card configuration is needed. Regional variants such as `de-CH` and `nl-BE` use the corresponding base language; unsupported languages fall back to English.
+
+Entity values use Home Assistant's own state formatting when available. Custom appliance names and manually renamed programs keep the names you chose.
+
+Thanks to [supergroover](https://github.com/supergroover) for contributing the Dutch translations.
+
 ## Installation
 
 ### HACS custom repository

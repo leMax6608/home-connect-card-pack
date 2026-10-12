@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { createDiscoveryReport, serializeCardConfig } from "../src/helpers/export";
 import { dishwasherDefinition } from "../src/definitions";
+import { VERSION } from "../src/version";
 import type { HomeAssistant } from "../src/types/home-assistant";
 
 describe("configuration exports", () => {
@@ -58,7 +59,7 @@ describe("configuration exports", () => {
       entity: "sensor.dishwasher_status",
     });
 
-    expect(report).toContain("Version: 1.6.4");
+    expect(report).toContain(`Version: ${VERSION}`);
     expect(report).toContain("status_entity: sensor.dishwasher_status (suggested)");
     expect(report).toContain("switch.dishwasher_power");
     expect(report).not.toContain("private-device-id");
