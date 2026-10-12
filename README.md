@@ -114,9 +114,13 @@ Thanks to [supergroover](https://github.com/supergroover) for contributing the D
 
 ### HACS custom repository
 
-1. Push this repository to GitHub and create a release containing `dist/home-connect-card-pack.js`.
-2. In HACS, open **Frontend**, choose **Custom repositories**, add the repository URL and select **Dashboard**.
-3. Install **Home Connect Card Pack** and reload the browser.
+Until the repository is included in the default HACS catalog, install it as a custom repository:
+
+1. Open **HACS** and choose **Custom repositories** from the menu.
+2. Add `https://github.com/leMax6608/home-connect-card-pack` and select **Dashboard** as the type.
+3. Search for **Home Connect Card Pack**, download the latest version and reload the browser.
+
+Once the HACS inclusion request has been accepted and the catalog has been refreshed, you can find **Home Connect Card Pack** directly in HACS. Existing custom-repository installations can continue receiving updates.
 
 HACS normally adds the Lovelace resource. If needed, add it manually:
 

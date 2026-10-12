@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7.1 — 2026-10-12
+
+- Clarify HACS installation instructions for users and explain installation before default-catalog inclusion
+- Run the test suite in build and release workflows
+- Require successful HACS validation before publishing each release
+
 ## 1.7.0 — 2026-10-12
 
 - Add Dutch UI localization for all cards and editors, selected automatically when Home Assistant uses Dutch (`nl`, `nl-BE`)
