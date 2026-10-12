@@ -1,4 +1,5 @@
 import type { HassEntity, HomeAssistant } from "../types/home-assistant";
+import { translate, uiLanguage } from "./localize";
 
 const INVALID = new Set(["unknown", "unavailable", "none", "null", ""]);
 
@@ -32,9 +33,8 @@ function formatIsoDuration(value: string): string | undefined {
 }
 
 export function displayState(hass: HomeAssistant, state?: HassEntity): string {
-  const german = (hass.language || hass.locale?.language || "").toLowerCase().startsWith("de");
-  if (!state) return german ? "Nicht konfiguriert" : "Not configured";
-  if (!isAvailable(state)) return state?.state === "unavailable" ? german ? "Nicht verfügbar" : "Unavailable" : german ? "Unbekannt" : "Unknown";
+  if (!state) return translate(hass, "not_configured", "Not configured");
+  if (!isAvailable(state)) return state?.state === "unavailable" ? translate(hass, "unavailable", "Unavailable") : translate(hass, "unknown", "Unknown");
   if (hass.formatEntityState) {
     try {
       const formatted = hass.formatEntityState(state);
@@ -45,13 +45,15 @@ export function displayState(hass: HomeAssistant, state?: HassEntity): string {
     } catch { /* fallback */ }
   }
   const known = canonicalState(state);
-  const knownLabels: Record<string, [string, string]> = {
-    run: ["Running", "Läuft"], running: ["Running", "Läuft"], active: ["Active", "Aktiv"],
-    ready: ["Ready", "Bereit"], pause: ["Paused", "Pausiert"], paused: ["Paused", "Pausiert"],
-    off: ["Off", "Aus"], on: ["On", "Ein"], inactive: ["Inactive", "Inaktiv"],
-    finished: ["Finished", "Beendet"], completed: ["Completed", "Beendet"], error: ["Error", "Fehler"],
+  const knownLabels: Record<string, [string, string, string]> = {
+    run: ["Running", "Läuft", "Bezig"], running: ["Running", "Läuft", "Bezig"], active: ["Active", "Aktiv", "Actief"],
+    ready: ["Ready", "Bereit", "Gereed"], pause: ["Paused", "Pausiert", "Gepauzeerd"], paused: ["Paused", "Pausiert", "Gepauzeerd"],
+    off: ["Off", "Aus", "Uit"], on: ["On", "Ein", "Aan"], inactive: ["Inactive", "Inaktiv", "Inactief"],
+    finished: ["Finished", "Beendet", "Klaar"], completed: ["Completed", "Beendet", "Klaar"], error: ["Error", "Fehler", "Fout"],
   };
-  if (knownLabels[known] && /enumtype|eventpresentstate|operationstate|powerstate/i.test(state.state)) return knownLabels[known][german ? 1 : 0];
+  const labelIndexes: Record<string, number> = { de: 1, nl: 2 };
+  const labelIndex = labelIndexes[uiLanguage(hass)] ?? 0;
+  if (knownLabels[known] && /enumtype|eventpresentstate|operationstate|powerstate/i.test(state.state)) return knownLabels[known][labelIndex];
   const duration = formatIsoDuration(state.state);
   if (duration) return duration;
   return `${cleanLabel(state.state)}${state.attributes.unit_of_measurement ? ` ${state.attributes.unit_of_measurement}` : ""}`;

@@ -93,7 +93,7 @@ This card pack is primarily recommended for use with [Home Connect Local](https:
 - Safe handling of missing, `unknown` and `unavailable` entities
 - Relevant-entity `shouldUpdate()` filtering for busy Home Assistant dashboards
 - Responsive light/dark/theme-aware UI
-- English and German UI labels selected from the Home Assistant language
+- English, German and Dutch UI labels selected from the Home Assistant language
 - One small bundled module for all four cards
 
 ## Installation

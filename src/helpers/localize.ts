@@ -59,9 +59,78 @@ const de: Record<string, string> = {
   "option.show_settings_section": "Geräteeinstellungen anzeigen",
 };
 
+const nl: Record<string, string> = {
+  "section.general": "Algemeen", "section.program": "Programma", "section.actions": "Acties",
+  "section.options": "Opties", "section.status": "Status & onderhoud", "section.settings": "Apparaatinstellingen",
+  "section.appearance": "Weergave", "section.layout": "Indeling & gedrag", "action.start": "Start",
+  "action.pause": "Pauze", "action.resume": "Hervatten", "action.cancel": "Annuleren",
+  "action.more_info": "Meer informatie", "action.toggle_details": "Details in-/uitklappen",
+  "action.confirm_cancel": "Annuleren bevestigen", "action.dismiss": "Sluiten", power: "Aan/uit",
+  progress: "Programmavoortgang", running: "Actief programma", paused: "Gepauzeerd", ready: "Gereed",
+  appliance_status: "Apparaatstatus", working: "Bezig…", not_configured: "Niet geconfigureerd",
+  unavailable: "Niet beschikbaar", unknown: "Onbekend", "device.dishwasher": "Vaatwasser", "device.oven": "Oven",
+  "device.coffee": "Koffiemachine", "device.dryer": "Droger", "field.entity": "Anker-entiteit van apparaat",
+  "field.power_entity": "Aan/uit", "field.status_entity": "Status", "field.operating_state_entity": "Bedrijfsstatus",
+  "field.selected_program_entity": "Geselecteerd programma", "field.active_program_entity": "Actief programma",
+  "field.progress_entity": "Programmavoortgang", "field.remaining_time_entity": "Resterende tijd",
+  "field.start_entity": "Start", "field.pause_entity": "Pauze", "field.resume_entity": "Hervatten",
+  "field.cancel_entity": "Annuleren", "field.phase_entity": "Programmafase", "field.door_entity": "Deur",
+  "field.water_entity": "Geschat waterverbruik", "field.energy_entity": "Geschat energieverbruik",
+  "field.salt_entity": "Zout", "field.rinse_aid_entity": "Glansspoelmiddel",
+  "field.vario_speed_entity": "VarioSpeed Plus", "field.hygiene_entity": "Hygiëne Plus",
+  "field.half_load_entity": "Halve belading", "field.silent_entity": "Stille modus",
+  "field.care_entity": "Machineverzorging", "field.filter_check_entity": "Filtersysteem controleren",
+  "field.filter_entity": "Filter machineverzorging", "field.aquastop_entity": "AquaStop geactiveerd",
+  "field.heater_scale_entity": "Verwarmingselement verkalkt",
+  "field.current_temperature_entity": "Huidige temperatuur",
+  "field.target_temperature_entity": "Ingestelde temperatuur", "field.duration_entity": "Duur",
+  "field.level_entity": "Stand", "field.rapid_preheat_entity": "Snel voorverwarmen",
+  "field.water_tank_entity": "Waterreservoir", "field.alarm_entity": "Timer",
+  "field.child_lock_entity": "Kinderslot", "field.display_brightness_entity": "Helderheid display",
+  "field.key_tones_entity": "Toetsgeluiden", "field.cooling_fan_entity": "Nalooptijd koelventilator",
+  "field.tone_duration_entity": "Signaalduur", "field.power_state_entity": "Bedrijfsstatus",
+  "field.bean_amount_entity": "Hoeveelheid bonen", "field.fill_quantity_entity": "Vulhoeveelheid",
+  "field.coffee_temperature_entity": "Koffietemperatuur", "field.milk_ratio_entity": "Verhouding koffie/melk",
+  "field.bean_container_entity": "Bonenreservoir", "field.water_temperature_entity": "Watertemperatuur",
+  "field.flow_rate_entity": "Doorstroomsnelheid", "field.multiple_beverages_entity": "Meerdere dranken",
+  "field.beans_empty_entity": "Bonenreservoir leeg", "field.drip_tray_entity": "Lekbak",
+  "field.cup_warmer_entity": "Kopjeswarmer", "field.finish_at_entity": "Klaar over",
+  "field.drying_target_entity": "Droogdoel", "field.speed_perfect_entity": "SpeedPerfect",
+  "field.gentle_entity": "Voorzichtig", "field.wrinkle_guard_entity": "Kreukbescherming",
+  "field.reload_entity": "Bijvullen mogelijk", "field.condensate_entity": "Condenswaterreservoir",
+  "field.lint_filter_entity": "Pluizenfilter", "field.load_recommendation_entity": "Beladingsadvies",
+  "field.drum_light_entity": "Trommelverlichting", "field.door_light_entity": "Deurringverlichting",
+  "field.signal_volume_entity": "Signaalvolume", "field.brightness_entity": "Helderheid",
+  "field.auto_power_off_entity": "Automatisch uitschakelen",
+  "editor.intro": "Kies een willekeurige entiteit van het apparaat als anker. De automatische herkenning gebruikt het apparaat- en entiteitenregister en vult alleen lege velden; elke suggestie blijft aanpasbaar.",
+  "editor.name": "Naam overschrijven", "editor.icon": "Pictogram overschrijven",
+  "editor.accent_color": "Accentkleur", "editor.detect": "Entiteiten van apparaat herkennen",
+  "editor.detected": "passende entiteiten toegevoegd. Controleer alle suggesties voor het opslaan.",
+  "editor.no_matches": "Geen verdere eenduidige koppelingen gevonden.", "editor.copy_yaml": "YAML kopiëren",
+  "editor.copy_report": "Herkenningsrapport kopiëren", "editor.program_names": "Programma's handmatig hernoemen",
+  "editor.program_names_help": "Alleen optionele weergavenamen. Naar Home Assistant wordt nog steeds de oorspronkelijke waarde gestuurd.",
+  "editor.custom_program_name": "Eigen naam",
+  "editor.yaml_copied": "YAML-configuratie naar het klembord gekopieerd.",
+  "editor.report_copied": "Herkenningsrapport gekopieerd. Controleer persoonlijke namen voordat je het deelt.",
+  "option.default_expanded": "Standaard uitgeklapt", "option.animations": "Animaties",
+  "option.confirm_cancel": "Programma annuleren met tweede klik bevestigen",
+  "option.show_progress": "Voortgang tonen", "option.show_remaining_time": "Resterende tijd tonen",
+  "option.show_status_section": "Statusgedeelte tonen", "option.show_options_section": "Optiegedeelte tonen",
+  "option.show_settings_section": "Apparaatinstellingen tonen",
+};
+
+const dictionaries: Record<string, Record<string, string>> = { de, nl };
+
+export function uiLanguage(hass: HomeAssistant | undefined): string {
+  return (hass?.language || hass?.locale?.language || "en").toLowerCase().split(/[-_]/)[0];
+}
+
 export function translate(hass: HomeAssistant | undefined, key: string, fallback: string): string {
-  const language = hass?.language || hass?.locale?.language || "en";
-  return language.toLowerCase().startsWith("de") ? de[key] || fallback : fallback;
+  return dictionaries[uiLanguage(hass)]?.[key] || fallback;
+}
+
+export function dictionaryKeys(language: string): string[] {
+  return Object.keys(dictionaries[language] || {}).sort();
 }
 
 export function fieldLabel(hass: HomeAssistant | undefined, field: FieldDefinition): string {

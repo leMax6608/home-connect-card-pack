@@ -50,7 +50,7 @@ Adding a function usually requires a definition entry and a typed config propert
 
 ## Localization
 
-Fixed UI copy and all device-field labels use the Home Assistant language. Version 1.1 ships English plus German and keeps English as the safe fallback. Entity values continue to prefer Home Assistant's own formatter; common raw Home Connect enum values receive a localized fallback.
+Fixed UI copy and all device-field labels use the Home Assistant language. Version 1.1 shipped English plus German; Dutch was added later. English remains the safe fallback, and regional variants such as `de-CH` or `nl-BE` use their base language. Entity values continue to prefer Home Assistant's own formatter; common raw Home Connect enum values receive a localized fallback.
 
 ## Discovery
 

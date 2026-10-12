@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add Dutch UI localization for all cards and editors, selected automatically when Home Assistant uses Dutch (`nl`, `nl-BE`)
+- Resolve the UI language once in a shared helper so regional variants map to their base language
+- Add regression coverage that every German UI key also has a Dutch translation
+
 ## 1.6.4
 
 - Move the coffee-machine cup warmer to Device settings
