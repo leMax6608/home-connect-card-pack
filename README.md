@@ -116,6 +116,12 @@ Thanks to [supergroover](https://github.com/supergroover) for contributing the D
 
 Home Connect Card Pack is included in the default HACS catalog.
 
+[![Open Home Connect Card Pack in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=leMax6608&repository=home-connect-card-pack&category=plugin)
+
+Click the button to open this card pack in your Home Assistant's HACS. If prompted, enter your Home Assistant URL. HACS must already be installed.
+
+Or find it manually:
+
 1. Open **HACS** in Home Assistant.
 2. Search for **Home Connect Card Pack** and open its entry in the **Dashboard** category.
 3. Download the latest version and reload the browser.
