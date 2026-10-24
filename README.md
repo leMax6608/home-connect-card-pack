@@ -1,11 +1,11 @@
-<h1 align="center"><img src="docs/images/logo.png" alt="" width="52" valign="middle"> Home Connect Card Pack</h1>
+<h1 align="center"><img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/logo.png" alt="" width="52" valign="middle"> Home Connect Card Pack</h1>
 
 <p align="center">
   <a href="https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml"><img src="https://github.com/leMax6608/home-connect-card-pack/actions/workflows/validate.yml/badge.svg" alt="HACS validation"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
 </p>
 
-![Large preview of all Home Connect cards](docs/images/cards-preview.png)
+![Large preview of all Home Connect cards](https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/cards-preview.png)
 
 An **independent, unofficial** family of four native, dependency-light Lovelace custom cards for Home Assistant:
 
@@ -22,51 +22,51 @@ The real compact cards are shown individually at a readable size. Open the detai
 
 ### Dishwasher
 
-<img src="docs/images/dishwasher-compact.png" alt="Dishwasher card — compact view" width="552">
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/dishwasher-compact.png" alt="Dishwasher card — compact view" width="552">
 
 <details>
 <summary>Show expanded dishwasher card</summary>
 <br>
 
-<img src="docs/images/dishwasher-expanded.png" alt="Dishwasher card — expanded view with all configured information" width="552">
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/dishwasher-expanded.png" alt="Dishwasher card — expanded view with all configured information" width="552">
 
 </details>
 
 <!--
 ### Oven
 
-<img src="docs/images/oven-compact.png" alt="Oven card — compact view" width="552">
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/oven-compact.png" alt="Oven card — compact view" width="552">
 
 <details>
 <summary>Show expanded oven card</summary>
 <br>
 
-![Oven card — expanded view with all configured information](docs/images/oven-expanded.png)
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/oven-expanded.png" alt="Oven card — expanded view with all configured information" width="552">
 
 </details>
 -->
 
 ### Coffee machine
 
-<img src="docs/images/coffee-machine-compact.png" alt="Coffee machine card — compact view" width="552">
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/coffee-machine-compact.png" alt="Coffee machine card — compact view" width="552">
 
 <details>
 <summary>Show expanded coffee-machine card</summary>
 <br>
 
-<img src="docs/images/coffee-machine-expanded.png" alt="Coffee machine card — expanded view with all configured information" width="552">
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/coffee-machine-expanded.png" alt="Coffee machine card — expanded view with all configured information" width="552">
 
 </details>
 
 ### Dryer
 
-<img src="docs/images/dryer-compact.png" alt="Dryer card — compact view" width="552">
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/dryer-compact.png" alt="Dryer card — compact view" width="552">
 
 <details>
 <summary>Show expanded dryer card</summary>
 <br>
 
-<img src="docs/images/dryer-expanded.png" alt="Dryer card — expanded view with all configured information" width="552">
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/dryer-expanded.png" alt="Dryer card — expanded view with all configured information" width="552">
 
 </details>
 

@@ -17,6 +17,8 @@ After adding both images for an appliance, enable its prepared block in the repo
 
 Use the same browser zoom level for both states. The main README constrains both compact and expanded screenshots to 552 pixels so source images with different resolutions are displayed consistently. Prefer tightly cropped screenshots without personal information, hostnames, IP addresses, location names, or unrelated dashboard content.
 
+Use absolute `https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/...` URLs for image sources in the main README. Relative HTML image paths do not resolve correctly when HACS displays the README. Keep the fixed display widths and collapsible detailed views when replacing screenshots. HACS reads documentation from the selected release, so README fixes must be included in a new release to reach those users.
+
 The project preview (`cards-preview.svg` / `cards-preview.png`) places all four compact cards in one large vertical overview. The README also uses the individual real card screenshots for closer inspection. Keep the logo and at least one screenshot in the repository for HACS validation.
 
 `logo.png` is the original, brand-neutral repository logo. Keep the transparent outer canvas intact when deriving smaller icon sizes.

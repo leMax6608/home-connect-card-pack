@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.2 — 2026-10-24
+
+- Fix README images in HACS by using absolute image URLs for the logo, overview and individual screenshots
+- Lead installation instructions with the default HACS catalog and keep custom-repository installation as a fallback
+- Add the official My Home Assistant button to open the card pack directly in HACS
+- Preserve consistent screenshot widths and collapsible expanded views
+
 ## 1.7.1 — 2026-10-12
 
 - Clarify HACS installation instructions for users and explain installation before default-catalog inclusion
