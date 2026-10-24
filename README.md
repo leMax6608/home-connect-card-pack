@@ -112,15 +112,16 @@ Thanks to [supergroover](https://github.com/supergroover) for contributing the D
 
 ## Installation
 
-### HACS custom repository
+### HACS (recommended)
 
-Until the repository is included in the default HACS catalog, install it as a custom repository:
+Home Connect Card Pack is included in the default HACS catalog.
 
-1. Open **HACS** and choose **Custom repositories** from the menu.
-2. Add `https://github.com/leMax6608/home-connect-card-pack` and select **Dashboard** as the type.
-3. Search for **Home Connect Card Pack**, download the latest version and reload the browser.
+1. Open **HACS** in Home Assistant.
+2. Search for **Home Connect Card Pack** and open its entry in the **Dashboard** category.
+3. Download the latest version and reload the browser.
+4. Edit your dashboard, add a card and search for **Home Connect** to choose your appliance.
 
-Once the HACS inclusion request has been accepted and the catalog has been refreshed, you can find **Home Connect Card Pack** directly in HACS. Existing custom-repository installations can continue receiving updates.
+No custom repository is required. Existing installations added as a custom repository can continue receiving updates without reinstalling.
 
 HACS normally adds the Lovelace resource. If needed, add it manually:
 
@@ -128,6 +129,14 @@ HACS normally adds the Lovelace resource. If needed, add it manually:
 url: /hacsfiles/home-connect-card-pack/home-connect-card-pack.js
 type: module
 ```
+
+### Custom repository (fallback)
+
+If the card pack does not appear in your HACS search yet, you can still install it as a custom repository:
+
+1. Open **HACS** and choose **Custom repositories** from the menu.
+2. Add `https://github.com/leMax6608/home-connect-card-pack` and select **Dashboard** as the type.
+3. Search for **Home Connect Card Pack**, download the latest version and reload the browser.
 
 ### Manual
 
