@@ -6,6 +6,7 @@ const KIND_TERMS: Record<ApplianceKind, string[]> = {
   oven: ["oven", "backofen", "herd"],
   coffee: ["coffee maker", "coffeemaker", "coffee machine", "kaffeemaschine", "kaffeevollautomat", "espresso"],
   dryer: ["dryer", "tumble dryer", "tumbledryer", "trockner", "waschetrockner"],
+  washer: ["washer", "washing machine", "waschmaschine", "waschmaschine"],
 };
 
 function normalize(value: string): string {

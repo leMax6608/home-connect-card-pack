@@ -1,4 +1,4 @@
-export type ApplianceKind = "dishwasher" | "oven" | "coffee" | "dryer";
+export type ApplianceKind = "dishwasher" | "oven" | "coffee" | "dryer" | "washer";
 export type ProgramNameMap = Record<string, string>;
 
 export interface BaseApplianceCardConfig {
@@ -105,8 +105,21 @@ export interface DryerCardConfig extends BaseApplianceCardConfig {
   auto_power_off_entity?: string;
 }
 
+export interface WasherCardConfig extends BaseApplianceCardConfig {
+  phase_entity?: string;
+  door_entity?: string;
+  washing_temperature_entity?: string;
+  spin_speed_entity?: string;
+  finish_at_entity?: string;
+  drum_clean_reminder_entity?: string;
+  prewash_entity?: string;
+  less_ironing_entity?: string;
+  drum_light_entity?: string;
+}
+
 export type ApplianceCardConfig =
   | DishwasherCardConfig
   | OvenCardConfig
   | CoffeeCardConfig
-  | DryerCardConfig;
+  | DryerCardConfig
+  | WasherCardConfig;
