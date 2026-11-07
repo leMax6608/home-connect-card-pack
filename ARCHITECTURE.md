@@ -2,7 +2,7 @@
 
 ## Goals and constraints
 
-The implementation favors usability, Home Assistant-native integration, performance and maintainability in that order. Four cards share one rendering and service core while their differences live in declarative definitions.
+The implementation favors usability, Home Assistant-native integration, performance and maintainability in that order. Five cards share one rendering and service core while their differences live in declarative definitions.
 
 ```text
 Card/editor registration
@@ -11,7 +11,8 @@ Card/editor registration
         │           ├── dishwasher
         │           ├── oven
         │           ├── coffee
-        │           └── dryer
+        │           ├── dryer
+        │           └── washer
         │
         ├── BaseApplianceCard ── shared Lit components ── HA services
         │
@@ -20,7 +21,7 @@ Card/editor registration
 
 ## Configuration
 
-`BaseApplianceCardConfig` contains only universal concepts. `DishwasherCardConfig`, `OvenCardConfig`, `CoffeeCardConfig` and `DryerCardConfig` extend it with appliance roles. This preserves autocomplete and avoids one oversized configuration interface.
+`BaseApplianceCardConfig` contains only universal concepts. `DishwasherCardConfig`, `OvenCardConfig`, `CoffeeCardConfig`, `DryerCardConfig` and `WasherCardConfig` extend it with appliance roles. This preserves autocomplete and avoids one oversized configuration interface.
 
 The IDs in `examples.yaml` are examples, never runtime defaults. Rendering is driven only by the user's configuration.
 
@@ -59,6 +60,8 @@ The editor requests the Entity Registry only after the user explicitly chooses d
 Names remain a secondary signal inside a registry-confirmed device boundary, never a global fuzzy search. Existing configuration is immutable from discovery's perspective.
 
 The card picker uses conservative appliance-name matching before suggesting a card for an entity. Suggested configurations contain the selected entity as their anchor, and the visual editor then performs the same device-registry-bounded discovery used for manual setup.
+
+Washer suggestions match complete normalized terms so `washer` does not also match `dishwasher`. Washer discovery accepts Home Connect Local's generic `Temperature` and `Finish In` labels, and spin-speed controls accept a writable select or a read-only sensor. Control rendering resolves the entity's actual domain, so a sensor stays read-only. A locked door is treated as a normal door state rather than a warning.
 
 ## Failure behavior
 

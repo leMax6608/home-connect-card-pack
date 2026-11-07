@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { pressEntity, setNumber, toggleEntity } from "../src/helpers/services";
+import { pressEntity, selectOption, setNumber, toggleEntity } from "../src/helpers/services";
 import type { HassEntity, HomeAssistant } from "../src/types/home-assistant";
 
 function entity(entityId: string, state: string, options?: string[]): HassEntity {
@@ -12,6 +12,18 @@ function mockHass() {
 }
 
 describe("service dispatch", () => {
+  it("sends exact washer select options and never writes to a spin-speed sensor", async () => {
+    const { hass, callService } = mockHass();
+    const option = "LaundryCare.Washer.EnumType.SpinSpeed.RPM1200";
+    await selectOption(hass, entity("select.washer_spin_speed", option, [option]), option);
+    expect(callService).toHaveBeenCalledWith("select", "select_option", {
+      entity_id: "select.washer_spin_speed", option,
+    });
+    callService.mockClear();
+    await expect(selectOption(hass, entity("sensor.washer_spin_speed", option), option)).rejects.toThrow(/not a select/);
+    expect(callService).not.toHaveBeenCalled();
+  });
+
   it("toggles switches", async () => {
     const { hass, callService } = mockHass();
     await toggleEntity(hass, entity("switch.power", "on"));

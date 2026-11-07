@@ -2,15 +2,17 @@ import "./editors/dishwasher-editor";
 import "./editors/oven-editor";
 import "./editors/coffee-editor";
 import "./editors/dryer-editor";
+import "./editors/washer-editor";
 import "./cards/dishwasher-card";
 import "./cards/oven-card";
 import "./cards/coffee-card";
 import "./cards/dryer-card";
-import { coffeeDefinition, dishwasherDefinition, dryerDefinition, ovenDefinition } from "./definitions";
+import "./cards/washer-card";
+import { coffeeDefinition, dishwasherDefinition, dryerDefinition, ovenDefinition, washerDefinition } from "./definitions";
 import { VERSION } from "./version";
 import { matchesApplianceEntity } from "./helpers/suggestion";
 
-const definitions = [dishwasherDefinition, ovenDefinition, coffeeDefinition, dryerDefinition];
+const definitions = [dishwasherDefinition, ovenDefinition, coffeeDefinition, dryerDefinition, washerDefinition];
 window.customCards = window.customCards || [];
 for (const definition of definitions) {
   if (!window.customCards.some((card) => card.type === definition.cardType.replace("custom:", ""))) {

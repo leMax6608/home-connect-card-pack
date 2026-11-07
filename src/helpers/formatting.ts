@@ -83,7 +83,7 @@ export function isOn(state?: HassEntity): boolean {
 export function isWarningActive(state?: HassEntity): boolean {
   if (!state || !isAvailable(state)) return false;
   const value = canonicalState(state);
-  return !["off", "closed", "ok", "normal", "none", "false", "0", "available", "full", "notpresent", "ready", "good"].includes(value);
+  return !["off", "closed", "locked", "ok", "normal", "none", "false", "0", "available", "full", "notpresent", "ready", "good"].includes(value);
 }
 
 export function resolveAccentColor(value: string | undefined, fallback: string): string {

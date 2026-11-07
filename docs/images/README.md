@@ -12,6 +12,8 @@ Recommended filenames:
 - `coffee-machine-expanded.png`
 - `dryer-compact.png`
 - `dryer-expanded.png`
+- `washer-compact.png`
+- `washer-expanded.png`
 
 After adding both images for an appliance, enable its prepared block in the repository's main `README.md` by removing that block's surrounding HTML comment markers. The compact image is then always visible; the expanded image is placed inside a collapsible `<details>` section. This lets each appliance be enabled independently.
 
@@ -19,6 +21,6 @@ Use the same browser zoom level for both states. The main README constrains both
 
 Use absolute `https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/...` URLs for image sources in the main README. Relative HTML image paths do not resolve correctly when HACS displays the README. Keep the fixed display widths and collapsible detailed views when replacing screenshots. HACS reads documentation from the selected release, so README fixes must be included in a new release to reach those users.
 
-The project preview (`cards-preview.svg` / `cards-preview.png`) places all four compact cards in one large vertical overview. The README also uses the individual real card screenshots for closer inspection. Keep the logo and at least one screenshot in the repository for HACS validation.
+The project preview (`cards-preview.svg` / `cards-preview.png`) currently shows the original four cards. Washer support was added in v1.8.0; add real washer screenshots before extending the preview or the main screenshot gallery. Do not enable image links before their files exist. The README also uses the individual real card screenshots for closer inspection. Keep the logo and at least one screenshot in the repository for HACS validation.
 
 `logo.png` is the original, brand-neutral repository logo. Keep the transparent outer canvas intact when deriving smaller icon sizes.

@@ -7,18 +7,19 @@
 
 ![Large preview of all Home Connect cards](https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/cards-preview.png)
 
-An **independent, unofficial** family of four native, dependency-light Lovelace custom cards for Home Assistant:
+An **independent, unofficial** family of five native, dependency-light Lovelace custom cards for Home Assistant:
 
 - Bosch/Siemens Home Connect dishwasher
 - Home Connect oven
 - Home Connect coffee machine
 - Home Connect dryer
+- Home Connect washer
 
 The cards are built with TypeScript and Lit. They do **not** depend on `button-card`, Mushroom, or another custom card. All commands use Home Assistant services; entity state is never mutated directly.
 
 ## Screenshots
 
-The real compact cards are shown individually at a readable size. Open the detailed view below a card to see all of its configured information and controls.
+The available real compact screenshots are shown individually at a readable size. Open the detailed view below a card to see all of its configured information and controls.
 
 ### Dishwasher
 
@@ -82,7 +83,7 @@ This card pack is primarily recommended for use with [Home Connect Local](https:
 - Two-tap confirmation for Cancel prevents accidental program termination
 - Program selects, number sliders, switches/lights, action buttons and grouped status
 - Fully manual display names for technical program values, used consistently across selector and status displays
-- Four full visual editors using Home Assistant entity pickers
+- Five full visual editors using Home Assistant entity pickers
 - Device-registry-first entity discovery; manual assignments always win
 - One-click YAML export and a privacy-conscious entity discovery report in every editor
 - Click the appliance identity for Home Assistant's More Info dialog; use the metrics/chevron to expand the card
@@ -94,11 +95,11 @@ This card pack is primarily recommended for use with [Home Connect Local](https:
 - Relevant-entity `shouldUpdate()` filtering for busy Home Assistant dashboards
 - Responsive light/dark/theme-aware UI
 - English, German and Dutch UI labels selected from the Home Assistant language
-- One small bundled module for all four cards
+- One small bundled module for all five cards
 
 ## Supported languages
 
-All four cards and their visual editors support:
+All five cards and their visual editors support:
 
 - English (`en`)
 - German / Deutsch (`de`)
@@ -169,7 +170,7 @@ Program names are never generated or guessed. The editor shows the original Home
 
 The two utility buttons below discovery copy either a paste-ready YAML configuration or an entity discovery report. The report is intended for troubleshooting mapping issues and deliberately excludes entity states, attributes, device-registry IDs, IP addresses and credentials. Entity IDs and display names can still contain personal labels, so review it before posting it publicly.
 
-If a card is created from YAML with only an `entity` anchor, opening its visual editor now starts discovery automatically. On Home Assistant 2026.6 and newer, matching dishwasher, oven, coffee-machine and dryer entities can also suggest the appropriate card directly in the entity-based card picker. Older Home Assistant versions simply ignore this optional picker capability.
+If a card is created from YAML with only an `entity` anchor, opening its visual editor now starts discovery automatically. On Home Assistant 2026.6 and newer, matching dishwasher, oven, coffee-machine, dryer and washer entities can also suggest the appropriate card directly in the entity-based card picker. Older Home Assistant versions simply ignore this optional picker capability.
 
 Discovery reads `config/entity_registry/list`, finds the anchor's `device_id`, considers only enabled entities on that same device, and scores their registry names, entity IDs, domains and selected state attributes against role-specific aliases. The anchor itself may also fill the matching role—for example, an oven status anchor becomes `status_entity`. Discovery only fills empty fields and never overwrites a manual choice. If the anchor has no device registry link, the editor explains that discovery is unavailable and remains fully usable manually.
 
@@ -188,6 +189,38 @@ aquastop_entity: binary_sensor.bosch_dishwasher_aquastop_aufgetreten
 ```
 
 Complete examples matching the reference entities are in [`examples.yaml`](examples.yaml).
+
+## Washer card
+
+Available since **v1.8.0** as `custom:home-connect-washer-card`. Search for **Home Connect Washer** in the card picker. The card uses the same compact progress display, collapsible sections and visual editor as the other appliances.
+
+In addition to the shared program, power, progress and action fields, the washer supports:
+
+| Configuration key | Function | Entity domain |
+| --- | --- | --- |
+| `washing_temperature_entity` | Washing temperature | `select` |
+| `spin_speed_entity` | Spin speed; selectable when writable, otherwise read-only | `select` or `sensor` |
+| `phase_entity` | Current program phase | `sensor` |
+| `finish_at_entity` | Finish-in duration; also a summary fallback when remaining time is not configured | `sensor` |
+| `door_entity` | Door state; closed and locked are normal | `binary_sensor` or `sensor` |
+| `drum_clean_reminder_entity` | Drum-cleaning reminder | `binary_sensor` |
+| `prewash_entity` | Prewash option | `switch` |
+| `less_ironing_entity` | Less-ironing option | `switch` |
+| `drum_light_entity` | Drum lighting | `light` or `switch` |
+
+```yaml
+type: custom:home-connect-washer-card
+entity: sensor.bosch_waschmaschine_betriebszustand
+power_entity: switch.bosch_waschmaschine_einschalter
+operating_state_entity: sensor.bosch_waschmaschine_betriebszustand
+selected_program_entity: select.bosch_waschmaschine_ausgewahltes_programm
+washing_temperature_entity: select.bosch_waschmaschine_temperature
+spin_speed_entity: select.bosch_waschmaschine_spin_speed
+```
+
+Replace the example entity IDs with your own. Entity availability depends on the appliance, integration and selected program. Configure only the options and Start/Pause/Resume/Cancel buttons your device actually provides. A spin-speed sensor displays the reported value and never receives a write command.
+
+Thanks to [vkotous](https://github.com/vkotous) for contributing washer support in [#2](https://github.com/leMax6608/home-connect-card-pack/pull/2).
 
 ## Shared options
 

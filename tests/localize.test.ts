@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { dictionaryKeys, fieldLabel, translate, uiLanguage } from "../src/helpers/localize";
 import { cleanLabel, displayState } from "../src/helpers/formatting";
-import { dishwasherDefinition } from "../src/definitions";
+import { dishwasherDefinition, washerDefinition } from "../src/definitions";
 import type { HassEntity, HomeAssistant } from "../src/types/home-assistant";
 
 function entity(state: string, entityId = "sensor.test", attributes: HassEntity["attributes"] = {}): HassEntity {
@@ -13,6 +13,18 @@ function hassFor(language: string): HomeAssistant {
 }
 
 describe("UI localization", () => {
+  it.each([
+    ["de", "Waschmaschine", "Vorwäsche", "Waschtemperatur"],
+    ["nl", "Wasmachine", "Voorwassen", "Wastemperatuur"],
+  ])("localizes washer names and controls in %s", (language, name, prewashLabel, temperatureLabel) => {
+    const hass = hassFor(language);
+    expect(translate(hass, "device.washer", "Washer")).toBe(name);
+    const prewash = washerDefinition.fields.find(({ key }) => key === "prewash_entity")!;
+    const temperature = washerDefinition.fields.find(({ key }) => key === "washing_temperature_entity")!;
+    expect(fieldLabel(hass, prewash)).toBe(prewashLabel);
+    expect(fieldLabel(hass, temperature)).toBe(temperatureLabel);
+  });
+
   it("resolves the base language from regional Home Assistant languages", () => {
     expect(uiLanguage(hassFor("nl-BE"))).toBe("nl");
     expect(uiLanguage(hassFor("de-CH"))).toBe("de");

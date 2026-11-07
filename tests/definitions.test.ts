@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { coffeeDefinition, dishwasherDefinition } from "../src/definitions";
+import { coffeeDefinition, dishwasherDefinition, washerDefinition } from "../src/definitions";
 
 const keys = (definition: typeof coffeeDefinition) => definition.fields.map((field) => field.key);
 
@@ -33,5 +33,20 @@ describe("device-specific editor roles", () => {
     expect(keys(dishwasherDefinition)).toContain("aquastop_entity");
     expect(dishwasherDefinition.fields.find((field) => field.key === "filter_check_entity")?.warning).toBe(true);
     expect(dishwasherDefinition.fields.find((field) => field.key === "aquastop_entity")?.warning).toBe(true);
+  });
+
+  it("includes a minimum viable washer definition with shared appliance fields and essential washer controls", () => {
+    expect(keys(washerDefinition)).toContain("power_entity");
+    expect(keys(washerDefinition)).toContain("selected_program_entity");
+    expect(keys(washerDefinition)).toContain("active_program_entity");
+    expect(keys(washerDefinition)).toContain("progress_entity");
+    expect(keys(washerDefinition)).toContain("remaining_time_entity");
+    expect(keys(washerDefinition)).toContain("start_entity");
+    expect(keys(washerDefinition)).toContain("door_entity");
+    expect(keys(washerDefinition)).toContain("washing_temperature_entity");
+    expect(keys(washerDefinition)).toContain("spin_speed_entity");
+    expect(keys(washerDefinition)).toContain("finish_at_entity");
+    expect(washerDefinition.defaultName).toBe("Washer");
+    expect(washerDefinition.cardType).toBe("custom:home-connect-washer-card");
   });
 });

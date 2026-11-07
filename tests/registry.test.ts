@@ -1,9 +1,80 @@
 import { describe, expect, it, vi } from "vitest";
 import { discoverEntities } from "../src/helpers/registry";
-import { coffeeDefinition, dishwasherDefinition, dryerDefinition, ovenDefinition } from "../src/definitions";
+import { coffeeDefinition, dishwasherDefinition, dryerDefinition, ovenDefinition, washerDefinition } from "../src/definitions";
 import type { HomeAssistant } from "../src/types/home-assistant";
 
 describe("registry-first discovery", () => {
+  it("discovers washer controls using Home Connect Local names and prefers a writable spin selector", async () => {
+    const entries = [
+      { entity_id: "sensor.washer_operation_state", device_id: "washer-1", original_name: "Operation State" },
+      { entity_id: "switch.washer_power", device_id: "washer-1", original_name: "Power" },
+      { entity_id: "select.washer_selected_program", device_id: "washer-1", original_name: "Selected Program" },
+      { entity_id: "sensor.washer_active_program", device_id: "washer-1", original_name: "Active Program" },
+      { entity_id: "sensor.washer_program_progress", device_id: "washer-1", original_name: "Program Progress" },
+      { entity_id: "sensor.washer_remaining_time", device_id: "washer-1", original_name: "Remaining Program Time" },
+      { entity_id: "sensor.washer_finish_in", device_id: "washer-1", original_name: "Finish In" },
+      { entity_id: "select.washer_temperature", device_id: "washer-1", original_name: "Temperature" },
+      { entity_id: "select.washer_spin_speed", device_id: "washer-1", original_name: "Spin Speed" },
+      { entity_id: "sensor.washer_spin_speed", device_id: "washer-1", original_name: "Spin Speed" },
+      { entity_id: "sensor.washer_process_phase", device_id: "washer-1", original_name: "Process Phase" },
+      { entity_id: "binary_sensor.washer_door", device_id: "washer-1", original_name: "Door" },
+      { entity_id: "binary_sensor.washer_drum_clean_reminder", device_id: "washer-1", original_name: "Drum Clean Reminder" },
+      { entity_id: "switch.washer_prewash", device_id: "washer-1", original_name: "Prewash" },
+      { entity_id: "switch.washer_less_ironing", device_id: "washer-1", original_name: "Less Ironing" },
+      { entity_id: "light.washer_drum_light", device_id: "washer-1", original_name: "Drum Light" },
+      { entity_id: "button.washer_start", device_id: "washer-1", original_name: "Start" },
+      { entity_id: "select.other_washer_temperature", device_id: "washer-2", original_name: "Washing Temperature" },
+    ];
+    const hass = {
+      states: Object.fromEntries(entries.map((entry) => [entry.entity_id, { attributes: { friendly_name: entry.original_name } }])),
+      callWS: vi.fn(async () => entries),
+    } as unknown as HomeAssistant;
+
+    const result = await discoverEntities(hass, "sensor.washer_operation_state", washerDefinition, {
+      type: washerDefinition.cardType,
+      entity: "sensor.washer_operation_state",
+    });
+
+    expect(result).toMatchObject({
+      power_entity: "switch.washer_power",
+      operating_state_entity: "sensor.washer_operation_state",
+      selected_program_entity: "select.washer_selected_program",
+      active_program_entity: "sensor.washer_active_program",
+      progress_entity: "sensor.washer_program_progress",
+      remaining_time_entity: "sensor.washer_remaining_time",
+      finish_at_entity: "sensor.washer_finish_in",
+      washing_temperature_entity: "select.washer_temperature",
+      spin_speed_entity: "select.washer_spin_speed",
+      phase_entity: "sensor.washer_process_phase",
+      door_entity: "binary_sensor.washer_door",
+      drum_clean_reminder_entity: "binary_sensor.washer_drum_clean_reminder",
+      prewash_entity: "switch.washer_prewash",
+      less_ironing_entity: "switch.washer_less_ironing",
+      drum_light_entity: "light.washer_drum_light",
+      start_entity: "button.washer_start",
+    });
+    expect(Object.values(result)).not.toContain("select.other_washer_temperature");
+  });
+
+  it("keeps manual washer mappings and accepts a read-only spin-speed sensor", async () => {
+    const entries = [
+      { entity_id: "sensor.washer_status", device_id: "washer-1", original_name: "Status" },
+      { entity_id: "select.washer_temperature", device_id: "washer-1", original_name: "Temperature" },
+      { entity_id: "sensor.washer_spin_speed", device_id: "washer-1", original_name: "Spin Speed" },
+    ];
+    const hass = {
+      states: Object.fromEntries(entries.map((entry) => [entry.entity_id, { attributes: { friendly_name: entry.original_name } }])),
+      callWS: vi.fn(async () => entries),
+    } as unknown as HomeAssistant;
+    const result = await discoverEntities(hass, "sensor.washer_status", washerDefinition, {
+      type: washerDefinition.cardType,
+      entity: "sensor.washer_status",
+      washing_temperature_entity: "select.manually_chosen_temperature",
+    });
+    expect(result).not.toHaveProperty("washing_temperature_entity");
+    expect(result.spin_speed_entity).toBe("sensor.washer_spin_speed");
+  });
+
   it("assigns a dryer power-state anchor to Status and finds its remaining device roles", async () => {
     const entries = [
       { entity_id: "sensor.bosch_trockner_power_state", device_id: "dryer-1", original_name: "Power State" },

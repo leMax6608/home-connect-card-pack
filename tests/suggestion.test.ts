@@ -16,6 +16,26 @@ const entities = [
 const hass = { states: Object.fromEntries(entities.map((entity) => [entity.entity_id, entity])) } as unknown as HomeAssistant;
 
 describe("card picker entity suggestions", () => {
+  it.each([
+    ["sensor.bosch_washer_status", "Bosch Washer Status"],
+    ["sensor.siemens_washing_machine_status", "Siemens Washing Machine"],
+    ["sensor.siemens_washingmachine_status", "Siemens Washingmachine"],
+    ["sensor.bosch_waschmaschine_status", "Bosch Waschmaschine"],
+    ["sensor.bosch_wasmachine_status", "Bosch Wasmachine"],
+  ])("recognizes washer entities in supported languages: %s", (entityId, friendlyName) => {
+    const washer = state(entityId, friendlyName);
+    const washerHass = { states: { [entityId]: washer } } as unknown as HomeAssistant;
+    expect(matchesApplianceEntity(washerHass, entityId, "washer")).toBe(true);
+    expect(matchesApplianceEntity(washerHass, entityId, "dishwasher")).toBe(false);
+  });
+
+  it("does not suggest the washer card for dishwashers, dryers or unrelated entities", () => {
+    expect(matchesApplianceEntity(hass, "sensor.bosch_dishwasher_status", "washer")).toBe(false);
+    expect(matchesApplianceEntity(hass, "sensor.dryer_state", "washer")).toBe(false);
+    expect(matchesApplianceEntity(hass, "sensor.living_room_temperature", "washer")).toBe(false);
+    expect(matchesApplianceEntity(hass, "sensor.not_loaded", "washer")).toBe(false);
+  });
+
   it("suggests only the matching appliance card", () => {
     expect(matchesApplianceEntity(hass, "sensor.bosch_dishwasher_status", "dishwasher")).toBe(true);
     expect(matchesApplianceEntity(hass, "sensor.bosch_dishwasher_status", "oven")).toBe(false);
