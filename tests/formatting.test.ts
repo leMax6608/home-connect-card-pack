@@ -39,6 +39,13 @@ describe("Home Connect state formatting", () => {
     expect(isWarningActive(entity("empty"))).toBe(true);
   });
 
+  it("treats a locked washer door as normal and an open door as a warning", () => {
+    expect(isWarningActive(entity("BSH.Common.EnumType.DoorState.Locked"))).toBe(false);
+    expect(isWarningActive(entity("BSH.Common.EnumType.DoorState.Closed"))).toBe(false);
+    expect(isWarningActive(entity("BSH.Common.EnumType.DoorState.Open"))).toBe(true);
+    expect(isWarningActive(entity("BSH.Common.EnumType.DoorState.Ajar"))).toBe(true);
+  });
+
   it("derives contextual modes from Home Connect enums", () => {
     expect(deriveMode(entity("BSH.Common.EnumType.OperationState.Run"))).toBe("running");
     expect(deriveMode(entity("BSH.Common.EnumType.OperationState.Pause"))).toBe("paused");

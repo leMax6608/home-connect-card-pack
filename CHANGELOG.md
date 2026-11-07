@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.8.0 — 2026-11-07
+
+- Add a fifth card, `custom:home-connect-washer-card`, with a visual editor and automatic device-entity discovery
+- Support washing temperature, spin speed, program phase, finish-in time, prewash, less ironing, drum lighting and drum-cleaning reminders
+- Keep spin-speed sensors read-only while allowing writable select entities
+- Prevent washer suggestions from matching dishwashers; recognize English, German and Dutch washer names
+- Recognize Home Connect Local's `Temperature` and `Finish In` entity names during washer discovery
+- Treat locked washer doors as normal while keeping open-door warnings
+- Complete German and Dutch labels, washer configuration documentation and YAML examples
+- Add regression coverage for washer discovery, localization, service dispatch and appliance suggestions
+- Thanks to [vkotous](https://github.com/vkotous) for the original washer contribution in [#2](https://github.com/leMax6608/home-connect-card-pack/pull/2)
+
 ## 1.7.2 — 2026-10-24
 
 - Fix README images in HACS by using absolute image URLs for the logo, overview and individual screenshots

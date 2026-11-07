@@ -124,3 +124,32 @@ cards:
     signal_volume_entity: select.bosch_trockner_end_signal_volume
     brightness_entity: number.bosch_trockner_brightness
     auto_power_off_entity: select.bosch_trockner_auto_power_off
+
+  # Washer: example IDs only; omit any entity not provided by your appliance.
+  - type: custom:home-connect-washer-card
+    entity: sensor.bosch_waschmaschine_betriebszustand
+    name: Bosch Waschmaschine
+    power_entity: switch.bosch_waschmaschine_einschalter
+    status_entity: sensor.bosch_waschmaschine_power_state
+    operating_state_entity: sensor.bosch_waschmaschine_betriebszustand
+    selected_program_entity: select.bosch_waschmaschine_ausgewahltes_programm
+    active_program_entity: sensor.bosch_waschmaschine_aktives_programm
+    program_names:
+      LaundryCare.Washer.Program.Cotton: Baumwolle
+      LaundryCare.Washer.Program.EasyCare: Pflegeleicht
+    progress_entity: sensor.bosch_waschmaschine_programmfortschritt
+    remaining_time_entity: sensor.bosch_waschmaschine_verbleibende_programmlaufzeit
+    finish_at_entity: sensor.bosch_waschmaschine_finish_in
+    phase_entity: sensor.bosch_waschmaschine_process_phase
+    washing_temperature_entity: select.bosch_waschmaschine_temperature
+    spin_speed_entity: select.bosch_waschmaschine_spin_speed
+    # If no writable selector exists, use sensor.bosch_waschmaschine_spin_speed.
+    start_entity: button.bosch_waschmaschine_start
+    pause_entity: button.bosch_waschmaschine_pause
+    resume_entity: button.bosch_waschmaschine_fortsetzen
+    cancel_entity: button.bosch_waschmaschine_abbrechen
+    door_entity: binary_sensor.bosch_waschmaschine_tur
+    drum_clean_reminder_entity: binary_sensor.bosch_waschmaschine_drum_clean_reminder
+    prewash_entity: switch.bosch_waschmaschine_prewash
+    less_ironing_entity: switch.bosch_waschmaschine_less_ironing
+    drum_light_entity: light.bosch_waschmaschine_drum_light

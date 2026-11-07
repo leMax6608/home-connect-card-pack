@@ -6,7 +6,7 @@ const KIND_TERMS: Record<ApplianceKind, string[]> = {
   oven: ["oven", "backofen", "herd"],
   coffee: ["coffee maker", "coffeemaker", "coffee machine", "kaffeemaschine", "kaffeevollautomat", "espresso"],
   dryer: ["dryer", "tumble dryer", "tumbledryer", "trockner", "waschetrockner"],
-  washer: ["washer", "washing machine", "waschmaschine", "waschmaschine"],
+  washer: ["washer", "washing machine", "washingmachine", "waschmaschine", "wasmachine"],
 };
 
 function normalize(value: string): string {
@@ -22,5 +22,9 @@ export function matchesApplianceEntity(hass: HomeAssistant, entityId: string, ki
     entity.attributes.device_class,
     entity.attributes.icon,
   ].filter(Boolean).join(" "));
-  return KIND_TERMS[kind].some((term) => haystack.includes(normalize(term)));
+  // "washer" is also a substring of "dishwasher". Match complete terms for
+  // this appliance while preserving existing suggestions for the other cards.
+  return KIND_TERMS[kind].some((term) => kind === "washer"
+    ? ` ${haystack} `.includes(` ${normalize(term)} `)
+    : haystack.includes(normalize(term)));
 }
