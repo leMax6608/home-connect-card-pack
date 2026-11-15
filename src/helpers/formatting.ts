@@ -32,6 +32,17 @@ function formatIsoDuration(value: string): string | undefined {
   return hours ? `${hours}:${String(minutes).padStart(2, "0")} h` : `${minutes} min`;
 }
 
+/** Label for a select option, translated by Home Assistant when it knows the option. */
+export function optionLabel(hass: HomeAssistant, state: HassEntity, option: string): string {
+  if (hass.formatEntityState) {
+    try {
+      const formatted = hass.formatEntityState(state, option);
+      if (formatted && formatted !== option) return formatted;
+    } catch { /* fallback */ }
+  }
+  return option;
+}
+
 export function displayState(hass: HomeAssistant, state?: HassEntity): string {
   if (!state) return translate(hass, "not_configured", "Not configured");
   if (!isAvailable(state)) return state?.state === "unavailable" ? translate(hass, "unavailable", "Unavailable") : translate(hass, "unknown", "Unknown");
