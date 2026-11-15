@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canonicalState, cleanLabel, deriveMode, displayState, isActiveMode, isWarningActive, progressValue, resolveAccentColor } from "../src/helpers/formatting";
+import { canonicalState, cleanLabel, deriveMode, displayState, optionLabel, isActiveMode, isWarningActive, progressValue, resolveAccentColor } from "../src/helpers/formatting";
 import type { HassEntity, HomeAssistant } from "../src/types/home-assistant";
 
 function entity(state: string, entityId = "sensor.test", attributes: HassEntity["attributes"] = {}): HassEntity {
@@ -24,6 +24,15 @@ describe("Home Connect state formatting", () => {
     const germanHass = { ...hass, language: "de", formatEntityState: (value: HassEntity) => cleanLabel(value.state) };
     expect(displayState(germanHass, entity("BSH.Common.EnumType.OperationState.Run"))).toBe("Läuft");
     expect(displayState(germanHass, entity("unavailable"))).toBe("Nicht verfügbar");
+  });
+
+  it("translates select options through Home Assistant", () => {
+    const program = entity("laundry_care_washer_program_mix", "select.washer_program", { options: ["laundry_care_washer_program_mix", "laundry_care_washer_program_cotton"] });
+    const labels: Record<string, string> = { laundry_care_washer_program_mix: "Mix", laundry_care_washer_program_cotton: "Baumwolle" };
+    const germanHass = { ...hass, language: "de", formatEntityState: (state: HassEntity, value?: string) => labels[value ?? state.state] ?? value ?? state.state };
+    expect(optionLabel(germanHass, program, "laundry_care_washer_program_cotton")).toBe("Baumwolle");
+    expect(optionLabel(germanHass, program, "unknown_option")).toBe("unknown_option");
+    expect(optionLabel(hass, program, "laundry_care_washer_program_mix")).toBe("laundry_care_washer_program_mix");
   });
 
   it("normalizes fractional and percentage progress", () => {
