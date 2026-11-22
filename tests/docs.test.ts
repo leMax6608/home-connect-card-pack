@@ -9,7 +9,7 @@ const imageRoot = "https://raw.githubusercontent.com/leMax6608/home-connect-card
 describe("published documentation assets", () => {
   it("uses existing PNGs at absolute URLs for HACS", () => {
     const references = [...readme.matchAll(/(?:src="|\]\()(https:\/\/raw\.githubusercontent\.com\/[^\s"\)]+)/g)];
-    expect(references).toHaveLength(8);
+    expect(references).toHaveLength(10);
     for (const [, url] of references) {
       expect(url.startsWith(imageRoot)).toBe(true);
       const path = resolve(root, url.slice(imageRoot.length));
@@ -21,11 +21,11 @@ describe("published documentation assets", () => {
     }
   });
 
-  it("constrains all six real screenshots and keeps expanded views collapsible", () => {
+  it("constrains the gallery screenshots and keeps expanded views collapsible", () => {
     const images = [...readme.matchAll(/<img[^>]+(?:compact|expanded)\.png[^>]+>/g)];
-    expect(images).toHaveLength(6);
+    expect(images).toHaveLength(8);
     for (const [tag] of images) expect(tag).toContain('width="552"');
-    expect([...readme.matchAll(/<details>/g)]).toHaveLength(3);
-    expect([...readme.matchAll(/<\/details>/g)]).toHaveLength(3);
+    expect([...readme.matchAll(/<details>/g)]).toHaveLength(4);
+    expect([...readme.matchAll(/<\/details>/g)]).toHaveLength(4);
   });
 });

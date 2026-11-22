@@ -5,9 +5,9 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
 </p>
 
-![Preview of dishwasher, oven, coffee-machine and dryer cards](https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/cards-preview.png)
+![Preview of dishwasher, oven, coffee machine, dryer and washer cards](https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/cards-preview.png)
 
-<p><sub>Overview: real dishwasher, coffee-machine and dryer screenshots, plus an illustrative oven card. Real oven and washer screenshots are welcome.</sub></p>
+<p><sub>The overview includes Home Assistant screenshots of the dishwasher, coffee machine and dryer, a rendered washer card with sample data, and an oven illustration.</sub></p>
 
 An **independent, unofficial** family of five native, dependency-light Lovelace custom cards for Home Assistant:
 
@@ -21,7 +21,7 @@ The cards are built with TypeScript and Lit. They do **not** depend on `button-c
 
 ## Screenshots
 
-The available real compact screenshots are shown individually at a readable size. Open the detailed view below a card to see its configured information and controls. These screenshots show earlier versions; available controls depend on your appliance and configuration. In current versions, active warnings are also visible while collapsed.
+Each compact view has an expandable detailed view below it. The dishwasher, coffee machine and dryer screenshots show earlier versions of the cards. Available controls depend on your appliance and configuration. Current versions also show active warnings while collapsed.
 
 ### Dishwasher
 
@@ -73,8 +73,9 @@ The available real compact screenshots are shown individually at a readable size
 
 </details>
 
-<!--
 ### Washer
+
+Rendered from the washer card with sample data. The expanded view includes an example i-Dos refill warning.
 
 <img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/washer-compact.png" alt="Washer card — compact view" width="552">
 
@@ -85,7 +86,6 @@ The available real compact screenshots are shown individually at a readable size
 <img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/washer-expanded.png" alt="Washer card — expanded view with all configured information" width="552">
 
 </details>
--->
 
 ## Recommended Home Assistant integration
 

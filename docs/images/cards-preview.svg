@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="990" viewBox="0 0 1200 990" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
   <title id="title">Home Connect Card Pack preview</title>
-  <desc id="desc">Four large Home Assistant-style appliance cards for a dishwasher, oven, coffee machine and dryer.</desc>
+  <desc id="desc">Five large appliance card previews for a dishwasher, oven, coffee machine, dryer and washer.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#090e18"/>
@@ -12,11 +12,15 @@
     <clipPath id="dishwasher-clip"><rect x="80" y="45" width="1040" height="190" rx="42"/></clipPath>
     <clipPath id="coffee-clip"><rect x="80" y="485" width="1040" height="222" rx="42"/></clipPath>
     <clipPath id="dryer-clip"><rect x="80" y="727" width="1040" height="218" rx="42"/></clipPath>
+    <clipPath id="washer-clip"><rect x="80" y="965" width="1040" height="189" rx="42"/></clipPath>
+    <clipPath id="background-clip"><rect width="1200" height="1200" rx="34"/></clipPath>
   </defs>
 
-  <rect width="1200" height="990" rx="34" fill="url(#background)"/>
-  <circle cx="1110" cy="80" r="280" fill="#4f8cff" opacity=".055"/>
-  <circle cx="70" cy="930" r="250" fill="#9668ff" opacity=".045"/>
+  <rect width="1200" height="1200" rx="34" fill="url(#background)"/>
+  <g clip-path="url(#background-clip)">
+    <circle cx="1110" cy="80" r="280" fill="#4f8cff" opacity=".055"/>
+    <circle cx="70" cy="1140" r="250" fill="#9668ff" opacity=".045"/>
+  </g>
 
   <g filter="url(#shadow)">
     <image href="dishwasher-compact.png" x="80" y="45" width="1040" height="190" preserveAspectRatio="none" clip-path="url(#dishwasher-clip)"/>
@@ -41,5 +45,6 @@
   <g filter="url(#shadow)">
     <image href="coffee-machine-compact.png" x="80" y="485" width="1040" height="222" preserveAspectRatio="none" clip-path="url(#coffee-clip)"/>
     <image href="dryer-compact.png" x="80" y="727" width="1040" height="218" preserveAspectRatio="none" clip-path="url(#dryer-clip)"/>
+    <image href="washer-compact.png" x="80" y="965" width="1040" height="189" clip-path="url(#washer-clip)"/>
   </g>
 </svg>

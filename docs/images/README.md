@@ -15,12 +15,12 @@ Recommended filenames:
 - `washer-compact.png`
 - `washer-expanded.png`
 
-After adding both images for an appliance, enable its prepared block in the repository's main `README.md` by removing that block's surrounding HTML comment markers. The compact image is then always visible; the expanded image is placed inside a collapsible `<details>` section. This lets each appliance be enabled independently.
+After adding both oven images, enable its prepared block in the repository's main `README.md` by removing the surrounding HTML comment markers. The compact image stays visible and the expanded image sits inside a collapsible `<details>` section.
 
 Use the same browser zoom level for both states. The main README constrains both compact and expanded screenshots to 552 pixels so source images with different resolutions are displayed consistently. Prefer tightly cropped screenshots without personal information, hostnames, IP addresses, location names, or unrelated dashboard content.
 
 Use absolute `https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/...` URLs for image sources in the main README. Relative HTML image paths do not resolve correctly when HACS displays the README. Keep the fixed display widths and collapsible detailed views when replacing screenshots. HACS reads documentation from the selected release, so README fixes must be included in a new release to reach those users.
 
-The project preview (`cards-preview.svg` / `cards-preview.png`) currently shows real dishwasher, coffee-machine and dryer screenshots plus an illustrative oven card. Washer support was added in v1.8.0; add real oven and washer screenshots before replacing the illustration or extending the gallery. The README includes commented blocks for both missing appliances. Do not enable image links before their files exist. The individual screenshots show earlier versions; refresh both compact and expanded views together when recording new features such as collapsed warnings. Keep the logo and at least one screenshot in the repository for HACS validation.
+The project preview (`cards-preview.svg` / `cards-preview.png`) shows all five appliances. The washer images are browser captures of the actual card with sample data. The dishwasher, coffee machine and dryer use Home Assistant screenshots from earlier versions, and the oven uses an illustration. When replacing a compact screenshot used in the overview, render `cards-preview.svg` to `cards-preview.png` again so the overview reflects the new image. Keep the logo and at least one screenshot in the repository for HACS validation.
 
 `logo.png` is the original, brand-neutral repository logo. Keep the transparent outer canvas intact when deriving smaller icon sizes.
