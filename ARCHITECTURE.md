@@ -48,6 +48,8 @@ Adding a function usually requires a definition entry and a typed config propert
 - Container queries adapt each card to its actual Lovelace column width instead of the browser viewport.
 - `getGridOptions()` supplies a six-column default and three-column minimum to Home Assistant Sections dashboards while leaving vertical sizing content-driven.
 - Service locks update only a small `Set` and prevent repeated calls per entity.
+- Custom warning entities participate in the same state-reference tracking as built-in roles. Active warnings are deduplicated by entity ID and rendered once, outside the collapsed details by default.
+- Collapsed details and subsections use `inert` so invisible controls cannot receive keyboard focus.
 
 ## Localization
 
@@ -55,7 +57,7 @@ Fixed UI copy and all device-field labels use the Home Assistant language. Versi
 
 ## Discovery
 
-The editor requests the Entity Registry only after the user explicitly chooses discovery. It resolves the anchor's `device_id`, limits candidates to that device, filters disabled entries, applies domain constraints and then scores role aliases. A candidate is used at most once. Scores below the confidence threshold are not assigned.
+The editor requests the Entity Registry when an anchor is set or the user clicks discovery. It resolves the anchor's `device_id`, limits candidates to that device, filters disabled and hidden entries, applies domain constraints and then scores role aliases. A candidate is used at most once. Scores below the confidence threshold are not assigned.
 
 Names remain a secondary signal inside a registry-confirmed device boundary, never a global fuzzy search. Existing configuration is immutable from discovery's perspective.
 

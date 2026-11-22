@@ -25,6 +25,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      - run: npm run test:browser
       - uses: softprops/action-gh-release@v2
         with:
           files: dist/home-connect-card-pack.js

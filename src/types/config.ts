@@ -1,5 +1,6 @@
 export type ApplianceKind = "dishwasher" | "oven" | "coffee" | "dryer" | "washer";
 export type ProgramNameMap = Record<string, string>;
+export interface ExtraWarning { entity: string; name?: string; }
 
 export interface BaseApplianceCardConfig {
   type: string;
@@ -15,6 +16,8 @@ export interface BaseApplianceCardConfig {
   progress_entity?: string;
   remaining_time_entity?: string;
   program_names?: ProgramNameMap;
+  extra_warnings?: ExtraWarning[];
+  show_warnings_collapsed?: boolean;
   start_entity?: string;
   pause_entity?: string;
   resume_entity?: string;
@@ -27,7 +30,7 @@ export interface BaseApplianceCardConfig {
   show_status_section?: boolean;
   show_options_section?: boolean;
   show_settings_section?: boolean;
-  [key: string]: string | boolean | ProgramNameMap | undefined;
+  [key: string]: string | boolean | ProgramNameMap | ExtraWarning[] | undefined;
 }
 
 export interface DishwasherCardConfig extends BaseApplianceCardConfig {
@@ -106,6 +109,8 @@ export interface DryerCardConfig extends BaseApplianceCardConfig {
 }
 
 export interface WasherCardConfig extends BaseApplianceCardConfig {
+  i_dos_1_fill_level_entity?: string;
+  i_dos_2_fill_level_entity?: string;
   phase_entity?: string;
   door_entity?: string;
   washing_temperature_entity?: string;

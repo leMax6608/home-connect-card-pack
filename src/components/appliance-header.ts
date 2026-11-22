@@ -6,6 +6,7 @@ import { styleMap } from "lit/directives/style-map.js";
 export class ApplianceHeader extends LitElement {
   static properties = {
     name: {}, icon: {}, status: {}, program: {}, mode: {}, accent: {}, busy: { type: Boolean },
+    animations: { type: Boolean },
   };
   name = "Appliance";
   icon = "mdi:devices";
@@ -14,6 +15,7 @@ export class ApplianceHeader extends LitElement {
   mode: ApplianceMode = "idle";
   accent = "var(--primary-color)";
   busy = false;
+  animations = true;
 
   static styles = css`
     :host { display: block; min-width: 0; }
@@ -28,7 +30,7 @@ export class ApplianceHeader extends LitElement {
     .icon::after { content: ""; position: absolute; inset: 5px; border-radius: 11px; border: 1px solid color-mix(in srgb, var(--hc-accent), transparent 89%); pointer-events: none; }
     .icon ha-icon { --mdc-icon-size: 25px; }
     .running .icon { background: color-mix(in srgb, var(--hc-accent), transparent 78%); }
-    .running .icon ha-icon { animation: breathe 2.4s ease-in-out infinite; }
+    .running.animated .icon ha-icon { animation: breathe 2.4s ease-in-out infinite; }
     .off .icon, .unavailable .icon { color: var(--secondary-text-color); background: var(--secondary-background-color); }
     .copy { min-width: 0; }
     .name { font-size: 15px; font-weight: 700; letter-spacing: -.01em; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -40,11 +42,11 @@ export class ApplianceHeader extends LitElement {
     .status, .program { color: var(--secondary-text-color); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .program::before { content: "·"; margin-right: 7px; color: var(--hc-accent); }
     @keyframes breathe { 50% { transform: scale(1.08); } }
-    @media (prefers-reduced-motion: reduce) { .running .icon ha-icon { animation: none; } }
+    @media (prefers-reduced-motion: reduce) { .running.animated .icon ha-icon { animation: none; } }
   `;
 
   render() {
-    return html`<div class="header ${this.mode}" style=${styleMap({ "--hc-accent": this.accent })}>
+    return html`<div class="header ${this.mode} ${this.animations ? "animated" : ""}" style=${styleMap({ "--hc-accent": this.accent })}>
       <div class="icon"><ha-icon .icon=${this.icon}></ha-icon></div>
       <div class="copy">
         <div class="name">${this.name}</div>

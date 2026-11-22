@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.9.0 — 2026-11-22
+
+- Translate select options through Home Assistant, while keeping custom program names first and sending the exact original option to services; thanks to [mtheli](https://github.com/mtheli) for [#3](https://github.com/leMax6608/home-connect-card-pack/pull/3)
+- Show active warnings below the compact header by default; `show_warnings_collapsed: false` keeps the previous expanded-only behavior
+- Add `extra_warnings` with optional names, visual-editor controls, live state updates, deduplication and YAML export on all five cards
+- Add washer i-Dos 1/2 refill warnings with automatic discovery for binary or enum sensors; keep cleaning reminders separate through custom sensors, as requested in [#4](https://github.com/leMax6608/home-connect-card-pack/issues/4)
+- Support enum door sensors on ovens, coffee machines and dishwashers; keep closed/locked doors and filled tanks normal
+- Hide program, option and settings controls while the appliance is off; keep warnings and power available
+- Keep collapsed controls out of keyboard navigation, respect disabled header animations, and render configuration changes batched with unchanged HA states
+- Correct helper-entity service routing, reject numeric writes to sensors, and include days when formatting ISO durations
+- Clarify screenshot provenance and older-version differences; check all published README images and their consistent display widths
+- Update development dependencies to resolve reported audit vulnerabilities
+- Expand coverage to 58 unit checks and add a 104-check browser fixture across all five cards and editors; run the browser fixture in build and release workflows
+
 ## 1.8.0 — 2026-11-07
 
 - Add a fifth card, `custom:home-connect-washer-card`, with a visual editor and automatic device-entity discovery

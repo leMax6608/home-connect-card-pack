@@ -1,0 +1,110 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Card pack browser regression checks</title>
+<style>
+  body { margin: 20px; font: 14px system-ui; background: #101114; color: #eee;
+    --primary-text-color: #eee; --secondary-text-color: #a2a4af; --primary-color: #528dff;
+    --card-background-color: #222328; --secondary-background-color: #191a1e; --divider-color: #363841;
+    --warning-color: #edc961; --error-color: #dd6385; --disabled-color: #575961; }
+  #mount { width: 552px; max-width: 100%; display: grid; gap: 16px; }
+  ha-icon { display: inline-block; width: 20px; height: 20px; }
+  pre { white-space: pre-wrap; }
+</style>
+<h1>Browser regression checks</h1>
+<p>Mock Home Assistant state and services; no real appliance commands.</p>
+<div id="mount"></div><pre id="qa-results">Running…</pre>
+<script type="module">
+import "../dist/home-connect-card-pack.js";
+const results = [], calls = [], mount = document.querySelector("#mount");
+const check = (name, condition) => { if (!condition) throw new Error(name); results.push(name); };
+const entity = (entity_id, state, attributes = {}) => ({ entity_id, state, attributes, last_changed: "", last_updated: "" });
+const raw = "laundry_care_washer_program_mix", other = "laundry_care_washer_program_cotton";
+const config = {
+  power_entity: "switch.power", operating_state_entity: "sensor.state", selected_program_entity: "select.program",
+  active_program_entity: "sensor.program", progress_entity: "sensor.progress", remaining_time_entity: "sensor.remaining",
+  door_entity: "binary_sensor.door", start_entity: "button.start", pause_entity: "button.pause", cancel_entity: "button.cancel",
+  program_names: { [raw]: "Mein Mix" }, extra_warnings: [{ entity: "binary_sensor.custom", name: "Clean i-Dos" }], animations: false,
+};
+const initialHass = () => ({ language: "de", states: {
+  "switch.power": entity("switch.power", "on"), "sensor.state": entity("sensor.state", "Run"),
+  "select.program": entity("select.program", raw, { options: [raw, other] }), "sensor.program": entity("sensor.program", raw),
+  "sensor.progress": entity("sensor.progress", "35", { unit_of_measurement: "%" }),
+  "sensor.remaining": entity("sensor.remaining", "PT1H20M"), "binary_sensor.door": entity("binary_sensor.door", "off"),
+  "binary_sensor.custom": entity("binary_sensor.custom", "off"), "button.start": entity("button.start", "unknown"),
+  "button.pause": entity("button.pause", "unknown"), "button.cancel": entity("button.cancel", "unknown"),
+  "sensor.idos": entity("sensor.idos", "Filled"),
+}, callService: async (...args) => { calls.push(args); }, callWS: async () => [],
+formatEntityState: (state, value) => ({ [raw]: "Mix", [other]: "Baumwolle" })[value ?? state.state] ?? value ?? state.state });
+async function settle() {
+  for (let i = 0; i < 6; i++) {
+    const pending = [];
+    function visit(root) { for (const el of root.querySelectorAll("*")) { if (el.updateComplete) pending.push(el.updateComplete); if (el.shadowRoot) visit(el.shadowRoot); } }
+    visit(document); await Promise.all(pending);
+  }
+}
+const control = (card, id) => [...card.shadowRoot.querySelectorAll("hc-entity-control")].find(el => el.entity.entity_id === id);
+try {
+  check("Five cards registered", window.customCards.length === 5);
+  for (const kind of ["dishwasher", "oven", "coffee", "dryer", "washer"]) {
+    const card = document.createElement(`home-connect-${kind}-card`);
+    const cfg = { ...config, type: `custom:home-connect-${kind}-card` };
+    card.setConfig(cfg); card.hass = initialHass(); mount.append(card); await settle();
+    const root = card.shadowRoot;
+    check(`${kind}: compact progress visible`, !!root.querySelector(".summary-progress"));
+    check(`${kind}: details inaccessible while collapsed`, root.querySelector(".details").inert);
+    check(`${kind}: all submenus collapsed`, [...root.querySelectorAll("hc-expandable-section")].every(el => !el.open));
+    check(`${kind}: animations setting reaches header`, !root.querySelector("hc-appliance-header").shadowRoot.querySelector(".animated"));
+    check(`${kind}: custom header program name`, root.querySelector("hc-appliance-header").program === "Mein Mix");
+    const previous = card.hass;
+    card.hass = { ...previous, states: { ...previous.states, "binary_sensor.custom": entity("binary_sensor.custom", "on") } }; await settle();
+    check(`${kind}: custom sensor alone updates collapsed warning`, !!root.querySelector(".shell > .warning-strip"));
+    card.setConfig({ ...cfg, show_warnings_collapsed: false }); card.hass = { ...card.hass }; await settle();
+    check(`${kind}: batched config and unchanged states update layout`, !root.querySelector(".shell > .warning-strip") && !!root.querySelector(".details .warning-strip"));
+    card.setConfig(cfg); root.querySelector(".summary-toggle").click(); await settle();
+    check(`${kind}: expand shows one warning only`, !root.querySelector(".details").inert && root.querySelectorAll(".warning-strip").length === 1);
+    let select = control(card, "select.program").shadowRoot.querySelector("select");
+    check(`${kind}: program selection disabled while running`, select.disabled);
+    check(`${kind}: manual names beat translated options`, select.options[0].textContent === "Mein Mix");
+    check(`${kind}: other options translated`, select.options[1].textContent === "Baumwolle" && select.options[1].value === other);
+    card.hass = { ...card.hass, states: { ...card.hass.states, "sensor.state": entity("sensor.state", "Ready") } }; await settle();
+    const section = control(card, "select.program").closest("hc-expandable-section");
+    check(`${kind}: submenu content inaccessible before opening`, section.shadowRoot.querySelector(".body").inert);
+    section.shadowRoot.querySelector("button").click(); await settle();
+    select = control(card, "select.program").shadowRoot.querySelector("select");
+    select.value = other; select.dispatchEvent(new Event("change", { bubbles: true })); await settle();
+    check(`${kind}: exact untranslated service option sent`, calls.at(-1)?.[2]?.option === other);
+    card.hass = { ...card.hass, states: { ...card.hass.states, "switch.power": entity("switch.power", "off"), "sensor.state": entity("sensor.state", "Run") } }; await settle();
+    check(`${kind}: off hides stale progress and activity`, !root.querySelector(".summary-progress, .activity, hc-action-buttons"));
+    check(`${kind}: off hides program controls`, !control(card, "select.program"));
+    check(`${kind}: off keeps custom warning`, !!root.querySelector(".shell > .warning-strip"));
+    mount.style.width = "320px";
+    await settle();
+    check(`${kind}: card fits narrow dashboard column`, card.getBoundingClientRect().width <= 320);
+    check(`${kind}: warning stays inside narrow card`, root.querySelector(".warning-strip").scrollWidth <= root.querySelector(".shell").clientWidth);
+    const editor = document.createElement(`home-connect-${kind}-card-editor`);
+    editor.hass = initialHass(); editor.setConfig({ type: cfg.type }); mount.append(editor); await settle();
+    let emitted;
+    editor.addEventListener("config-changed", event => emitted = event.detail.config);
+    const add = [...editor.shadowRoot.querySelectorAll("button")].find(el => el.textContent.includes("Warnung hinzufügen"));
+    add.click(); await settle();
+    const row = editor.shadowRoot.querySelector(".warning-row");
+    row.querySelector("ha-selector").dispatchEvent(new CustomEvent("value-changed", { detail: { value: "binary_sensor.custom" } })); await settle();
+    const input = editor.shadowRoot.querySelector(".warning-row input"); input.value = "Clean i-Dos"; input.dispatchEvent(new Event("change")); await settle();
+    check(`${kind}: editor saves custom sensor and name`, emitted.extra_warnings[0].entity === "binary_sensor.custom" && emitted.extra_warnings[0].name === "Clean i-Dos");
+    editor.shadowRoot.querySelector(".warning-row button").click(); await settle();
+    check(`${kind}: editor removes last warning`, !emitted.extra_warnings);
+    editor.remove(); card.remove(); mount.style.width = "552px";
+  }
+  const washer = document.createElement("home-connect-washer-card");
+  washer.setConfig({ ...config, type: "custom:home-connect-washer-card", i_dos_1_fill_level_entity: "sensor.idos" });
+  washer.hass = initialHass(); mount.append(washer); await settle();
+  check("Washer: filled i-Dos does not warn", !washer.shadowRoot.querySelector(".warning-strip"));
+  washer.hass = { ...washer.hass, states: { ...washer.hass.states, "sensor.idos": entity("sensor.idos", "Poor") } }; await settle();
+  check("Washer: poor i-Dos warns while collapsed", washer.shadowRoot.querySelector("hc-status-chip").label === "i-Dos 1 nachfüllen");
+  const picker = window.customCards.find(card => card.type === "home-connect-washer-card");
+  const sample = initialHass(); sample.states["sensor.dishwasher"] = entity("sensor.dishwasher", "Ready");
+  check("Washer picker rejects dishwasher", picker.getEntitySuggestion(sample, "sensor.dishwasher") === null);
+  document.body.dataset.qa = "passed";
+} catch (error) { document.body.dataset.qa = "failed"; results.push(error.stack || String(error)); }
+document.querySelector("#qa-results").textContent = JSON.stringify({ status: document.body.dataset.qa, checks: results.length, results }, null, 2);
+</script>

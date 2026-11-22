@@ -1,6 +1,6 @@
 {
   "name": "home-connect-card-pack",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Unofficial Lovelace cards compatible with Home Connect appliances",
   "license": "MIT",
   "author": "leMax6608",
@@ -16,7 +16,8 @@
     "build": "tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:browser": "node scripts/test-browser.mjs"
   },
   "files": ["dist"],
   "devDependencies": {

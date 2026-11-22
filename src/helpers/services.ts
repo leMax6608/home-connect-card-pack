@@ -10,9 +10,10 @@ export async function toggleEntity(hass: HomeAssistant, entity: HassEntity): Pro
     const off = options.find((value) => ["off", "aus", "inactive", "standby"].includes(normalized(value)));
     const option = ["on", "ein", "active"].includes(canonicalState(entity)) ? off : on;
     if (!option) throw new Error("This select has no recognizable on/off options.");
-    await hass.callService("select", "select_option", { entity_id: entity.entity_id, option });
+    await hass.callService(domain, "select_option", { entity_id: entity.entity_id, option });
     return;
   }
+  if (!["switch", "light", "input_boolean"].includes(domain)) throw new Error("The configured entity is not a switch or light.");
   await hass.callService(domain, entity.state === "on" ? "turn_off" : "turn_on", { entity_id: entity.entity_id });
 }
 
@@ -30,5 +31,7 @@ export async function selectOption(hass: HomeAssistant, entity: HassEntity, opti
 
 export async function setNumber(hass: HomeAssistant, entity: HassEntity, value: number): Promise<void> {
   const domain = entity.entity_id.split(".")[0];
+  if (domain !== "number" && domain !== "input_number") throw new Error("The configured entity is not a number.");
+  if (!Number.isFinite(value)) throw new Error("The configured value is not a finite number.");
   await hass.callService(domain, "set_value", { entity_id: entity.entity_id, value });
 }

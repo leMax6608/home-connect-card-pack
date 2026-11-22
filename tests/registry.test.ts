@@ -4,6 +4,30 @@ import { coffeeDefinition, dishwasherDefinition, dryerDefinition, ovenDefinition
 import type { HomeAssistant } from "../src/types/home-assistant";
 
 describe("registry-first discovery", () => {
+  it("accepts enum door sensors on ovens, coffee machines and dishwashers", async () => {
+    const entries = [
+      { entity_id: "sensor.appliance_status", device_id: "device", original_name: "Status" },
+      { entity_id: "sensor.appliance_door", device_id: "device", original_name: "Door" },
+    ];
+    const hass = { states: {}, callWS: vi.fn(async () => entries) } as unknown as HomeAssistant;
+    for (const definition of [ovenDefinition, coffeeDefinition, dishwasherDefinition]) {
+      expect((await discoverEntities(hass, entries[0].entity_id, definition, { type: definition.cardType })).door_entity).toBe(entries[1].entity_id);
+    }
+  });
+  it("discovers each i-Dos container separately and ignores disabled sensors", async () => {
+    const entries = [
+      { entity_id: "sensor.washer_status", device_id: "washer", original_name: "Status" },
+      { entity_id: "binary_sensor.washer_poor_i_dos_1_fill_level", device_id: "washer", original_name: "Poor i-Dos 1 fill level" },
+      { entity_id: "sensor.washer_idos2_fill_level", device_id: "washer", original_name: "i-Dos 2 fill level" },
+      { entity_id: "sensor.washer_idos1_fill_level", device_id: "washer", disabled_by: "user", original_name: "i-Dos 1 fill level" },
+    ];
+    const hass = { states: {}, callWS: vi.fn(async () => entries) } as unknown as HomeAssistant;
+    const result = await discoverEntities(hass, entries[0].entity_id, washerDefinition, { type: washerDefinition.cardType });
+    expect(result.i_dos_1_fill_level_entity).toBe(entries[1].entity_id);
+    expect(result.i_dos_2_fill_level_entity).toBe(entries[2].entity_id);
+    const onlySecond = { ...hass, callWS: vi.fn(async () => [entries[0], entries[2]]) } as unknown as HomeAssistant;
+    expect((await discoverEntities(onlySecond, entries[0].entity_id, washerDefinition, { type: washerDefinition.cardType })).i_dos_1_fill_level_entity).toBeUndefined();
+  });
   it("discovers washer controls using Home Connect Local names and prefers a writable spin selector", async () => {
     const entries = [
       { entity_id: "sensor.washer_operation_state", device_id: "washer-1", original_name: "Operation State" },

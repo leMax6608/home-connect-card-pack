@@ -1,5 +1,5 @@
 import { LitElement, PropertyValues, css, html, nothing } from "lit";
-import type { ApplianceCardConfig } from "../types/config";
+import type { ApplianceCardConfig, ExtraWarning } from "../types/config";
 import type { HomeAssistant } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition } from "../types/schema";
 import { discoverEntities } from "../helpers/registry";
@@ -58,6 +58,7 @@ export abstract class BaseApplianceEditor extends LitElement {
     .program-rename code { overflow: hidden; color: var(--secondary-text-color); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
     .program-rename input { height: 36px; font-size: 12px; }
     .notice { font-size: 12px; color: var(--secondary-text-color); }
+    .warning-row { display: grid; gap: 8px; padding: 10px; border: 1px solid var(--divider-color); border-radius: 10px; }
     .loading { animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     @media (max-width: 480px) { .tool-row, .program-rename { grid-template-columns: 1fr; } .program-rename { gap: 4px; } }
@@ -201,6 +202,34 @@ export abstract class BaseApplianceEditor extends LitElement {
     </div></details>`;
   }
 
+  private changeWarning(index: number, patch?: Partial<ExtraWarning>): void {
+    if (!this._config) return;
+    const warnings = Array.isArray(this._config.extra_warnings) ? this._config.extra_warnings.slice() : [];
+    if (patch) warnings[index] = { ...warnings[index], ...patch };
+    else warnings.splice(index, 1);
+    const config = { ...this._config };
+    if (warnings.length) config.extra_warnings = warnings;
+    else delete config.extra_warnings;
+    this.notify(config);
+  }
+
+  private renderExtraWarnings() {
+    if (!this._config) return nothing;
+    const warnings = Array.isArray(this._config.extra_warnings) ? this._config.extra_warnings : [];
+    return html`<section class="group"><h3 class="group-title"><ha-icon icon="mdi:alert-outline"></ha-icon>${translate(this.hass, "editor.extra_warnings", "Custom warnings")}</h3><div class="fields">
+      <p class="intro">${translate(this.hass, "editor.extra_warnings_help", "Choose a binary sensor that turns on when attention is needed. Names are optional; inactive and unavailable warnings stay hidden.")}</p>
+      ${warnings.map((warning, index) => html`<div class="warning-row">
+        <ha-selector .hass=${this.hass} .selector=${{ entity: { domain: "binary_sensor" } }} .value=${warning.entity || ""}
+          .label=${translate(this.hass, "editor.warning_entity", "Warning entity")}
+          @value-changed=${(ev: CustomEvent<{ value?: string }>) => this.changeWarning(index, { entity: ev.detail.value || "" })}></ha-selector>
+        <input type="text" .value=${warning.name || ""} placeholder=${translate(this.hass, "editor.warning_name", "Optional warning name")} aria-label=${translate(this.hass, "editor.warning_name", "Optional warning name")}
+          @change=${(ev: Event) => this.changeWarning(index, { name: (ev.currentTarget as HTMLInputElement).value })}>
+        <button type="button" class="tool" @click=${() => this.changeWarning(index)}>${translate(this.hass, "editor.remove_warning", "Remove warning")}</button>
+      </div>`)}
+      <button type="button" class="tool" @click=${() => this.changeWarning(warnings.length, { entity: "" })}><ha-icon icon="mdi:plus"></ha-icon>${translate(this.hass, "editor.add_warning", "Add warning")}</button>
+    </div></section>`;
+  }
+
   render() {
     if (!this._config || !this.hass) return nothing;
     return html`<div class="editor">
@@ -224,12 +253,14 @@ export abstract class BaseApplianceEditor extends LitElement {
             ${this._notice ? html`<div class="notice" role="status">${this._notice}</div>` : ""}` : ""}
         </div></section>`;
       })}
+      ${this.renderExtraWarnings()}
       <section class="group"><h3 class="group-title"><ha-icon icon="mdi:eye-outline"></ha-icon>${translate(this.hass, "section.layout", "Layout & behavior")}</h3><div class="fields">
         ${this.renderToggle("default_expanded", translate(this.hass, "option.default_expanded", "Expanded by default"), false)}
         ${this.renderToggle("animations", translate(this.hass, "option.animations", "Animations"), true)}
         ${this.renderToggle("confirm_cancel", translate(this.hass, "option.confirm_cancel", "Require a second tap to cancel a program"), true)}
         ${this.renderToggle("show_progress", translate(this.hass, "option.show_progress", "Show progress"), true)}
         ${this.renderToggle("show_remaining_time", translate(this.hass, "option.show_remaining_time", "Show remaining time"), true)}
+        ${this.renderToggle("show_warnings_collapsed", translate(this.hass, "option.show_warnings_collapsed", "Show warnings while collapsed"), true)}
         ${this.renderToggle("show_status_section", translate(this.hass, "option.show_status_section", "Show status section"), true)}
         ${this.definition.fields.some((field) => field.section === "options") ? this.renderToggle("show_options_section", translate(this.hass, "option.show_options_section", "Show options section"), true) : nothing}
         ${this.renderToggle("show_settings_section", translate(this.hass, "option.show_settings_section", "Show device settings"), true)}

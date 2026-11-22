@@ -11,6 +11,7 @@ export interface FieldDefinition {
   domains?: string[];
   aliases?: string[];
   warning?: boolean;
+  warningStates?: string[];
   prominent?: boolean;
 }
 

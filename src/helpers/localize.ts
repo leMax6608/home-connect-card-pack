@@ -2,6 +2,11 @@ import type { HomeAssistant } from "../types/home-assistant";
 import type { FieldDefinition } from "../types/schema";
 
 const de: Record<string, string> = {
+  warnings: "Warnungen",
+  "field.i_dos_1_fill_level_entity": "i-Dos 1 nachfüllen", "field.i_dos_2_fill_level_entity": "i-Dos 2 nachfüllen",
+  "option.show_warnings_collapsed": "Warnungen auch eingeklappt anzeigen",
+  "editor.extra_warnings": "Eigene Warnungen", "editor.extra_warnings_help": "Wähle einen Binärsensor, der bei Handlungsbedarf einschaltet. Der Name ist optional. Inaktive und nicht verfügbare Warnungen bleiben ausgeblendet.",
+  "editor.warning_entity": "Warnsensor", "editor.warning_name": "Optionaler Warnungsname", "editor.add_warning": "Warnung hinzufügen", "editor.remove_warning": "Warnung entfernen",
   "section.general": "Allgemein", "section.program": "Programm", "section.actions": "Aktionen",
   "section.options": "Optionen", "section.status": "Status & Wartung", "section.settings": "Geräteeinstellungen",
   "section.appearance": "Darstellung", "section.layout": "Layout & Verhalten",
@@ -62,6 +67,11 @@ const de: Record<string, string> = {
 };
 
 const nl: Record<string, string> = {
+  warnings: "Waarschuwingen",
+  "field.i_dos_1_fill_level_entity": "i-Dos 1 bijvullen", "field.i_dos_2_fill_level_entity": "i-Dos 2 bijvullen",
+  "option.show_warnings_collapsed": "Waarschuwingen ook ingeklapt tonen",
+  "editor.extra_warnings": "Eigen waarschuwingen", "editor.extra_warnings_help": "Kies een binaire sensor die aangaat wanneer aandacht nodig is. De naam is optioneel. Inactieve en niet-beschikbare waarschuwingen blijven verborgen.",
+  "editor.warning_entity": "Waarschuwingssensor", "editor.warning_name": "Optionele waarschuwingsnaam", "editor.add_warning": "Waarschuwing toevoegen", "editor.remove_warning": "Waarschuwing verwijderen",
   "section.general": "Algemeen", "section.program": "Programma", "section.actions": "Acties",
   "section.options": "Opties", "section.status": "Status & onderhoud", "section.settings": "Apparaatinstellingen",
   "section.appearance": "Weergave", "section.layout": "Indeling & gedrag", "action.start": "Start",

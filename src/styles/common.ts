@@ -47,7 +47,8 @@ export const commonCardStyles = css`
   .no-animation .details, .no-animation .chevron { transition: none; }
   .no-animation .summary-progress-fill { transition: none; }
   .unavailable { opacity: .72; }
-  .warning-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 1px; scrollbar-width: none; }
+  .warning-strip { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 1px; }
+  .shell > .warning-strip { padding: 0 14px 12px; }
   .warning-strip::-webkit-scrollbar { display: none; }
   .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .primary-actions { padding-top: 2px; }

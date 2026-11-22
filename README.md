@@ -5,7 +5,9 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
 </p>
 
-![Large preview of all Home Connect cards](https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/cards-preview.png)
+![Preview of dishwasher, oven, coffee-machine and dryer cards](https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/cards-preview.png)
+
+<p><sub>Overview: real dishwasher, coffee-machine and dryer screenshots, plus an illustrative oven card. Real oven and washer screenshots are welcome.</sub></p>
 
 An **independent, unofficial** family of five native, dependency-light Lovelace custom cards for Home Assistant:
 
@@ -19,7 +21,7 @@ The cards are built with TypeScript and Lit. They do **not** depend on `button-c
 
 ## Screenshots
 
-The available real compact screenshots are shown individually at a readable size. Open the detailed view below a card to see all of its configured information and controls.
+The available real compact screenshots are shown individually at a readable size. Open the detailed view below a card to see its configured information and controls. These screenshots show earlier versions; available controls depend on your appliance and configuration. In current versions, active warnings are also visible while collapsed.
 
 ### Dishwasher
 
@@ -71,6 +73,20 @@ The available real compact screenshots are shown individually at a readable size
 
 </details>
 
+<!--
+### Washer
+
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/washer-compact.png" alt="Washer card — compact view" width="552">
+
+<details>
+<summary>Show expanded washer card</summary>
+<br>
+
+<img src="https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/washer-expanded.png" alt="Washer card — expanded view with all configured information" width="552">
+
+</details>
+-->
+
 ## Recommended Home Assistant integration
 
 This card pack is primarily recommended for use with [Home Connect Local](https://github.com/chris-mc1/homeconnect_local_hass), which communicates with supported appliances over the local network. The standard Home Connect integration may also work, but available entities and entity names can differ. All mappings remain manually configurable in the visual editor.
@@ -82,6 +98,8 @@ This card pack is primarily recommended for use with [Home Connect Local](https:
 - Context-aware controls for off, idle, running and paused states
 - Two-tap confirmation for Cancel prevents accidental program termination
 - Program selects, number sliders, switches/lights, action buttons and grouped status
+- Home Assistant translations for program and option choices, with manual program names taking precedence
+- Active warnings visible while collapsed, optional custom warning sensors, and washer i-Dos fill-level warnings
 - Fully manual display names for technical program values, used consistently across selector and status displays
 - Five full visual editors using Home Assistant entity pickers
 - Device-registry-first entity discovery; manual assignments always win
@@ -166,7 +184,7 @@ Add a card and search for **Home Connect**. Every card exposes a grouped editor.
 4. Under **Program**, open **Rename programs manually** to assign optional display names to the available program values.
 5. Configure only the functions you want. Unconfigured fields are not rendered.
 
-Program names are never generated or guessed. The editor shows the original Home Assistant value next to an empty name field. A custom name changes only what the card displays; selections and service calls always retain the exact original option value.
+Custom program names are never generated or guessed. The editor shows the original Home Assistant value next to an empty name field. When no custom name is set, option labels use Home Assistant's translations, with the original value as a fallback. A custom name changes only what the card displays; selections and service calls always retain the exact original option value.
 
 The two utility buttons below discovery copy either a paste-ready YAML configuration or an entity discovery report. The report is intended for troubleshooting mapping issues and deliberately excludes entity states, attributes, device-registry IDs, IP addresses and credentials. Entity IDs and display names can still contain personal labels, so review it before posting it publicly.
 
@@ -204,6 +222,7 @@ In addition to the shared program, power, progress and action fields, the washer
 | `finish_at_entity` | Finish-in duration; also a summary fallback when remaining time is not configured | `sensor` |
 | `door_entity` | Door state; closed and locked are normal | `binary_sensor` or `sensor` |
 | `drum_clean_reminder_entity` | Drum-cleaning reminder | `binary_sensor` |
+| `i_dos_1_fill_level_entity` / `i_dos_2_fill_level_entity` | i-Dos container 1 / 2 needs refilling | `binary_sensor` or enum `sensor` |
 | `prewash_entity` | Prewash option | `switch` |
 | `less_ironing_entity` | Less-ironing option | `switch` |
 | `drum_light_entity` | Drum lighting | `light` or `switch` |
@@ -222,11 +241,30 @@ Replace the example entity IDs with your own. Entity availability depends on the
 
 Thanks to [vkotous](https://github.com/vkotous) for contributing washer support in [#2](https://github.com/leMax6608/home-connect-card-pack/pull/2).
 
+## Warnings and custom reminders
+
+Active warnings appear below the compact header, even when the card is collapsed or the appliance is off. They wrap on narrow screens and appear only once when the card is expanded. Set `show_warnings_collapsed: false` to show them only in the expanded details.
+
+Every card's visual editor has a **Custom warnings** section. Add a binary sensor and an optional display name, or configure the same list in YAML:
+
+```yaml
+extra_warnings:
+  - entity: binary_sensor.washer_i_dos_cleaning_due
+    name: Clean i-Dos
+show_warnings_collapsed: true
+```
+
+Use a sensor that is `on` when attention is needed and `off` otherwise. Inactive, unknown, unavailable and missing custom sensors do not produce a warning. Without a custom name the entity's friendly name is used. Duplicate entity IDs are displayed once. Custom warning sensors may belong to a template or another device; they are explicitly selected and are never added by automatic device discovery.
+
+For washers, map `i_dos_1_fill_level_entity` and `i_dos_2_fill_level_entity` to Home Connect Local's **Poor i-Dos 1/2 fill level** binary sensors, or its enum fill-level sensors. Binary `on` and enum `Poor`/`Low`/`Empty` activate the warning; `off` and `Filled` do not. Some enum sensors are disabled by default in the integration and must be enabled in Home Assistant before discovery. A low fill level is a refill warning; create your own template/reminder sensor for a cleaning reminder.
+
+Thanks to [mtheli](https://github.com/mtheli) for translated options in [#3](https://github.com/leMax6608/home-connect-card-pack/pull/3) and the warning suggestions in [#4](https://github.com/leMax6608/home-connect-card-pack/issues/4).
+
 ## Shared options
 
 | Key | Purpose | Default |
 | --- | --- | --- |
-| `entity` | Anchor used only for registry discovery | — |
+| `entity` | Device anchor for registry discovery and More Info | — |
 | `name` / `icon` | Override the card identity | Device-specific |
 | `accent_color` | CSS color or theme variable used as the card accent | Device-specific |
 | `power_entity` | Power switch or select | — |
@@ -235,6 +273,8 @@ Thanks to [vkotous](https://github.com/vkotous) for contributing washer support 
 | `active_program_entity` | Program currently running | — |
 | `selected_program_entity` | Program selection | — |
 | `program_names` | Original program values mapped to manual display names | — |
+| `extra_warnings` | List of custom warning sensors with optional names | — |
+| `show_warnings_collapsed` | Keep active warnings visible below the compact header | `true` |
 | `progress_entity` | Numeric program progress | — |
 | `remaining_time_entity` | Remaining time | — |
 | `start_entity` / `pause_entity` / `resume_entity` / `cancel_entity` | Button entities | — |
@@ -248,7 +288,7 @@ Device-specific keys are presented by each card's visual editor and demonstrated
 
 ## State-dependent behavior
 
-- **Off:** identity, status, warnings and the power control; program controls remain hidden.
+- **Off:** identity, status, warnings and the power control; program, option and settings controls remain hidden.
 - **Idle:** program setup and Start are prominent.
 - **Running:** progress, Pause and Cancel are prominent; program-changing controls are disabled.
 - **Paused:** Resume and Cancel are prominent; program-changing controls remain disabled.
@@ -277,7 +317,10 @@ npm ci
 npm run typecheck
 npm test
 npm run build
+npm run test:browser
 ```
+
+`test:browser` needs Chrome/Chromium; set `CHROME_BIN` if it is installed in a nonstandard location. It checks all five cards and editors against mock Home Assistant states; it never calls a real appliance. To inspect the fixture manually after building, serve the repository locally (for example with `python -m http.server 8000`) and open `http://localhost:8000/tests/browser.html`. Build and release workflows run the same browser checks.
 
 The release file is `dist/home-connect-card-pack.js`. Keep this file in GitHub releases (or commit `dist/` for a direct-source HACS workflow). See [`ARCHITECTURE.md`](ARCHITECTURE.md) for design decisions.
 

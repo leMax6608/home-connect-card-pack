@@ -12,6 +12,20 @@ function mockHass() {
 }
 
 describe("service dispatch", () => {
+  it("routes helper entities to their own domains and rejects writes to sensors", async () => {
+    const { hass, callService } = mockHass();
+    await toggleEntity(hass, entity("input_select.power", "On", ["On", "Off"]));
+    expect(callService).toHaveBeenLastCalledWith("input_select", "select_option", { entity_id: "input_select.power", option: "Off" });
+    await selectOption(hass, entity("input_select.program", "Mix", ["Mix", "Cotton"]), "Cotton");
+    expect(callService).toHaveBeenLastCalledWith("input_select", "select_option", { entity_id: "input_select.program", option: "Cotton" });
+    await setNumber(hass, entity("input_number.temperature", "30"), 40);
+    expect(callService).toHaveBeenLastCalledWith("input_number", "set_value", { entity_id: "input_number.temperature", value: 40 });
+    callService.mockClear();
+    await expect(setNumber(hass, entity("sensor.temperature", "30"), 40)).rejects.toThrow(/not a number/);
+    await expect(setNumber(hass, entity("number.temperature", "30"), NaN)).rejects.toThrow(/finite/);
+    await expect(toggleEntity(hass, entity("sensor.power", "off"))).rejects.toThrow(/not a switch/);
+    expect(callService).not.toHaveBeenCalled();
+  });
   it("sends exact washer select options and never writes to a spin-speed sensor", async () => {
     const { hass, callService } = mockHass();
     const option = "LaundryCare.Washer.EnumType.SpinSpeed.RPM1200";

@@ -15,6 +15,6 @@ export class StatusChip extends LitElement {
     span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     b { color: currentColor; font-weight: 650; }
   `;
-  render() { return html`<span class="chip ${this.warning ? "warning" : ""}">${this.icon ? html`<ha-icon .icon=${this.icon}></ha-icon>` : ""}<span>${this.label}${this.value ? html` <b>${this.value}</b>` : ""}</span></span>`; }
+  render() { return html`<span class="chip ${this.warning ? "warning" : ""}" title=${`${this.label}${this.value ? `: ${this.value}` : ""}`}>${this.icon ? html`<ha-icon .icon=${this.icon}></ha-icon>` : ""}<span>${this.label}${this.value ? html` <b>${this.value}</b>` : ""}</span></span>`; }
 }
 registerElement("hc-status-chip", StatusChip);

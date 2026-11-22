@@ -3,16 +3,18 @@ import type { HomeAssistant } from "../types/home-assistant";
 import type { ApplianceDefinition } from "../types/schema";
 import { VERSION } from "../version";
 import { analyzeEntityDiscovery } from "./registry";
+import { extraWarnings } from "./warnings";
 
 function yamlValue(value: string | boolean): string {
   if (typeof value === "boolean") return String(value);
-  return /^[A-Za-z0-9_./:%-]+$/.test(value) ? value : JSON.stringify(value);
+  const ambiguous = /^(?:true|false|null|~|yes|no|on|off|[-+]?\d.*)$/i.test(value);
+  return !ambiguous && /^[A-Za-z0-9_./:%-]+$/.test(value) ? value : JSON.stringify(value);
 }
 
 export function serializeCardConfig(config: BaseApplianceCardConfig, definition: ApplianceDefinition): string {
   const preferredKeys = [
     "type", "entity", "name", "icon", "accent_color",
-    ...definition.fields.map((field) => field.key), "program_names",
+    ...definition.fields.map((field) => field.key), "program_names", "extra_warnings", "show_warnings_collapsed",
     "default_expanded", "animations", "confirm_cancel", "show_progress", "show_remaining_time",
     "show_status_section", "show_options_section", "show_settings_section",
   ];
@@ -21,6 +23,13 @@ export function serializeCardConfig(config: BaseApplianceCardConfig, definition:
   return `${keys.flatMap((key) => {
     const value = config[key];
     if (typeof value === "string" || typeof value === "boolean") return [`${key}: ${yamlValue(value)}`];
+    if (key === "extra_warnings" && Array.isArray(value)) {
+      const warnings = extraWarnings(config);
+      return warnings.length ? ["extra_warnings:", ...warnings.flatMap((warning) => [
+        `  - entity: ${yamlValue(warning.entity)}`,
+        ...(warning.name ? [`    name: ${yamlValue(warning.name)}`] : []),
+      ])] : [];
+    }
     if (value && typeof value === "object") {
       const entries = Object.entries(value)
         .filter((entry): entry is [string, string] => typeof entry[1] === "string" && Boolean(entry[1].trim()))

@@ -5,7 +5,8 @@ import type { ApplianceCardConfig } from "../types/config";
 import type { HomeAssistant, HassEntity } from "../types/home-assistant";
 import type { ApplianceDefinition, FieldDefinition, SectionId } from "../types/schema";
 import { configuredEntityIds, relevantStatesChanged, stateFor } from "../helpers/entity";
-import { deriveMode, displayState, isActiveMode, isAvailable, isWarningActive, progressValue, resolveAccentColor } from "../helpers/formatting";
+import { deriveMode, displayState, isActiveMode, isAvailable, progressValue, resolveAccentColor } from "../helpers/formatting";
+import { activeWarnings } from "../helpers/warnings";
 import { pressEntity, selectOption, setNumber, toggleEntity } from "../helpers/services";
 import { fieldLabel, translate } from "../helpers/localize";
 import type { ControlEventDetail } from "../components/entity-control";
@@ -85,6 +86,7 @@ export abstract class BaseApplianceCard extends LitElement {
   }
 
   protected shouldUpdate(changed: PropertyValues<this>): boolean {
+    if (changed.size > 1) return true;
     if (!changed.has("hass")) return true;
     if (!this._config) return true;
     return relevantStatesChanged(changed.get("hass") as HomeAssistant | undefined, this.hass, configuredEntityIds(this._config));
@@ -239,10 +241,9 @@ export abstract class BaseApplianceCard extends LitElement {
     const summaryRemaining = active ? remaining : undefined;
     const headerStatus = mode === "off" && power ? power : status;
     const animations = this._config.animations !== false;
-    const warnings = this.definition.fields
-      .filter((field) => field.warning)
-      .map((field) => ({ field, entity: this.getState(field.key) }))
-      .filter(({ entity }) => entity && isWarningActive(entity));
+    const warnings = activeWarnings(this.hass, this._config, this.definition);
+    const warningStrip = warnings.length ? html`<div class="warning-strip" role="status" aria-label=${translate(this.hass, "warnings", "Warnings")}>${warnings.map(({ label, value }) => html`<hc-status-chip .label=${label} .value=${value} warning icon="mdi:alert-outline"></hc-status-chip>`)}</div>` : nothing;
+    const collapsedWarnings = this._config.show_warnings_collapsed !== false;
     const prominent = this.definition.fields
       .filter((field) => field.prominent)
       .map((field) => ({ field, entity: this.getState(field.key) }))
@@ -259,7 +260,7 @@ export abstract class BaseApplianceCard extends LitElement {
         <div class="summary ${summaryProgress !== undefined && this._config.show_progress !== false ? "has-progress" : ""}">
           <button class="summary-button header-button" type="button" ?disabled=${!infoEntityId} @click=${this.showMoreInfo} title=${translate(this.hass, "action.more_info", "More information")} aria-label=${translate(this.hass, "action.more_info", "More information")}>
             <hc-appliance-header .name=${this._config.name || translate(this.hass, `device.${this.definition.kind}`, this.definition.defaultName)} .icon=${this._config.icon || this.definition.defaultIcon}
-              .status=${displayState(this.hass, headerStatus)} .program=${isAvailable(summaryProgram) ? displayProgramName(this.hass, summaryProgram!, programNames) : ""} .mode=${mode} .accent=${accent}></hc-appliance-header>
+              .status=${displayState(this.hass, headerStatus)} .program=${isAvailable(summaryProgram) ? displayProgramName(this.hass, summaryProgram!, programNames) : ""} .mode=${mode} .accent=${accent} .animations=${animations}></hc-appliance-header>
           </button>
           <button class="summary-button summary-toggle" type="button" @click=${this.toggleExpanded} aria-expanded=${String(this._expanded)} aria-label=${translate(this.hass, "action.toggle_details", "Toggle details")}><div class="metrics">
             ${prominent.map(({ entity }) => html`<span class="metric">${displayState(this.hass!, entity)}</span>`)}
@@ -268,15 +269,16 @@ export abstract class BaseApplianceCard extends LitElement {
           </div><ha-icon class="chevron" icon="mdi:chevron-down"></ha-icon></button>
           ${summaryProgress !== undefined && this._config.show_progress !== false ? html`<div class="summary-progress" aria-hidden="true"><div class="summary-progress-fill" style=${`transform:scaleX(${summaryProgress / 100})`}></div></div>` : ""}
         </div>
-        <div class="details"><div class="details-inner"><div class="details-content">
-          ${warnings.length ? html`<div class="warning-strip">${warnings.map(({ field, entity }) => html`<hc-status-chip .label=${fieldLabel(this.hass, field)} .value=${entity?.entity_id.startsWith("binary_sensor.") ? "" : displayState(this.hass!, entity)} warning icon="mdi:alert-outline"></hc-status-chip>`)}</div>` : ""}
+        ${collapsedWarnings ? warningStrip : nothing}
+        <div class="details" ?inert=${!this._expanded}><div class="details-inner"><div class="details-content">
+          ${!collapsedWarnings ? warningStrip : nothing}
           ${this.renderPower(false)}
           ${showActivity ? html`<div class="activity"><div class="activity-top"><div class="activity-copy"><div class="activity-label">${mode === "running" ? translate(this.hass, "running", "Now running") : mode === "paused" ? translate(this.hass, "paused", "Paused") : translate(this.hass, "ready", "Ready")}</div><div class="activity-program">${isAvailable(program) ? displayProgramName(this.hass, program!, programNames) : translate(this.hass, "appliance_status", "Appliance status")}</div></div>${isAvailable(summaryRemaining) && this._config.show_remaining_time !== false ? html`<div class="activity-time">${displayState(this.hass, summaryRemaining)}</div>` : ""}</div>${summaryProgress !== undefined && this._config.show_progress !== false ? html`<hc-progress-display .value=${summaryProgress} .label=${translate(this.hass, "progress", "Program progress")} .animated=${animations}></hc-progress-display>` : ""}</div>` : ""}
           ${this.renderActions(mode)}
-          ${this.renderSection("program", detailsDisabled)}
-          ${this.renderSection("options", detailsDisabled)}
+          ${mode !== "off" ? this.renderSection("program", detailsDisabled) : nothing}
+          ${mode !== "off" ? this.renderSection("options", detailsDisabled) : nothing}
           ${this.renderSection("status", false)}
-          ${this.renderSection("settings", detailsDisabled)}
+          ${mode !== "off" ? this.renderSection("settings", detailsDisabled) : nothing}
         </div></div></div>
         ${this._error ? html`<div class="error" role="alert"><span>${this._error}</span><button type="button" @click=${() => { this._error = ""; }} aria-label=${translate(this.hass, "action.dismiss", "Dismiss")} title=${translate(this.hass, "action.dismiss", "Dismiss")}><ha-icon icon="mdi:close"></ha-icon></button></div>` : ""}
       </div>

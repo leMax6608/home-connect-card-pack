@@ -150,6 +150,12 @@ cards:
     cancel_entity: button.bosch_waschmaschine_abbrechen
     door_entity: binary_sensor.bosch_waschmaschine_tur
     drum_clean_reminder_entity: binary_sensor.bosch_waschmaschine_drum_clean_reminder
+    i_dos_1_fill_level_entity: binary_sensor.bosch_waschmaschine_poor_i_dos_1_fill_level
+    i_dos_2_fill_level_entity: binary_sensor.bosch_waschmaschine_poor_i_dos_2_fill_level
+    show_warnings_collapsed: true
+    extra_warnings:
+      - entity: binary_sensor.washer_i_dos_cleaning_due
+        name: Clean i-Dos
     prewash_entity: switch.bosch_waschmaschine_prewash
     less_ironing_entity: switch.bosch_waschmaschine_less_ironing
     drum_light_entity: light.bosch_waschmaschine_drum_light

@@ -18,6 +18,8 @@ describe("Home Connect state formatting", () => {
   it("formats ISO durations when Home Assistant has no formatter", () => {
     expect(displayState(hass, entity("PT1H5M"))).toBe("1:05 h");
     expect(displayState(hass, entity("PT42M"))).toBe("42 min");
+    expect(displayState(hass, entity("P1DT2H5M"))).toBe("26:05 h");
+    expect(displayState(hass, entity("PT90M"))).toBe("1:30 h");
   });
 
   it("localizes raw Home Connect states and unavailable values", () => {
@@ -33,6 +35,7 @@ describe("Home Connect state formatting", () => {
     expect(optionLabel(germanHass, program, "laundry_care_washer_program_cotton")).toBe("Baumwolle");
     expect(optionLabel(germanHass, program, "unknown_option")).toBe("unknown_option");
     expect(optionLabel(hass, program, "laundry_care_washer_program_mix")).toBe("laundry_care_washer_program_mix");
+    expect(optionLabel({ ...hass, formatEntityState: () => { throw new Error("Translations loading"); } }, program, "original")).toBe("original");
   });
 
   it("normalizes fractional and percentage progress", () => {

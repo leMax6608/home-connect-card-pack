@@ -5,6 +5,13 @@ import { VERSION } from "../src/version";
 import type { HomeAssistant } from "../src/types/home-assistant";
 
 describe("configuration exports", () => {
+  it("exports custom warning lists and preserves YAML-like labels as strings", () => {
+    const yaml = serializeCardConfig({ type: dishwasherDefinition.cardType, name: "true", extra_warnings: [
+      { entity: "binary_sensor.cleaning", name: "Clean i-Dos: now" }, { entity: "binary_sensor.water" },
+    ] }, dishwasherDefinition);
+    expect(yaml).toContain('name: "true"');
+    expect(yaml).toContain('extra_warnings:\n  - entity: binary_sensor.cleaning\n    name: "Clean i-Dos: now"\n  - entity: binary_sensor.water\n');
+  });
   it("serializes a card configuration in a stable, paste-ready order", () => {
     const yaml = serializeCardConfig({
       type: dishwasherDefinition.cardType,

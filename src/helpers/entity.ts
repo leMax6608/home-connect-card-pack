@@ -1,5 +1,6 @@
 import type { BaseApplianceCardConfig } from "../types/config";
 import type { HassEntity, HomeAssistant } from "../types/home-assistant";
+import { extraWarnings } from "./warnings";
 
 export function stateFor(hass: HomeAssistant | undefined, config: BaseApplianceCardConfig, key: string): HassEntity | undefined {
   const entityId = config[key];
@@ -8,6 +9,7 @@ export function stateFor(hass: HomeAssistant | undefined, config: BaseApplianceC
 
 export function configuredEntityIds(config: BaseApplianceCardConfig): string[] {
   const result = new Set<string>();
+  for (const warning of extraWarnings(config)) result.add(warning.entity);
   for (const [key, value] of Object.entries(config)) {
     if ((key === "entity" || key.endsWith("_entity")) && typeof value === "string" && value.includes(".")) result.add(value);
   }

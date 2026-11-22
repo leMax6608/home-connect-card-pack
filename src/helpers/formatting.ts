@@ -25,10 +25,11 @@ export function canonicalState(state?: HassEntity): string {
 }
 
 function formatIsoDuration(value: string): string | undefined {
-  const match = /^P(?:\d+D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$/i.exec(value);
+  const match = /^P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$/i.exec(value);
   if (!match) return undefined;
-  const hours = Number(match[1] || 0);
-  const minutes = Number(match[2] || 0) + Math.floor(Number(match[3] || 0) / 60);
+  const totalMinutes = Number(match[1] || 0) * 1440 + Number(match[2] || 0) * 60 + Number(match[3] || 0) + Math.floor(Number(match[4] || 0) / 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
   return hours ? `${hours}:${String(minutes).padStart(2, "0")} h` : `${minutes} min`;
 }
 
@@ -94,7 +95,7 @@ export function isOn(state?: HassEntity): boolean {
 export function isWarningActive(state?: HassEntity): boolean {
   if (!state || !isAvailable(state)) return false;
   const value = canonicalState(state);
-  return !["off", "closed", "locked", "ok", "normal", "none", "false", "0", "available", "full", "notpresent", "ready", "good"].includes(value);
+  return !["off", "closed", "locked", "ok", "normal", "none", "false", "0", "available", "full", "filled", "notpresent", "ready", "good"].includes(value);
 }
 
 export function resolveAccentColor(value: string | undefined, fallback: string): string {
