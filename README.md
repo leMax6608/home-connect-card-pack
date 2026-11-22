@@ -89,7 +89,9 @@ Rendered from the washer card with sample data. The expanded view includes an ex
 
 ## Recommended Home Assistant integration
 
-This card pack is primarily recommended for use with [Home Connect Local](https://github.com/chris-mc1/homeconnect_local_hass), which communicates with supported appliances over the local network. The standard Home Connect integration may also work, but available entities and entity names can differ. All mappings remain manually configurable in the visual editor.
+We recommend [Home Connect Local](https://github.com/chris-mc1/homeconnect_local_hass) for local communication with supported appliances. You can also use the [standard Home Connect integration](https://www.home-assistant.io/integrations/home_connect/) over the cloud. Available entities and names depend on the appliance and integration, and you can adjust the mappings in the visual editor.
+
+A community member confirmed two warning behaviors with the cloud integration on v1.9.0. A custom brewing-unit cleaning reminder stays visible when the coffee machine is off and the card is collapsed, and an open steam-oven door shows as a warning on the collapsed oven card. See [the appliance test report](https://github.com/leMax6608/home-connect-card-pack/issues/4#issuecomment-7083723044).
 
 ## Highlights
 
