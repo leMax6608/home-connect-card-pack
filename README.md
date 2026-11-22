@@ -7,7 +7,7 @@
 
 ![Preview of dishwasher, oven, coffee machine, dryer and washer cards](https://raw.githubusercontent.com/leMax6608/home-connect-card-pack/main/docs/images/cards-preview.png)
 
-<p><sub>The overview includes Home Assistant screenshots of the dishwasher, coffee machine and dryer, a rendered washer card with sample data, and an oven illustration.</sub></p>
+<p><sub>All five cards rendered in the same theme with sample data.</sub></p>
 
 An **independent, unofficial** family of five native, dependency-light Lovelace custom cards for Home Assistant:
 

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<title>Home Connect Card Pack</title>
+<style>
+  html, body { margin: 0; }
+  body {
+    font: 14px Roboto, "Segoe UI", sans-serif;
+    --primary-text-color: #e6e8ed;
+    --secondary-text-color: #afb3c0;
+    --primary-color: #58a6ff;
+    --card-background-color: #222328;
+    --secondary-background-color: #18191d;
+    --divider-color: #363841;
+    --success-color: #2b9c68;
+    --ha-card-border-radius: 20px;
+    --ha-card-box-shadow: 0 3px 8px #0004;
+  }
+  main {
+    box-sizing: border-box;
+    display: grid;
+    gap: 12px;
+    width: 600px;
+    padding: 24px;
+    border-radius: 22px;
+    background: linear-gradient(155deg, #161d2a, #101218 66%, #151a25);
+  }
+</style>
+<main aria-label="Home Connect Card Pack"></main>
+<script type="module">
+import {
+  mdiChevronDown, mdiCoffeeMaker, mdiDishwasher, mdiStove, mdiTumbleDryer, mdiWashingMachine,
+} from "https://cdn.jsdelivr.net/npm/@mdi/js@7.4.47/+esm";
+import "../../dist/home-connect-card-pack.js";
+
+const icons = {
+  "mdi:chevron-down": mdiChevronDown,
+  "mdi:coffee-maker": mdiCoffeeMaker,
+  "mdi:dishwasher": mdiDishwasher,
+  "mdi:stove": mdiStove,
+  "mdi:tumble-dryer": mdiTumbleDryer,
+  "mdi:washing-machine": mdiWashingMachine,
+};
+
+// Provide the icon element normally supplied by the Home Assistant frontend.
+class PreviewIcon extends HTMLElement {
+  static observedAttributes = ["icon"];
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+  }
+
+  set icon(value) { this.setAttribute("icon", value); }
+
+  attributeChangedCallback() {
+    const path = icons[this.getAttribute("icon")];
+    this.shadowRoot.innerHTML = path ? `
+      <style>
+        :host { display: inline-flex; width: var(--mdc-icon-size, 24px); height: var(--mdc-icon-size, 24px); }
+      </style>
+      <svg viewBox="0 0 24 24" fill="currentColor" width="100%" height="100%" aria-hidden="true">
+        <path d="${path}"/>
+      </svg>` : "";
+  }
+}
+customElements.define("ha-icon", PreviewIcon);
+
+const appliances = [
+  { kind: "dishwasher", program: "Auto 45–65 °C", progress: 31, remaining: "1 h 58 Min." },
+  { kind: "oven", program: "Heißluft", progress: 68, remaining: "18 Min.", temperature: 180 },
+  { kind: "coffee", program: "Espresso", progress: 42 },
+  { kind: "dryer", program: "Baumwolle", progress: 36, remaining: "1 h 31 Min." },
+  { kind: "washer", program: "Schnell/Mix", progress: 48, remaining: "54 Min." },
+];
+
+const cards = appliances.map(({ kind, program, progress, remaining, temperature }) => {
+  const tag = `home-connect-${kind}-card`;
+  const config = { type: `custom:${tag}`, animations: false };
+  const states = {};
+  const labels = {};
+
+  function addSensor(role, state, label, attributes = {}) {
+    const id = `sensor.${kind}_${role}`;
+    config[`${role}_entity`] = id;
+    states[id] = { entity_id: id, state: String(state), attributes };
+    labels[id] = label;
+  }
+
+  addSensor("operating_state", "Run", "Im Betrieb");
+  addSensor("active_program", "demo_program", program);
+  addSensor("progress", progress, undefined, { unit_of_measurement: "%" });
+  if (remaining) addSensor("remaining_time", "PT1M", remaining);
+  if (temperature !== undefined) addSensor("current_temperature", temperature, `${temperature} °C`);
+
+  const card = document.createElement(tag);
+  card.setConfig(config);
+  card.hass = {
+    language: "de",
+    states,
+    formatEntityState: entity => labels[entity.entity_id] ?? entity.state,
+  };
+  document.querySelector("main").append(card);
+  return card;
+});
+
+for (const card of cards) {
+  await card.updateComplete;
+  await card.shadowRoot.querySelector("hc-appliance-header").updateComplete;
+}
+await document.fonts.ready;
+document.body.dataset.ready = "true";
+</script>
+</html>
