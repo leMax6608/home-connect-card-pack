@@ -20,7 +20,7 @@ export interface HomeAssistant {
   locale?: { language?: string };
   callService(domain: string, service: string, data?: Record<string, unknown>): Promise<unknown>;
   callWS<T>(message: Record<string, unknown>): Promise<T>;
-  formatEntityState?(state: HassEntity): string;
+  formatEntityState?(state: HassEntity, value?: string): string;
   formatEntityAttributeValue?(state: HassEntity, attribute: string): string;
 }
 
